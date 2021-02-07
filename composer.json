@@ -1,0 +1,11 @@
+{
+    "name": "vianetz/hashover-next",
+    "description": "A comment system for e.g. static websites",
+    "require": {
+        "ext-mbstring": "*",
+        "ext-intl": "*",
+        "ext-xml": "*",
+        "ext-json": "*"
+    },
+    "license": "AGPL-3.0-only"
+}
