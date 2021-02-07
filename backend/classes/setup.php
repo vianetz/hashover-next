@@ -199,7 +199,6 @@ class Setup extends Settings
 	// Gets a domain with a port from given URL
 	protected function getDomainWithPort ($url = '')
 	{
-		// Parse URL
 		$url = parse_url ($url);
 
 		// Throw exception if URL or host is empty
@@ -209,13 +208,8 @@ class Setup extends Settings
 			);
 		}
 
-		// If URL has a port, return domain with port
-		if (!empty ($url['port'])) {
-			return $url['host'] . ':' . $url['port'];
-		}
-
 		// Otherwise, return domain without port
-		return $url['host'];
+		return $url['host'] . (!empty($url['port']) ? ':' . $url['port'] : '');
 	}
 
 	// Enables and sets up remote access
@@ -266,14 +260,12 @@ class Setup extends Settings
 				// If so, setup remote access
 				$this->setupRemoteAccess ();
 
-				// Connection origin
-				$origin = $this->scheme . '://' . $domain;
+				$referer = parse_url($_SERVER['HTTP_REFERER']);
+				$refererDomain = $referer['scheme'] . '://' . $referer['host'] . (!empty($referer['port']) ? ':' . $referer['port'] : '');
 
-				// Set remote access headers
-				header ('Access-Control-Allow-Origin: ' . $origin);
+				header ('Access-Control-Allow-Origin: ' . $refererDomain);
 				header ('Access-Control-Allow-Credentials: true');
 
-				// And return true
 				return true;
 			}
 		}
