@@ -1,2 +1,4 @@
 /comments
 /config/settings.json
+/vendor/
+composer.lock

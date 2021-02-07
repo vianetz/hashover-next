@@ -160,12 +160,6 @@ try {
 	// Register message element methods
 	$javascript->registerFile ('messages.js');
 
-	// Register email validator event handler method
-	$javascript->registerFile ('validateemail.js');
-
-	// Register comment validator event handler method
-	$javascript->registerFile ('validatecomment.js');
-
 	// Register AJAX post comment event handler method
 	$javascript->registerFile ('ajaxpost.js', array (
 		'include' => $setup->usesAjax,

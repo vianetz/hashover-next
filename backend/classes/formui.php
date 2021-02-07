@@ -224,7 +224,8 @@ class FormUI
 				'value' => $attributes['input-value'],
 				'autocomplete' => $attributes['autocomplete'],
 				'title' => $attributes['input-title'],
-				'placeholder' => $attributes['placeholder']
+				'placeholder' => $attributes['placeholder'],
+                'required' => $this->setup->formFields[$field] === 'required' ? 'required' : '',
 			), false, true);
 
 			// Add input to wrapper element
@@ -350,7 +351,8 @@ class FormUI
 			'cols' => '63',
 			'name' => 'comment',
 			'rows' => '6',
-			'title' => $this->locale->text[$title_locale]
+			'title' => $this->locale->text[$title_locale],
+            'required' => 'required'
 		), false);
 
 		// Set the placeholder attribute if one is given
@@ -652,7 +654,8 @@ class FormUI
 			'class' => 'hashover-form hashover-balloon',
 			'name' => 'hashover-form',
 			'action' => $this->setup->getBackendPath ('form-actions.php'),
-			'method' => 'post'
+			'method' => 'post',
+            'onSubmit' => "hashover.postComment(this, document.getElementById('hashover-post-button'), ''); return false;"
 		));
 
 		// Create wrapper element for styling inputs

@@ -11,7 +11,7 @@ HashOver.prototype.init = function (id)
 	var mainElement = this.getMainElement (id);
 
 	// Form events that get the same listeners
-	var formEvents = [ 'onclick', 'onsubmit' ];
+	var formEvents = [ 'onsubmit' ];
 
 	// Current page URL without the hash
 	var pageURL = window.location.href.split ('#')[0];
@@ -158,7 +158,7 @@ HashOver.prototype.init = function (id)
 	var postButton = this.getElement ('post-button');
 	var formElement = this.getElement ('form');
 
-	// Set onclick and onsubmit event handlers
+	// Set onsubmit event handlers
 	this.duplicateProperties (postButton, formEvents, function () {
 		return hashover.postComment (formElement, postButton, 'main');
 	});
