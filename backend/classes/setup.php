@@ -217,11 +217,13 @@ class Setup extends Settings
 		$this->syncSettings ();
 	}
 
-	// Checks remote request against allowed domains setting
-	public function refererCheck ()
+	/**
+     * Checks remote request against allowed domains setting
+     */
+	public function refererCheck()
 	{
-		// Return true if no referer is set
-		if (empty ($_SERVER['HTTP_REFERER'])) {
+		if (empty($_SERVER['HTTP_REFERER'])) {
+		    $this->setupRemoteAccess();
 			return true;
 		}
 
@@ -249,7 +251,6 @@ class Setup extends Settings
 
 			// Check if script was requested from an allowed domain
 			if (preg_match ($domain_regex, $domain)) {
-				// If so, setup remote access
 				$this->setupRemoteAccess ();
 
 				$referer = parse_url($_SERVER['HTTP_REFERER']);
