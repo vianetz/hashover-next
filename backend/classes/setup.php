@@ -37,11 +37,6 @@ class Setup extends Settings
 	public $pageTitle;
 	public $instanceNumber = 1;
 
-	// Required extensions to check for
-	protected $extensions = array (
-		'date', 'dom', 'json', 'mbstring', 'openssl', 'pcre', 'intl'
-	);
-
 	// Characters to convert to dashes in thread names
 	protected $dashFromThreads = array (
 		'<', '>', ':', '"', '/', '\\', '|', '?',
@@ -63,9 +58,6 @@ class Setup extends Settings
 	{
 		// Construct parent class
 		parent::__construct ();
-
-		// Check for required extensions
-		$this->extensionsLoaded ($this->extensions);
 
 		// Get connection scheme
 		$this->scheme = $this->isHTTPS () ? 'https' : 'http';

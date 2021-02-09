@@ -24,9 +24,6 @@ class ParseJSON extends CommentFiles
 	{
 		// Construct parent class
 		parent::__construct ($setup, $thread);
-
-		// Throw exception if the JSON extension isn't loaded
-		$setup->extensionsLoaded (array ('json'));
 	}
 
 	// Returns an array of comment files

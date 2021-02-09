@@ -1,0 +1,29 @@
+version: '3'
+services:
+  php:
+    build: .
+    working_dir: /app
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/
+      - PHP_DISPLAY_ERRORS=1
+      - PHP_MEMORY_LIMIT=2048M
+      - PHP_MAX_EXECUTION_TIME=-1
+      - XDEBUG_REMOTE_AUTOSTART=0
+      - XDEBUG_REMOTE_PORT=9000
+      - XDEBUG_PROFILER_ENABLE=0
+      - XDEBUG_REMOTE_CONNECT_BACK=0
+      - XDEBUG_REMOTE_HOST=docker.for.mac.localhost
+      - php.xdebug.idekey=PHPSTORM
+      - php.xdebug.remote_enable=1
+      - php.xdebug.max_nesting_level=1000
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/app:rw,cached
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025

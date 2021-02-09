@@ -19,7 +19,7 @@
 
 class Email extends Secrets
 {
-	// E-mail delivery method class
+    /** @var \HashOver\Sendmail|\HashOver\SMTP */
 	protected $mailer;
 
 	public function __construct (Setup $setup)

@@ -2,10 +2,19 @@
     "name": "vianetz/hashover-next",
     "description": "A comment system for e.g. static websites",
     "require": {
+        "php": "^7.2|^8.0",
         "ext-mbstring": "*",
         "ext-intl": "*",
         "ext-xml": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-date": "*",
+        "ext-dom": "*",
+        "ext-openssl": "*",
+        "ext-pcre": "*"
     },
-    "license": "AGPL-3.0-only"
+    "license": "AGPL-3.0-only",
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.74",
+        "roave/security-advisories": "dev-master"
+    }
 }

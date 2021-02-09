@@ -225,8 +225,11 @@ class FormUI
 				'autocomplete' => $attributes['autocomplete'],
 				'title' => $attributes['input-title'],
 				'placeholder' => $attributes['placeholder'],
-                'required' => $this->setup->formFields[$field] === 'required' ? 'required' : '',
 			), false, true);
+
+			if ($this->setup->formFields[$field] === 'required') {
+                $input->appendAttribute('required', 'required');
+            }
 
 			// Add input to wrapper element
 			$input_wrapper->appendChild ($input);
