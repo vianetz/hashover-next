@@ -17,7 +17,7 @@ declare(strict_types=1);
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace HashOver;
+namespace HashOver\Backend;
 
 use Psr\Log\LoggerInterface;
 
@@ -70,8 +70,7 @@ final class Email
     public function send(): bool
     {
         try {
-            $this->logger->info('Sending email to ' . implode(', ', $this->message->getTo()) . ' with subject ' . $this->message->getSubject());
-
+            $this->logger->info('Sending email to ' . implode(', ', array_keys($this->message->getTo())) . ' with subject ' . $this->message->getSubject());
             return (new \Swift_Mailer($this->transport))->send($this->message) > 0;
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage());

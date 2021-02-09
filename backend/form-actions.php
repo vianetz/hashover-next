@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2015-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,23 +17,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
-// Check if request is for JSONP
 use Dotenv\Dotenv;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
 if (isset ($_GET['jsonp'])) {
 	// If so, setup HashOver for JavaScript
-	require ('javascript-setup.php');
-
-	// Get data from GET request
+	require __DIR__ . '/javascript-setup.php';
 	$request = $_GET;
 } else {
-	// If not, setup HashOver for JSON
-	require ('json-setup.php');
-
-	// Get data from POST request
+	require __DIR__ . '/json-setup.php';
 	$request = $_POST;
 }
 
@@ -117,7 +113,7 @@ try {
 	$hashover->initiate ();
 	$hashover->finalize ();
 
-	$email = new Email($logger, $_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
+	$email = new Backend\Email($logger, $_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
 
 	// Instantiate class for writing and editing comments
 	$write_comments = new WriteComments(
@@ -188,5 +184,5 @@ try {
 	}
 } catch (\Throwable $error) {
     $logger->error($error);
-    echo Misc::displayException ('An error occured.', 'json');
+    echo Misc::displayError('An error occured.', 'json');
 }
