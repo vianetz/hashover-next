@@ -23,6 +23,7 @@ header ('Content-Type: application/javascript');
 // Do some standard HashOver setup work
 require ('nocache-headers.php');
 require ('standard-setup.php');
+require __DIR__ . '/../vendor/autoload.php';
 
 // Setup class autoloader
 setup_autoloader (function ($error) {

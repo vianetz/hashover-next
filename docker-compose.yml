@@ -16,6 +16,7 @@ services:
       - php.xdebug.idekey=PHPSTORM
       - php.xdebug.remote_enable=1
       - php.xdebug.max_nesting_level=1000
+      - PHP_SENDMAIL_PATH="/usr/local/bin/mhsendmail --smtp-addr="mailhog:1025""
     ports:
       - "80:80"
       - "443:443"
