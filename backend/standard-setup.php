@@ -24,6 +24,8 @@ ini_set ('default_charset', 'UTF-8');
 ini_set ('display_errors', true);
 error_reporting (E_ALL);
 
+require __DIR__ . '/../vendor/autoload.php';
+
 // Autoload class files
 function setup_autoloader ($method = 'echo')
 {

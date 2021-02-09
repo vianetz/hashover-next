@@ -18,6 +18,10 @@
 
 
 // Check if request is for JSONP
+use Dotenv\Dotenv;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
 if (isset ($_GET['jsonp'])) {
 	// If so, setup HashOver for JavaScript
 	require ('javascript-setup.php');
@@ -69,8 +73,12 @@ function display_json (\HashOver $hashover, FormData $form_data, $data)
 }
 
 try {
-	// Instantiate HashOver class
-	$hashover = new \HashOver ('json');
+	$hashover = new \HashOver('json');
+	$logger = new Logger('hashover-logger');
+	$logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+
+	$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv->load();
 
 	// Throw exception if requested by remote server
 	$hashover->setup->refererCheck ();
@@ -109,8 +117,11 @@ try {
 	$hashover->initiate ();
 	$hashover->finalize ();
 
+	$email = new Email($logger, $_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
+
 	// Instantiate class for writing and editing comments
-	$write_comments = new WriteComments (
+	$write_comments = new WriteComments(
+	    $email,
 		$hashover->setup,
 		$form_data,
 		$hashover->thread
@@ -175,6 +186,7 @@ try {
 			$form_data->displayMessage ('post-fail');
 		}
 	}
-} catch (\Exception $error) {
-	echo Misc::displayException ($error, 'json');
+} catch (\Throwable $error) {
+    $logger->error($error);
+    echo Misc::displayException ('An error occured.', 'json');
 }

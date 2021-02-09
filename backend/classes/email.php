@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,81 +17,65 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
-class Email extends Secrets
+use Psr\Log\LoggerInterface;
+
+final class Email
 {
-    /** @var \HashOver\Sendmail|\HashOver\SMTP */
-	protected $mailer;
+    private \Swift_Message $message;
+    private LoggerInterface $logger;
+    private \Swift_Transport $transport;
 
-	public function __construct (Setup $setup)
-	{
-		// Name of mailer class to instantiate
-		$mail_class = 'HashOver\\' . $setup->mailer;
+    public function __construct(LoggerInterface $logger, string $smtpHost, string $smtpPort, string $smtpUser, string $smtpPassword)
+    {
+        $this->message = new \Swift_Message();
+        $this->logger = $logger;
 
-		// Instantiate mailer class
-		$this->mailer = new $mail_class ($setup);
+        $this->transport = (new \Swift_SmtpTransport($smtpHost, $smtpPort))
+            ->setUsername($smtpUser)
+            ->setPassword($smtpPassword);
+    }
 
-		// Setup SMTP Mailer
-		if (mb_strtolower ($setup->mailer) !== 'sendmail') {
-			// Set SMTP server host
-			$this->mailer->setHost ($this->smtpHost);
+    public function to(string $email, string $name = null): void
+    {
+        $this->message->addTo($email, $name);
+    }
 
-			// Set SMTP server port number
-			$this->mailer->setPort ($this->smtpPort);
+    public function replyTo(string $email, string $name = null): void
+    {
+        $this->message->addReplyTo($email, $name);
+    }
 
-			// Set SMTP server encryption method
-			$this->mailer->setCrypto ($this->smtpCrypto);
+    public function from(string $email, string $name = null): void
+    {
+        $this->message->addFrom($email, $name);
+    }
 
-			// Set whether SMTP server requires authentication
-			$this->mailer->setAuth ($this->smtpAuth);
+    public function subject(string $text): void
+    {
+        $this->message->setSubject($text);
+    }
 
-			// Set SMTP server login user
-			$this->mailer->setUser ($this->smtpUser);
+    public function text(string $text): void
+    {
+        $this->message->addPart($text);
+    }
 
-			// Set SMTP server login password
-			$this->mailer->setPassword ($this->smtpPassword);
-		}
-	}
+    public function html(string $html): void
+    {
+        $this->message->addPart($html, 'text/html');
+    }
 
-	// Call mailer method
-	public function to ($email, $name = null)
-	{
-		$this->mailer->to ($email, $name);
-	}
+    public function send(): bool
+    {
+        try {
+            $this->logger->info('Sending email to ' . implode(', ', $this->message->getTo()) . ' with subject ' . $this->message->getSubject());
 
-	// Call mailer method
-	public function from ($email, $name = null)
-	{
-		$this->mailer->from ($email, $name);
-	}
-
-	// Call mailer method
-	public function subject ($text)
-	{
-		$this->mailer->subject ($text);
-	}
-
-	// Call mailer method
-	public function replyTo ($email, $name = null)
-	{
-		$this->mailer->replyTo ($email, $name);
-	}
-
-	// Call mailer method
-	public function text ($text)
-	{
-		$this->mailer->text ($text);
-	}
-
-	// Call mailer method
-	public function html ($html)
-	{
-		$this->mailer->html ($html);
-	}
-
-	// Call mailer method
-	public function send ()
-	{
-		$this->mailer->send ();
-	}
+            return (new \Swift_Mailer($this->transport))->send($this->message) > 0;
+        } catch (\Throwable $exception) {
+            $this->logger->error($exception->getMessage());
+            return false;
+        }
+    }
 }

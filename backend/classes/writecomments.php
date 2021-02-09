@@ -127,7 +127,7 @@ class WriteComments extends Secrets
 		'deleted'
 	);
 
-	public function __construct (Setup $setup, FormData $form_data, Thread $thread)
+	public function __construct(Email $email, Setup $setup, FormData $form_data, Thread $thread)
 	{
 		// Store parameters as properties
 		$this->setup = $setup;
@@ -141,7 +141,7 @@ class WriteComments extends Secrets
 		$this->crypto = new Crypto ();
 		$this->avatars = new Avatars ($setup);
 		$this->templater = new Templater ($setup);
-		$this->mail = new Email ($setup);
+		$this->mail = $email;
 
 		// Setup initial login data
 		$this->setupLogin ();
@@ -740,14 +740,9 @@ class WriteComments extends Secrets
 
 		// Only send admin notification if it's not admin posting
 		if ($this->email !== $this->notificationEmail) {
-			// Set e-mail to be sent to admin
-			$this->mail->to ($this->notificationEmail);
-
-			// Set e-mail as coming from the posting user
-			$this->mail->from ($this->email);
-
-			// And actually send the message
-			$this->mail->send ();
+			$this->mail->to($this->notificationEmail);
+			$this->mail->from($this->noreplyEmail);
+			$this->mail->send();
 		}
 
 		// Do nothing else if reply comment failed to read
