@@ -112,7 +112,7 @@ class Markdown
 		);
 
 		// Replace code blocks with markers
-		$string = preg_replace_callback ($this->blockCodeRegex, 'self::blockCodeReplace', $string);
+		$string = preg_replace_callback ($this->blockCodeRegex, [$this, 'blockCodeReplace'], $string);
 
 		// Break string into paragraphs
 		$paragraphs = preg_split ($this->paragraphRegex, $string);
@@ -120,20 +120,20 @@ class Markdown
 		// Run through each paragraph
 		for ($i = 0, $il = count ($paragraphs); $i < $il; $i++) {
 			// Replace inline code with markers
-			$paragraphs[$i] = preg_replace_callback ($this->inlineCodeRegex, 'self::inlineCodeReplace', $paragraphs[$i]);
+			$paragraphs[$i] = preg_replace_callback ($this->inlineCodeRegex, [$this, 'inlineCodeReplace'], $paragraphs[$i]);
 
 			// Replace markdown patterns
 			$paragraphs[$i] = preg_replace ($this->search, $this->replace, $paragraphs[$i]);
 
 			// Replace markers with original markdown code
-			$paragraphs[$i] = preg_replace_callback ('/CODE_INLINE\[([0-9]+)\]/S', 'self::inlineCodeReturn', $paragraphs[$i]);
+			$paragraphs[$i] = preg_replace_callback ('/CODE_INLINE\[([0-9]+)\]/S', [$this, 'inlineCodeReturn'], $paragraphs[$i]);
 		}
 
 		// Join paragraphs
 		$string = implode (PHP_EOL . PHP_EOL, $paragraphs);
 
 		// Replace code block markers with original markdown code
-		$string = preg_replace_callback ('/CODE_BLOCK\[([0-9]+)\]/S', 'self::blockCodeReturn', $string);
+		$string = preg_replace_callback ('/CODE_BLOCK\[([0-9]+)\]/S', [$this, 'blockCodeReturn'], $string);
 
 		return $string;
 	}

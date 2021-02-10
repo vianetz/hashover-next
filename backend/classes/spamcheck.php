@@ -24,6 +24,8 @@ class SpamCheck
 
 	public $error;
 
+	private $ip;
+
 	public function __construct (Setup $setup)
 	{
 		// JSON IP address blocklist file

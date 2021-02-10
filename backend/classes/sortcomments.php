@@ -157,7 +157,7 @@ class SortComments
 				$sort_array = $this->getAllComments ($comments);
 
 				// Sort comments by date
-				usort ($sort_array, 'self::sortByDate');
+				usort ($sort_array, [$this, 'sortByDate']);
 
 				// And return comments sorted by date
 				return $sort_array;
@@ -231,7 +231,7 @@ class SortComments
 				$sort_array = $this->getAllComments ($comments);
 
 				// Sort comments by the commenter names
-				usort ($sort_array, 'self::sortByCommenter');
+				usort ($sort_array, [$this, 'sortByCommenter']);
 
 				// And return sorted comments
 				return $sort_array;
@@ -248,7 +248,7 @@ class SortComments
 				$sort_array = $comments;
 
 				// Sort threads by date
-				usort ($sort_array, 'self::sortByDate');
+				usort ($sort_array, [$this, 'sortByDate']);
 
 				// And return sorted comments
 				return $sort_array;
@@ -274,7 +274,7 @@ class SortComments
 				$sort_array = $comments;
 
 				// Sort threads by commenter names
-				usort ($sort_array, 'self::sortByCommenter');
+				usort ($sort_array, [$this, 'sortByCommenter']);
 
 				// And return sorted comments
 				return $sort_array;

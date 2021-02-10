@@ -408,12 +408,12 @@ class PHPMode
 
 			// Replace code tags with placeholder text
 			if (mb_strpos ($template['comment'], '<code>') !== false) {
-				$template['comment'] = preg_replace_callback ('/(<code>)([\s\S]*?)(<\/code>)/iS', 'self::codeTagReplace', $template['comment']);
+				$template['comment'] = preg_replace_callback ('/(<code>)([\s\S]*?)(<\/code>)/iS', [$this, 'codeTagReplace'], $template['comment']);
 			}
 
 			// Replace pre tags with placeholder text
 			if (mb_strpos ($template['comment'], '<pre>') !== false) {
-				$template['comment'] = preg_replace_callback ('/(<pre>)([\s\S]*?)(<\/pre>)/iS', 'self::preTagReplace', $template['comment']);
+				$template['comment'] = preg_replace_callback ('/(<pre>)([\s\S]*?)(<\/pre>)/iS', [$this, 'preTagReplace'], $template['comment']);
 			}
 
 			// Check for various multi-line tags
@@ -437,12 +437,12 @@ class PHPMode
 
 			// Replace code tag placeholders with original code tag HTML
 			if ($this->codeTagCount > 0) {
-				$pd_comment = preg_replace_callback ('/CODE_TAG\[([0-9]+)\]/S', 'self::codeTagReturn', $pd_comment);
+				$pd_comment = preg_replace_callback ('/CODE_TAG\[([0-9]+)\]/S', [$this, 'codeTagReturn'], $pd_comment);
 			}
 
 			// Replace pre tag placeholders with original pre tag HTML
 			if ($this->preTagCount > 0) {
-				$pd_comment = preg_replace_callback ('/PRE_TAG\[([0-9]+)\]/S', 'self::preTagReturn', $pd_comment);
+				$pd_comment = preg_replace_callback ('/PRE_TAG\[([0-9]+)\]/S', [$this, 'preTagReturn'], $pd_comment);
 			}
 
 			// Add paragraph'd comment data to template

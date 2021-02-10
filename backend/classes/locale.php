@@ -91,21 +91,22 @@ class Locale
 		return $locales_path . '/en-us.php';
 	}
 
-	// Includes a locale file
-	protected function includeLocaleFile ($file)
-	{
-		// Check if the locale file can be included
-		if (@include ($file)) {
-			// If so, set locale to array stored in the file
-			$this->text = $locale;
-		} else {
-			// If not, throw exception
-			throw new \Exception (sprintf (
-				'%s locale file could not be included!',
-				mb_strtoupper ($this->setup->language)
-			));
-		}
-	}
+    /**
+     * @throws \Exception
+     */
+    protected function includeLocaleFile(string $file): void
+    {
+        $locale = [];
+        if (! @include($file)) {
+            throw new \Exception(sprintf(
+                '%s locale file could not be included!',
+                mb_strtoupper($this->setup->language)
+            ));
+        }
+
+        // If so, set locale to array stored in the file
+        $this->text = $locale;
+    }
 
 	// Injects optionality into a given locale string
 	protected function optionality ($locale, $choice = 'optional')
