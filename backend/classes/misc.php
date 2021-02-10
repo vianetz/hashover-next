@@ -150,11 +150,10 @@ class Misc
 		return $message;
 	}
 
-	// Returns error in HTML paragraph
-	public static function displayException (\Exception $error, $mode = 'php')
-	{
-		return self::displayError ($error->getMessage (), $mode);
-	}
+    public static function displayException(\Throwable $error, $mode = 'php')
+    {
+        return self::displayError($error->getMessage(), $mode);
+    }
 
 	// Returns an array item or a given default value
 	public static function getArrayItem (array $data, $key)

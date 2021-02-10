@@ -19,11 +19,17 @@ declare(strict_types=1);
 
 namespace HashOver;
 
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../backend/standard-setup.php';
+
 use FastRoute\RouteCollector;
+use HashOver\Admin\Handler\RedirectHandler;
+
+setup_autoloader();
 
 $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteCollector $r): void {
     $r->addGroup('/admin', static function (RouteCollector $r): void {
-        $r->addRoute('GET', '/', 'handler');
+        $r->addRoute('GET', '/', RedirectHandler::class);
     });
 });
 
@@ -47,8 +53,11 @@ switch ($routeInfo[0]) {
         // ... 405 Method Not Allowed
         break;
     case \FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
+        /** @var \HashOver\Admin\Handler\HandlerInterface $handler */
+        $handler = new $routeInfo[1]();
         $vars = $routeInfo[2];
-        // ... call $handler with $vars
+
+        $handler->run();
+
         break;
 }

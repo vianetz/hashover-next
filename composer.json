@@ -24,6 +24,7 @@
     },
     "autoload": {
         "psr-4": {
+            "HashOver\\Admin\\": "src\\Admin",
             "HashOver\\Backend\\": "src\\Backend"
         }
     }
