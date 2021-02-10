@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2010-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,14 +17,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
-// Check if request is for JSONP
-if (isset ($_GET['jsonp'])) {
-	// If so, setup HashOver for JavaScript
-	require ('javascript-setup.php');
+if (isset($_GET['jsonp'])) {
+    require __DIR__ . '/../../backend/javascript-setup.php';
 } else {
-	// If not, setup HashOver for JSON
-	require ('json-setup.php');
+    require __DIR__ . '/../../backend/json-setup.php';
 }
 
 try {

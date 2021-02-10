@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace HashOver\Admin\Handler;
+namespace HashOver\Handler;
 
 interface HandlerInterface
 {

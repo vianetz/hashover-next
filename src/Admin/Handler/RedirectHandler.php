@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
+use HashOver\Handler\HandlerInterface;
+
 final class RedirectHandler implements HandlerInterface
 {
     public function run(): void
@@ -10,9 +12,9 @@ final class RedirectHandler implements HandlerInterface
         $hashover = new \HashOver();
 
         if ($hashover->login->isAdmin()) {
-            header('Location: moderation/');
+            header('Location: /admin/moderation/');
         } else {
-            header('Location: login/');
+            header('Location: /admin/login/');
         }
     }
 }

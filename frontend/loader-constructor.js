@@ -55,7 +55,7 @@ function HashOver (id, options, instance)
 	var frontend = document.createElement ('script');
 
 	// Frontend script path
-	var path = HashOver.rootPath + '/comments.php';
+	var path = HashOver.rootPath + '/comments.js';
 
 	// Some elements around this script
 	var parent = HashOver.script.parentNode;

@@ -36,6 +36,7 @@ class Settings extends SensitiveSettings
 	public $domain;
 	public $themePath;
 	public $formFields;
+	public bool $enableStatistics = false;
 
 	public function __construct ()
 	{

@@ -1214,7 +1214,7 @@ class FormUI
 			// Create link to HashOver JavaScript source code
 			$javascript_link = new HTMLTag ('a', array (
 				'rel' => 'nofollow',
-				'href' => $this->setup->getHttpPath ('comments.php'),
+				'href' => $this->setup->getHttpPath ('comments.js'),
 				'class' => 'hashover-javascript-link',
 				'target' => '_blank',
 				'title' => 'JavaScript'

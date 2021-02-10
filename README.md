@@ -14,7 +14,7 @@ This repository is a modern implementation of the [great original hashover-next]
 - Dependency management with composer
 - Replace components with external libraries, e.g. Swiftmailer
 - Add application logging
-- Improve application security (by using a router, environment variables as secrets, adding separate `htdocs` folder, etc.)
+- Improve application security (by using a router, environment variables as secrets, adding separate `htdocs` folder, removing superglobals, dependency injection, etc.)
 - Provide Docker container
 - Implement unit tests
 

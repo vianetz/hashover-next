@@ -28,18 +28,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 \define('APP_DIR', __DIR__ . '/../');
 
-$containerBuilder = new ContainerBuilder();
-$containerBuilder->useAnnotations(false);
-$containerBuilder->enableCompilation(__DIR__ . '/tmp');
-$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
-$containerBuilder->addDefinitions(__DIR__ . '/../config/container.php');
-$container = $containerBuilder->build();
-
-$container->get(\Monolog\Logger::class)->pushHandler($container->get(\Monolog\Handler\StreamHandler::class));
-
-$dotenv = Dotenv::createImmutable(APP_DIR);
-$dotenv->load();
-
 function setup_autoloader($method = 'echo')
 {
     // Register a class autoloader
@@ -54,3 +42,16 @@ function setup_autoloader($method = 'echo')
         @include __DIR__ . '/classes/' . $file;
     });
 }
+
+setup_autoloader();
+
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->useAnnotations(false);
+$containerBuilder->enableCompilation(__DIR__ . '/tmp');
+$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
+$containerBuilder->addDefinitions(__DIR__ . '/../config/container.php');
+$container = $containerBuilder->build();
+
+$dotenv = Dotenv::createImmutable(APP_DIR);
+$dotenv->load();
+

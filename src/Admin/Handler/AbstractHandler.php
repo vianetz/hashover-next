@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace HashOver\Admin\Handler;
 
 use HashOver\DataFiles;
+use HashOver\Handler\HandlerInterface;
 use HashOver\Locale;
 
 abstract class AbstractHandler implements HandlerInterface

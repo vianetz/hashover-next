@@ -31,20 +31,23 @@ use HashOver\Admin\Handler\SettingsHandler;
 use HashOver\Admin\Handler\ThreadsHandler;
 use HashOver\Admin\Handler\UpdateHandler;
 use HashOver\Admin\Handler\UrlQueriesHandler;
+use HashOver\Handler\CommentsJsHandler;
 
 setup_autoloader();
 
 $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteCollector $r): void {
     $r->addGroup('/admin', static function (RouteCollector $r): void {
-        $r->addRoute('GET', '/', RedirectHandler::class);
-        $r->addRoute(['GET', 'POST'], '/login/', LoginHandler::class);
-        $r->addRoute('GET', '/moderation/', ModerationHandler::class);
-        $r->addRoute('GET', '/moderation/threads/', ThreadsHandler::class);
-        $r->addRoute(['GET', 'POST'], '/blocklist/', BlocklistHandler::class);
-        $r->addRoute(['GET', 'POST'], '/url-queries/', UrlQueriesHandler::class);
-        $r->addRoute(['GET', 'POST'], '/settings/', SettingsHandler::class);
-        $r->addRoute(['GET', 'POST'], '/updates/', UpdateHandler::class);
+        $r->addRoute('GET', '', RedirectHandler::class);
+        $r->addRoute(['GET', 'POST'], '/login', LoginHandler::class);
+        $r->addRoute('GET', '/moderation', ModerationHandler::class);
+        $r->addRoute('GET', '/moderation/threads', ThreadsHandler::class);
+        $r->addRoute(['GET', 'POST'], '/blocklist', BlocklistHandler::class);
+        $r->addRoute(['GET', 'POST'], '/url-queries', UrlQueriesHandler::class);
+        $r->addRoute(['GET', 'POST'], '/settings', SettingsHandler::class);
+        $r->addRoute(['GET', 'POST'], '/updates', UpdateHandler::class);
     });
+    $r->addRoute(['GET'], '/comments.js', CommentsJsHandler::class);
+    $r->addRoute(['GET'], '/comments.php', CommentsJsHandler::class);
 });
 
 // Fetch method and URI from somewhere
@@ -55,7 +58,7 @@ $uri = $_SERVER['REQUEST_URI'];
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
-$uri = rtrim(rawurldecode($uri), '/') . '/';
+$uri = rtrim(rawurldecode($uri), '/');
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 switch ($routeInfo[0]) {
@@ -67,8 +70,8 @@ switch ($routeInfo[0]) {
         // ... 405 Method Not Allowed
         break;
     case \FastRoute\Dispatcher::FOUND:
-        /** @var \HashOver\Admin\Handler\HandlerInterface $handler */
-        $handler = new $routeInfo[1]();
+        /** @var \HashOver\Handler\HandlerInterface $handler */
+        $handler = $container->get($routeInfo[1]);
         $vars = $routeInfo[2];
 
         $handler->run();

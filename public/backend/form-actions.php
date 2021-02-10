@@ -23,7 +23,6 @@ use HashOver\Backend\SendNotification;
 use Monolog\Logger;
 
 if (isset($_GET['jsonp'])) {
-    // If so, setup HashOver for JavaScript
     require __DIR__ . '/../../backend/javascript-setup.php';
     $request = $_GET;
 } else {
