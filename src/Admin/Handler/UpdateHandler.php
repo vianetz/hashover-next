@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,22 +17,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver\Admin\Handler;
 
-try {
-	// Do some standard HashOver setup work
-	require (realpath ('../../../../backend/standard-setup.php'));
+final class UpdateHandler extends AbstractHandler
+{
+    public function run(): void
+    {
+        $template = [
+            'title' => $this->hashover->locale->text['check-for-updates'],
+            'sub-title' => $this->hashover->locale->text['coming-soon'],
+        ];
 
-	// View setup
-	require (realpath ('../../../view-setup.php'));
-
-	// Template data
-	$template = array (
-		'title'		=> $hashover->locale->text['documentation']
-	);
-
-	// Load and parse HTML template
-	echo parse_templates ('../../docs/en-us/steps', 'faq.html', $template, $hashover);
-
-} catch (\Exception $error) {
-	echo Misc::displayException ($error);
+        echo $this->parse_templates('admin', 'updates.html', $template, $this->hashover);
+    }
 }

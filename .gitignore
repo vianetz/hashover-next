@@ -1,4 +1,5 @@
 /comments
+/config/blocklist.json
 /config/settings.json
 /vendor/
 composer.lock
