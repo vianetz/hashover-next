@@ -90,7 +90,7 @@ class Templater
 	{
 		// Get the file path for the configured theme
 		$path = $this->setup->getThemePath ($file, false);
-		$path = $this->setup->getAbsolutePath ($path);
+		$path = $this->setup->getAbsolutePath ('public' . DIRECTORY_SEPARATOR . $path);
 
 		// Parse the theme file as template
 		if (!empty ($template)) {

@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,59 +17,59 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
 try {
-	// Do some standard HashOver setup work
-	require (realpath ('../../backend/standard-setup.php'));
+    require __DIR__ . '/../../../backend/standard-setup.php';
 
-	// View setup
-	require (realpath ('../view-setup.php'));
+    // View setup
+    require __DIR__ . '/../view-setup.php';
 
-	// Check if the user submitted login information
-	if (!empty ($_POST['name']) and !empty ($_POST['password'])) {
-		// If so, attempt to log them in
-		$hashover->login->setAdminLogin ();
+    // Check if the user submitted login information
+    if (!empty ($_POST['name']) and !empty ($_POST['password'])) {
+        // If so, attempt to log them in
+        $hashover->login->setAdminLogin();
 
-		// Check if user is admin
-		if ($hashover->login->isAdmin () === true) {
-			// If so, login as admin
-			$hashover->login->adminLogin ();
-		} else {
-			// If not, logout
-			$hashover->login->clearLogin ();
+        // Check if user is admin
+        if ($hashover->login->isAdmin() === true) {
+            // If so, login as admin
+            $hashover->login->adminLogin();
+        } else {
+            // If not, logout
+            $hashover->login->clearLogin();
 
-			// Sleep 5 seconds
-			sleep (5);
-		}
+            // Sleep 5 seconds
+            sleep(5);
+        }
 
-		// And redirect user to desired view
-		redirect ();
-	}
+        // And redirect user to desired view
+        redirect();
+    }
 
-	// Check if we're logging out
-	if (isset ($_GET['logout'])) {
-		// If so, attempt to log the user out
-		$hashover->login->clearLogin ();
+    // Check if we're logging out
+    if (isset ($_GET['logout'])) {
+        // If so, attempt to log the user out
+        $hashover->login->clearLogin();
 
-		// Get path to main admin page
-		$admin_path = $hashover->setup->getHttpPath ('admin');
+        // Get path to main admin page
+        $admin_path = $hashover->setup->getHttpPath('admin');
 
-		// And redirect user to main admin page
-		redirect ($admin_path . '/');
-	}
+        // And redirect user to main admin page
+        redirect($admin_path . '/');
+    }
 
-	// Template data
-	$template = array (
-		'title'		=> $hashover->locale->text['login'],
-		'sub-title'	=> $hashover->locale->text['admin-required'],
-		'name'		=> $hashover->locale->text['name'],
-		'password'	=> $hashover->locale->text['password'],
-		'login'		=> $hashover->locale->text['login']
-	);
+    // Template data
+    $template = array(
+        'title' => $hashover->locale->text['login'],
+        'sub-title' => $hashover->locale->text['admin-required'],
+        'name' => $hashover->locale->text['name'],
+        'password' => $hashover->locale->text['password'],
+        'login' => $hashover->locale->text['login']
+    );
 
-	// Load and parse HTML template
-	echo $hashover->templater->parseTemplate ('login.html', $template);
+    // Load and parse HTML template
+    echo $hashover->templater->parseTemplate('login.html', $template);
 
 } catch (\Exception $error) {
-	echo Misc::displayException ($error);
+    echo Misc::displayException($error);
 }

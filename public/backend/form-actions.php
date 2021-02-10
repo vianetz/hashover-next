@@ -25,10 +25,10 @@ use Monolog\Logger;
 
 if (isset($_GET['jsonp'])) {
     // If so, setup HashOver for JavaScript
-    require APP_DIR . '/backend/javascript-setup.php';
+    require __DIR__ . '/../../backend/javascript-setup.php';
     $request = $_GET;
 } else {
-    require APP_DIR . '/backend/json-setup.php';
+    require __DIR__ . '/../../backend/json-setup.php';
     $request = $_POST;
 }
 

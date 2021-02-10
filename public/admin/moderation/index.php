@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,6 +17,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
 // Adds a row to a table body
 function add_table_row (HTMLTag $body, HTMLTag $child)
@@ -56,11 +58,9 @@ function add_table_head (HTMLTag $table, $html)
 }
 
 try {
-	// Do some standard HashOver setup work
-	require (realpath ('../../backend/standard-setup.php'));
+	require __DIR__ .'/../../../backend/standard-setup.php';
 
-	// View setup
-	require (realpath ('../view-setup.php'));
+	require __DIR__ . '/../view-setup.php';
 
 	// Get current website
 	$current_website = $hashover->setup->website;

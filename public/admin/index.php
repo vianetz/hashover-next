@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,25 +17,25 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
 try {
-	// Do some standard HashOver setup work
-	require (realpath ('../backend/standard-setup.php'));
+    require __DIR__ . '/../../backend/standard-setup.php';
 
-	// Setup class autoloader
-	setup_autoloader ();
+    // Setup class autoloader
+    setup_autoloader();
 
-	// Instantiate HashOver class
-	$hashover = new \HashOver ();
+    // Instantiate HashOver class
+    $hashover = new \HashOver ();
 
-	// Check if user is admin
-	if ($hashover->login->isAdmin () === true) {
-		// If so, redirect to moderation page
-		header ('Location: moderation/');
-	} else {
-		// If not, redirect to login page
-		header ('Location: login/');
-	}
+    // Check if user is admin
+    if ($hashover->login->isAdmin() === true) {
+        // If so, redirect to moderation page
+        header('Location: moderation/');
+    } else {
+        // If not, redirect to login page
+        header('Location: login/');
+    }
 } catch (\Exception $error) {
-	echo Misc::displayException ($error);
+    echo Misc::displayException($error);
 }
