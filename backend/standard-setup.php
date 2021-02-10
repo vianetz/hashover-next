@@ -19,10 +19,22 @@ declare(strict_types=1);
 
 namespace HashOver;
 
-// Use UTF-8 character set
+use DI\ContainerBuilder;
+
 ini_set('default_charset', 'UTF-8');
 
 require __DIR__ . '/../vendor/autoload.php';
+
+\define('APP_DIR', __DIR__ . '/../');
+
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->useAnnotations(false);
+$containerBuilder->enableCompilation(__DIR__ . '/tmp');
+$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
+$containerBuilder->addDefinitions(__DIR__ . '/../config/container.php');
+$container = $containerBuilder->build();
+
+$container->get(\Monolog\Logger::class)->pushHandler($container->get(\Monolog\Handler\StreamHandler::class));
 
 function setup_autoloader($method = 'echo')
 {

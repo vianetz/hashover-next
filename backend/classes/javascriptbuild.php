@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,131 +17,127 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
-class JavaScriptBuild
+final class JavaScriptBuild
 {
-	protected $directory;
-	protected $files = array ();
+    private string $directory;
+    protected array $files = array();
 
-	public function __construct ($directory = '.')
-	{
-		$this->changeDirectory ($directory);
-	}
+    public function __construct(string $directory = '.')
+    {
+        $this->directory = __DIR__ . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR;
+    }
 
-	public function changeDirectory ($directory = '.')
-	{
-		$this->directory = trim ($directory, '/') . '/';
-	}
+    protected function addFile($file)
+    {
+        // Add file to files array if it isn't already present
+        if (!in_array($file, $this->files, true)) {
+            $this->files[] = $file;
+        }
+    }
 
-	protected function addFile ($file)
-	{
-		// Add file to files array if it isn't already present
-		if (!in_array ($file, $this->files, true)) {
-			$this->files[] = $file;
-		}
-	}
+    protected function addDependencies($file, array $dependencies)
+    {
+        // Add each dependency to files array
+        foreach ($dependencies as $dependency) {
+            $dependency = $this->directory . $dependency;
 
-	protected function addDependencies ($file, array $dependencies)
-	{
-		// Add each dependency to files array
-		foreach ($dependencies as $dependency) {
-			$dependency = $this->directory . $dependency;
+            // Check if the file exists
+            if (file_exists($file)) {
+                // If so, add file to files array
+                $this->addFile($dependency);
+            } else {
+                // If not, throw exception on failure
+                throw new \Exception (sprintf(
+                                          '"%s" depends on "%s" but it does not exist.',
+                                          $file, $dependency
+                                      ));
+            }
+        }
 
-			// Check if the file exists
-			if (file_exists ($file)) {
-				// If so, add file to files array
-				$this->addFile ($dependency);
-			} else {
-				// If not, throw exception on failure
-				throw new \Exception (sprintf (
-					'"%s" depends on "%s" but it does not exist.',
-					$file, $dependency
-				));
-			}
-		}
+        return true;
+    }
 
-		return true;
-	}
+    protected function includeFile($file)
+    {
+        // Attempt to read JavaScript file
+        $file = @file_get_contents($file);
 
-	protected function includeFile ($file)
-	{
-		// Attempt to read JavaScript file
-		$file = @file_get_contents ($file);
+        // Check if the file read successfully
+        if ($file !== false) {
+            // If so, return the contents
+            return trim($file);
+        }
 
-		// Check if the file read successfully
-		if ($file !== false) {
-			// If so, return the contents
-			return trim ($file);
-		}
+        // Otherwise throw exception
+        throw new \Exception (
+            sprintf('Unable to include "%s"', $file)
+        );
+    }
 
-		// Otherwise throw exception
-		throw new \Exception (
-			sprintf ('Unable to include "%s"', $file)
-		);
-	}
+    public function registerFile($file, array $options = array())
+    {
+        $file = $this->directory . $file;
 
-	public function registerFile ($file, array $options = array ())
-	{
-		$file = $this->directory . $file;
+        if (!empty ($options)) {
+            // Check if there is an include condition
+            if (isset ($options['include'])) {
+                // If so, return void if include is false
+                if ($options['include'] === false) {
+                    return;
+                }
+            }
 
-		if (!empty ($options)) {
-			// Check if there is an include condition
-			if (isset ($options['include'])) {
-				// If so, return void if include is false
-				if ($options['include'] === false) {
-					return;
-				}
-			}
+            // Add optional dependencies to files array
+            if (!empty ($options['dependencies'])) {
+                $dependencies = $options['dependencies'];
+                $this->addDependencies($file, $dependencies);
+            }
+        }
 
-			// Add optional dependencies to files array
-			if (!empty ($options['dependencies'])) {
-				$dependencies = $options['dependencies'];
-				$this->addDependencies ($file, $dependencies);
-			}
-		}
+        // Check if the file exists
+        if (file_exists($file)) {
+            // If so, add file to files array
+            $this->addFile($file);
+        } else {
+            // If not, throw exception
+            throw new \Exception (
+                sprintf('"%s" does not exist.', $file)
+            );
+        }
 
-		// Check if the file exists
-		if (file_exists ($file)) {
-			// If so, add file to files array
-			$this->addFile ($file);
-		} else {
-			// If not, throw exception
-			throw new \Exception (
-				sprintf ('"%s" does not exist.', $file)
-			);
-		}
+        return true;
+    }
 
-		return true;
-	}
+    public function build($minify = false, $minify_level = 0)
+    {
+        // Array for included JavaScript files
+        $files = array();
 
-	public function build ($minify = false, $minify_level = 0)
-	{
-		// Array for included JavaScript files
-		$files = array ();
+        // Attempt to include registered JavaScript files
+        foreach ($this->files as $file) {
+            $files[] = $this->includeFile($file);
+        }
 
-		// Attempt to include registered JavaScript files
-		foreach ($this->files as $file) {
-			$files[] = $this->includeFile ($file);
-		}
+        // Join the included JavaScript files
+        $javascript = implode(PHP_EOL . PHP_EOL, $files);
 
-		// Join the included JavaScript files
-		$javascript = implode (PHP_EOL . PHP_EOL, $files);
+        // Minify the JavaScript if told to
+        if (!isset ($_GET['unminified'])) {
+            if ($minify === true and $minify_level > 0) {
+                // Instantiate JavaScript minification class
+                $minifier = new JavaScriptMinifier ();
 
-		// Minify the JavaScript if told to
-		if (!isset ($_GET['unminified'])) {
-			if ($minify === true and $minify_level > 0) {
-				// Instantiate JavaScript minification class
-				$minifier = new JavaScriptMinifier ();
+                // Minify JavaScript build result
+                $minified = $minifier->minify($javascript, $minify_level);
 
-				// Minify JavaScript build result
-				$minified = $minifier->minify ($javascript, $minify_level);
+                // Set minified result as JavaScript output
+                $javascript = $minified;
+            }
+        }
 
-				// Set minified result as JavaScript output
-				$javascript = $minified;
-			}
-		}
-
-		// Return normal JavaScript code
-		return $javascript;
-	}
+        // Return normal JavaScript code
+        return $javascript;
+    }
 }

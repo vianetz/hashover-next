@@ -14,7 +14,8 @@
         "ext-pcre": "*",
         "swiftmailer/swiftmailer": "^6.2",
         "monolog/monolog": "^2.2",
-        "vlucas/phpdotenv": "^5.3"
+        "vlucas/phpdotenv": "^5.3",
+        "php-di/php-di": "^6.3"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.74",

@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2017-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,22 +17,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
-// Tell browser output is JavaScript
-header ('Content-Type: application/javascript');
+header('Content-Type: application/javascript');
 
-// Do some standard HashOver setup work
-require ('nocache-headers.php');
-require ('standard-setup.php');
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/nocache-headers.php';
+require __DIR__ . '/standard-setup.php';
 
-// Setup class autoloader
-setup_autoloader (function ($error) {
-	// Construct JavaScript code to display error
-	$js_error  = 'var hashover = document.getElementById (\'hashover\') || document.body;' . PHP_EOL;
-	$js_error .= 'var error = \'<p><b>HashOver</b>: ' . $error . '</p>\';' . PHP_EOL . PHP_EOL;
-	$js_error .= 'hashover.innerHTML += error;';
+setup_autoloader(static function($error) {
+    $js_error = 'var hashover = document.getElementById (\'hashover\') || document.body;' . PHP_EOL;
+    $js_error .= 'var error = \'<p><b>HashOver</b>: ' . $error . '</p>\';' . PHP_EOL . PHP_EOL;
+    $js_error .= 'hashover.innerHTML += error;';
 
-	// Display JavaScript code
-	echo $js_error;
+    // Display JavaScript code
+    echo $js_error;
 });
