@@ -19,7 +19,6 @@ declare(strict_types=1);
 
 namespace HashOver;
 
-use Dotenv\Dotenv;
 use HashOver\Backend\SendNotification;
 use Monolog\Logger;
 

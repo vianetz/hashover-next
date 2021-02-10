@@ -105,7 +105,7 @@ final class ModerationHandler extends AbstractHandler
 
             // Add thread hyperlink to row div
             $div->appendChild(new HTMLTag ('a', array(
-                'href' => 'threads.php?' . implode('&amp;', array(
+                'href' => 'threads/?' . implode('&amp;', array(
                         'website=' . urlencode($website),
                         'thread=' . urlencode($thread),
                         'title=' . urlencode($data['title']),

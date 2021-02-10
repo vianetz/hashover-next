@@ -26,6 +26,7 @@ use FastRoute\RouteCollector;
 use HashOver\Admin\Handler\LoginHandler;
 use HashOver\Admin\Handler\ModerationHandler;
 use HashOver\Admin\Handler\RedirectHandler;
+use HashOver\Admin\Handler\ThreadsHandler;
 
 setup_autoloader();
 
@@ -34,6 +35,7 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
         $r->addRoute('GET', '/', RedirectHandler::class);
         $r->addRoute(['GET', 'POST'], '/login/', LoginHandler::class);
         $r->addRoute('GET', '/moderation/', ModerationHandler::class);
+        $r->addRoute('GET', '/moderation/threads/', ThreadsHandler::class);
     });
 });
 

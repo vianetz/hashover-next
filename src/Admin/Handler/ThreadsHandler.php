@@ -17,21 +17,17 @@ declare(strict_types=1);
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace HashOver;
+namespace HashOver\Admin\Handler;
 
-try {
-    require_once __DIR__ . '/../../../backend/standard-setup.php';
-    require_once __DIR__ . '/../view-setup.php';
+final class ThreadsHandler extends AbstractHandler
+{
+    public function run(): void
+    {
+        $template = [
+            'title' => $this->hashover->locale->text['moderation'],
+            'back' => $this->hashover->locale->text['back'],
+        ];
 
-    // Template data
-    $template = array(
-        'title' => $hashover->locale->text['moderation'],
-        'back' => $hashover->locale->text['back']
-    );
-
-    // Load and parse HTML template
-    echo parse_templates('admin', 'threads.html', $template, $hashover);
-
-} catch (\Exception $error) {
-    echo Misc::displayException($error);
+        echo $this->parse_templates('admin', 'threads.html', $template, $this->hashover);
+    }
 }
