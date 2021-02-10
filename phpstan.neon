@@ -1,5 +1,7 @@
 parameters:
     level: 0
+    bootstrapFiles:
+        - phpstan-bootstrap.php
     paths:
         - %currentWorkingDirectory%/backend
         - %currentWorkingDirectory%/frontend

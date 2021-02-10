@@ -27,7 +27,7 @@ final class EmailSender
     private LoggerInterface $logger;
     private \Swift_Transport $transport;
 
-    public function __construct(LoggerInterface $logger, string $smtpHost, string $smtpPort, string $smtpUser, string $smtpPassword)
+    public function __construct(LoggerInterface $logger, string $smtpHost, int $smtpPort, string $smtpUser, string $smtpPassword)
     {
         $this->message = new \Swift_Message();
         $this->logger = $logger;

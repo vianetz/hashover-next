@@ -33,6 +33,9 @@ final class SendNotification
         $this->thread = $thread;
     }
 
+    /**
+     * @param array<mixed> $data
+     */
     public function send(string $file, array $data, string $email, string $notificationEmail, string $noreplyEmail, ?string $replyTo = null, ?string $name = null): void
     {
         $templateVars = [];
@@ -142,7 +145,7 @@ final class SendNotification
     /**
      * Wordwraps text after adding indentation
      */
-    private function indentWordwrap($text): string
+    private function indentWordwrap(string $text): string
     {
         // Line ending styles to convert
         $styles = array(
