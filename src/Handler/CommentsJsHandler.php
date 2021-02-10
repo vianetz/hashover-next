@@ -19,7 +19,7 @@ declare(strict_types=1);
 
 namespace HashOver\Handler;
 
-use HashOver\JavaScriptBuild;
+use HashOver\Build\JavaScriptBuild;
 use HashOver\Setup;
 use HashOver\Statistics;
 

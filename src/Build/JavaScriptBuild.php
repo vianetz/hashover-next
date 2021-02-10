@@ -17,7 +17,7 @@ declare(strict_types=1);
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace HashOver;
+namespace HashOver\Build;
 
 final class JavaScriptBuild
 {
@@ -110,10 +110,9 @@ final class JavaScriptBuild
         return true;
     }
 
-    public function build($minify = false, $minify_level = 0)
+    public function build(bool $minify = false, int $minify_level = 0): string
     {
-        // Array for included JavaScript files
-        $files = array();
+        $files = [];
 
         // Attempt to include registered JavaScript files
         foreach ($this->files as $file) {
@@ -127,7 +126,7 @@ final class JavaScriptBuild
         if (!isset ($_GET['unminified'])) {
             if ($minify === true and $minify_level > 0) {
                 // Instantiate JavaScript minification class
-                $minifier = new JavaScriptMinifier ();
+                $minifier = new \HashOver\JavaScriptMinifier();
 
                 // Minify JavaScript build result
                 $minified = $minifier->minify($javascript, $minify_level);
