@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace HashOver;
 
 use Dotenv\Dotenv;
+use HashOver\Backend\SendNotification;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -69,9 +70,10 @@ function display_json (\HashOver $hashover, FormData $form_data, $data)
 }
 
 try {
-	$hashover = new \HashOver('json');
 	$logger = new Logger('hashover-logger');
 	$logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+
+	$hashover = new \HashOver('json');
 
 	$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
     $dotenv->load();
@@ -113,11 +115,19 @@ try {
 	$hashover->initiate ();
 	$hashover->finalize ();
 
-	$email = new Backend\Email($logger, $_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
+    $email = new Backend\Email($logger, $_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
+    $sendNotification = new SendNotification(
+        $email,
+        $hashover->setup,
+        new Crypto(),
+        new Avatars($hashover->setup),
+        new Templater($hashover->setup),
+        new Thread($hashover->setup)
+    );
 
 	// Instantiate class for writing and editing comments
 	$write_comments = new WriteComments(
-	    $email,
+	    $sendNotification,
 		$hashover->setup,
 		$form_data,
 		$hashover->thread
@@ -183,6 +193,6 @@ try {
 		}
 	}
 } catch (\Throwable $error) {
-    $logger->error($error);
+    $logger->error($error->getMessage() . ', ' . $error->getTraceAsString());
     echo Misc::displayError('An error occured.', 'json');
 }

@@ -3,3 +3,4 @@ parameters:
     paths:
         - %currentWorkingDirectory%/backend
         - %currentWorkingDirectory%/frontend
+        - %currentWorkingDirectory%/src

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-use HashOver\Backend\Email;
+use HashOver\Backend\SendNotification;
 
 class WriteComments extends Secrets
 {
@@ -30,7 +30,7 @@ class WriteComments extends Secrets
 	protected $crypto;
 	protected $avatar;
 	protected $templater;
-	protected $mail;
+	private SendNotification $sendNotification;
 
 	protected $name = '';
 	protected $password = '';
@@ -128,8 +128,10 @@ class WriteComments extends Secrets
 		'deleted'
 	);
 
-	public function __construct(Email $email, Setup $setup, FormData $form_data, Thread $thread)
+	public function __construct(SendNotification $sendNotification, Setup $setup, FormData $form_data, Thread $thread)
 	{
+	    parent::__construct();
+
 		// Store parameters as properties
 		$this->setup = $setup;
 		$this->formData = $form_data;
@@ -140,9 +142,7 @@ class WriteComments extends Secrets
 		$this->login = new Login ($setup);
 		$this->cookies = new Cookies ($setup, $this->login);
 		$this->crypto = new Crypto ();
-		$this->avatars = new Avatars ($setup);
-		$this->templater = new Templater ($setup);
-		$this->mail = $email;
+		$this->sendNotification = $sendNotification;
 
 		// Setup initial login data
 		$this->setupLogin ();
@@ -513,12 +513,6 @@ class WriteComments extends Secrets
 		}
 	}
 
-	// Converts a file name (1-2) to a permalink (hashover-c1r1)
-	protected function filePermalink ($file)
-	{
-		return 'hashover-c' . str_replace ('-', 'r', $file);
-	}
-
 	// Edits a comment
 	public function editComment ()
 	{
@@ -584,218 +578,16 @@ class WriteComments extends Secrets
 		return array ();
 	}
 
-	// Wordwraps text after adding indentation
-	protected function indentWordwrap ($text)
-	{
-		// Line ending styles to convert
-		$styles = array ("\r\n", "\r");
-
-		// Convert line endings to UNIX-style
-		$text = str_replace ($styles, "\n", $text);
-
-		// Wordwrap the text to 64 characters long
-		$text = wordwrap ($text, 64, "\n", true);
-
-		// Split the text by paragraphs
-		$paragraphs = explode ("\n\n", $text);
-
-		// Indent the first line of each paragraph
-		array_walk ($paragraphs, function (&$paragraph) {
-			$paragraph = '    ' . $paragraph;
-		});
-
-		// Indent all other lines of each paragraph
-		$paragraphs = str_replace ("\n", "\r\n    ", $paragraphs);
-
-		// Convert paragraphs back to a string
-		$text = implode ("\r\n\r\n", $paragraphs);
-
-		// And return indented text
-		return $text;
-	}
-
-	// Converts text paragraphs to HTML paragraph tags
-	protected function paragraphsTags ($text, $indention = '')
-	{
-		// Initial HTML paragraphs
-		$paragraphs = array ();
-
-		// Break comment into paragraphs
-		$ps = preg_split ('/(\r\n|\r|\n){2}/S', $text);
-
-		// Wrap each paragraph in <p> tags and place <br> tags after each line
-		for ($i = 0, $il = count ($ps); $i < $il; $i++) {
-			// Place <br> tags after each line
-			$paragraph = preg_replace ('/(\r\n|\r|\n)/S', '<br>\\1', $ps[$i]);
-
-			// Create <p> tag
-			$pTag = new HTMLTag ('p', $paragraph);
-
-			// Add paragraph to HTML
-			$paragraphs[] = $pTag->asHTML ($indention);
-		}
-
-		// Convert paragraphs array to string
-		$html = implode ("\r\n\r\n" . $indention, $paragraphs);
-
-		// And return paragraphs HTML
-		return $html;
-	}
-
-	// Sends a notification e-mail to another commenter
-	protected function sendNotifications ($file)
-	{
-		// Initial comment data
-		$data = array ();
-
-		// Shorthand
-		$default_name = $this->setup->defaultName;
-
-		// Commenter's name
-		$name = $this->name ?: $default_name;
-
-		// Get comment permalink
-		$permalink = $this->filePermalink ($file);
-
-		// "New Comment" locale string
-		$new_comment = $this->locale->text['new-comment'];
-
-		// E-mail hash for Gravatar or empty for default avatar
-		$hash = Misc::getArrayItem ($this->data, 'email_hash') ?: '';
-
-		// Add avatar to data
-		$data['avatar'] = $this->avatars->getGravatar ($hash, true, 128);
-
-		// Add name of commenter or configurable default name to data
-		$data['name'] = $name;
-
-		// Add domain name to data
-		$data['domain'] = $this->setup->website;
-
-		// Add plain text comment to data
-		$data['text-comment'] = $this->indentWordwrap ($this->data['body']);
-
-		// Add "From <name>" locale string to data
-		$data['from'] = sprintf ($this->locale->text['from'], $name);
-
-		// Add some locale strings to data
-		$data['comment'] = $this->locale->text['comment'];
-		$data['page'] = $this->locale->text['page'];
-		$data['new-comment'] = $new_comment;
-
-		// Add comment permalink to data
-		$data['permalink'] = $this->setup->pageURL . '#' . $permalink;
-
-		// Add page URL to data
-		$data['url'] = $this->setup->pageURL;
-
-		// Add page URL to data
-		$data['title'] = $this->setup->pageTitle;
-
-		// Add message about what website is sending the e-mail to data
-		$data['sent-by'] = sprintf ($this->locale->text['sent-by'], $this->setup->website);
-
-		// Attempt to read reply comment
-		$reply = $this->thread->data->read ($this->formData->replyTo);
-
-		// Check if the reply comment read successfully
-		if ($reply !== false) {
-			// If so, decide name of recipient
-			$reply_name = Misc::getArrayItem ($reply, 'name') ?: $default_name;
-
-			// Add reply name to data
-			$data['reply-name'] = $reply_name;
-
-			// Add "In reply to" locale string to data
-			$data['in-reply-to'] = sprintf ($this->locale->text['thread'], $reply_name);
-
-			// Add indented body of recipient's comment to data
-			$data['text-reply'] = $this->indentWordwrap ($reply['body']);
-
-			// And add HTML version of the reply comment to data
-			if ($this->setup->mailType !== 'text') {
-				$data['html-reply'] = $this->paragraphsTags ($reply['body'], "\t\t\t\t");
-			}
-		}
-
-		// Get and parse plain text e-mail notification
-		$text_body = $this->templater->parseTheme ('email-notification.txt', $data);
-
-		// Set subject to "New Comment - <domain here>"
-		$this->mail->subject ($new_comment . ' - ' . $this->setup->website);
-
-		// Set plain text version of the message
-		$this->mail->text ($text_body);
-
-		// Check if e-mail format is anything other than text
-		if ($this->setup->mailType !== 'text') {
-			// If so, add HTML version of the message to data
-			$data['html-comment'] = $this->paragraphsTags ($this->data['body'], "\t\t\t\t");
-
-			// Get and parse HTML e-mail notification
-			$html_body = $this->templater->parseTheme ('email-notification.html', $data);
-
-			// And set HTML version of the message if told to
-			$this->mail->html ($html_body);
-		}
-
-		// Only send admin notification if it's not admin posting
-		if ($this->email !== $this->notificationEmail) {
-			$this->mail->to($this->notificationEmail);
-			$this->mail->from($this->noreplyEmail);
-			$this->mail->send();
-		}
-
-		// Do nothing else if reply comment failed to read
-		if ($reply === false) {
-			return;
-		}
-
-		// Do nothing else if reply comment lacks e-mail and decrypt info
-		if (empty ($reply['email']) or empty ($reply['encryption'])) {
-			return;
-		}
-
-		// Do nothing else if reply comment poster disabled notifications
-		if (Misc::getArrayItem ($reply, 'notifications') === 'no') {
-			return;
-		}
-
-		// Otherwise, decrypt reply e-mail address
-		$reply_email = $this->crypto->decrypt ($reply['email'], $reply['encryption']);
-
-		// Check if reply e-mail is different than login's and admin's
-		if ($reply_email !== $this->email and $reply_email !== $this->notificationEmail) {
-			// If so, set message to be sent to reply comment e-mail
-			$this->mail->to ($reply_email);
-
-			// Check if users are allowed to reply by email
-			if ($this->setup->allowsUserReplies === true) {
-				// If so, set e-mail as coming from posting user
-				$this->mail->from ($this->email);
-			} else {
-				// If not, set e-mail as coming from noreply e-mail
-				$this->mail->from ($this->noreplyEmail);
-			}
-
-			// And actually send the message
-			$this->mail->send ();
-		}
-	}
-
-	// Writes a comment
 	protected function writeComment ($comment_file)
 	{
 		// Attempt to save comment
 		$saved = $this->thread->data->save ($comment_file, $this->data);
 
-		// Check if the comment was saved successfully
-		if ($saved === true) {
+		if ($saved) {
 			// If so, add it to latest comments metadata
 			$this->thread->data->addLatestComment ($comment_file);
 
-			// Send notification e-mails
-			$this->sendNotifications ($comment_file);
+			$this->sendNotification->send($comment_file, $this->data, $this->email, $this->notificationEmail, $this->noreplyEmail, $this->formData->replyTo,  $this->name);
 
 			// Set/update user login cookie
 			if ($this->setup->usesAutoLogin !== false) {

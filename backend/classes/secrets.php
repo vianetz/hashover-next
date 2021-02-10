@@ -86,4 +86,15 @@ class Secrets
 
 	// SMTP server password
 	protected $smtpPassword = 'password';
+
+	public function __construct()
+    {
+        $this->encryptionKey = $_ENV['ENCRYPTION_KEY'];
+        $this->notificationEmail = $_ENV['NOTIFICATION_EMAIL'];
+        $this->noreplyEmail = $_ENV['NOREPLY_EMAIL'];
+        $this->smtpHost = $_ENV['SMTP_HOST'];
+        $this->smtpPort = $_ENV['SMTP_PORT'];
+        $this->smtpUser = $_ENV['SMTP_USER'];
+        $this->smtpPassword = $_ENV['SMTP_PASSWORD'];
+    }
 }

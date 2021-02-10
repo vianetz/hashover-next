@@ -22,6 +22,8 @@ class SetupChecks extends Secrets
 {
 	public function __construct (Setup $setup)
 	{
+	    parent::__construct();
+
 		// Check if PHP version is too old
 		if (version_compare (PHP_VERSION, '5.3.3') < 0) {
 			// If so, split the PHP version by dashes

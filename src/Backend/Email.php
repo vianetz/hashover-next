@@ -39,17 +39,17 @@ final class Email
 
     public function to(string $email, string $name = null): void
     {
-        $this->message->addTo($email, $name);
+        $this->message->setTo($email, $name);
     }
 
     public function replyTo(string $email, string $name = null): void
     {
-        $this->message->addReplyTo($email, $name);
+        $this->message->setReplyTo($email, $name);
     }
 
     public function from(string $email, string $name = null): void
     {
-        $this->message->addFrom($email, $name);
+        $this->message->setFrom($email, $name);
     }
 
     public function subject(string $text): void
