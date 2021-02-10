@@ -23,6 +23,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../backend/standard-setup.php';
 
 use FastRoute\RouteCollector;
+use HashOver\Admin\Handler\LoginHandler;
+use HashOver\Admin\Handler\ModerationHandler;
 use HashOver\Admin\Handler\RedirectHandler;
 
 setup_autoloader();
@@ -30,6 +32,8 @@ setup_autoloader();
 $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteCollector $r): void {
     $r->addGroup('/admin', static function (RouteCollector $r): void {
         $r->addRoute('GET', '/', RedirectHandler::class);
+        $r->addRoute(['GET', 'POST'], '/login/', LoginHandler::class);
+        $r->addRoute('GET', '/moderation/', ModerationHandler::class);
     });
 });
 
@@ -41,7 +45,7 @@ $uri = $_SERVER['REQUEST_URI'];
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
-$uri = rawurldecode($uri);
+$uri = rtrim(rawurldecode($uri), '/') . '/';
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 switch ($routeInfo[0]) {

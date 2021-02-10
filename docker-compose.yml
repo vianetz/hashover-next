@@ -18,8 +18,8 @@ services:
       - php.xdebug.max_nesting_level=1000
       - PHP_SENDMAIL_PATH="/usr/local/bin/mhsendmail --smtp-addr="mailhog:1025""
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
+      - "8081:443"
     volumes:
       - ./:/app:rw,cached
 

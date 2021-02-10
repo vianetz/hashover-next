@@ -28,23 +28,22 @@ class Templater
 		$this->setup = $setup;
 	}
 
-	// Reads a file
-	public function loadFile ($file)
-	{
-		// Attempt to read template HTML file
-		$content = @file_get_contents ($file);
+    /**
+     * @throws \Exception
+     */
+    public function loadFile(string $file): string
+    {
+        // Attempt to read template HTML file
+        $content = @file_get_contents($file);
 
-		// Check if template file read successfully
-		if ($content !== false) {
-			// If so, return trimmed HTML template
-			return trim ($content);
-		} else {
-			// If not, throw exception
-			throw new \Exception (
-				'Failed to load template file.'
-			);
-		}
-	}
+        // Check if template file read successfully
+        if ($content !== false) {
+            // If so, return trimmed HTML template
+            return trim($content);
+        }
+
+        throw new \Exception('Failed to load template file "' . $file . '".');
+    }
 
 	// Parses file from any location
 	public function parseTemplate ($file, array $template = array ())
