@@ -21,7 +21,7 @@ namespace HashOver\Backend;
 
 use Psr\Log\LoggerInterface;
 
-final class Email
+final class EmailSender
 {
     private \Swift_Message $message;
     private LoggerInterface $logger;

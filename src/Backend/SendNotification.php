@@ -16,13 +16,13 @@ final class SendNotification
 {
     private Setup $setup;
     private Locale $locale;
-    private Email $emailSender;
+    private EmailSender $emailSender;
     private Crypto $crypto;
     private Avatars $avatars;
     private Templater $templater;
     private Thread $thread;
 
-    public function __construct(Email $emailSender, Setup $setup, Crypto $crypto, Avatars $avatars, Templater $templater, Thread $thread)
+    public function __construct(EmailSender $emailSender, Setup $setup, Crypto $crypto, Avatars $avatars, Templater $templater, Thread $thread)
     {
         $this->setup = $setup;
         $this->locale = new Locale($setup);

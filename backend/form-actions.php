@@ -115,7 +115,7 @@ try {
 	$hashover->initiate ();
 	$hashover->finalize ();
 
-    $email = new Backend\Email($logger, $_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
+    $email = new Backend\EmailSender($logger, $_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
     $sendNotification = new SendNotification(
         $email,
         $hashover->setup,
