@@ -71,9 +71,6 @@ function display_json(\HashOver $hashover, FormData $form_data, $data)
 try {
     $hashover = new \HashOver('json');
 
-    $dotenv = Dotenv::createImmutable(APP_DIR);
-    $dotenv->load();
-
     // Throw exception if requested by remote server
     $hashover->setup->refererCheck();
 

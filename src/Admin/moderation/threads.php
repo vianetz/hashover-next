@@ -20,22 +20,18 @@ declare(strict_types=1);
 namespace HashOver;
 
 try {
-    require __DIR__ . '/../../backend/standard-setup.php';
+    require_once __DIR__ . '/../../../backend/standard-setup.php';
+    require_once __DIR__ . '/../view-setup.php';
 
-    // Setup class autoloader
-    setup_autoloader();
+    // Template data
+    $template = array(
+        'title' => $hashover->locale->text['moderation'],
+        'back' => $hashover->locale->text['back']
+    );
 
-    // Instantiate HashOver class
-    $hashover = new \HashOver ();
+    // Load and parse HTML template
+    echo parse_templates('admin', 'threads.html', $template, $hashover);
 
-    // Check if user is admin
-    if ($hashover->login->isAdmin() === true) {
-        // If so, redirect to moderation page
-        header('Location: moderation/');
-    } else {
-        // If not, redirect to login page
-        header('Location: login/');
-    }
 } catch (\Exception $error) {
     echo Misc::displayException($error);
 }

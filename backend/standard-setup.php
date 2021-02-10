@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace HashOver;
 
 use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 
 ini_set('default_charset', 'UTF-8');
 
@@ -35,6 +36,9 @@ $containerBuilder->addDefinitions(__DIR__ . '/../config/container.php');
 $container = $containerBuilder->build();
 
 $container->get(\Monolog\Logger::class)->pushHandler($container->get(\Monolog\Handler\StreamHandler::class));
+
+$dotenv = Dotenv::createImmutable(APP_DIR);
+$dotenv->load();
 
 function setup_autoloader($method = 'echo')
 {

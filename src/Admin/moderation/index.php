@@ -58,9 +58,8 @@ function add_table_head (HTMLTag $table, $html)
 }
 
 try {
-	require __DIR__ .'/../../../backend/standard-setup.php';
-
-	require __DIR__ . '/../view-setup.php';
+	require_once __DIR__ . '/../../../backend/standard-setup.php';
+	require_once __DIR__ . '/../view-setup.php';
 
 	// Get current website
 	$current_website = $hashover->setup->website;

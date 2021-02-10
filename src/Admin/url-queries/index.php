@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,13 +17,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
 try {
-	// Do some standard HashOver setup work
-	require (realpath ('../../backend/standard-setup.php'));
-
-	// View setup
-	require (realpath ('../view-setup.php'));
+    require_once __DIR__ . '/../../../backend/standard-setup.php';
+    require_once __DIR__ . '/../view-setup.php';
 
 	// Default URL Query Pair array
 	$ignored_queries = array ();

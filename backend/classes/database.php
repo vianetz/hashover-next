@@ -45,6 +45,8 @@ class Database extends Secrets
 
 	public function __construct (Setup $setup)
 	{
+	    parent::__construct();
+
 		// Store parameters as properties
 		$this->setup = $setup;
 

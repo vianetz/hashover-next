@@ -24,70 +24,31 @@
 // you or your visitors, or to imply endorsement of some product(s),
 // service(s), and/or political ideology.
 
-
+/** @deprecated */
 class Secrets
 {
-	// REQUIRED SETUP INFORMATION
+    protected string $notificationEmail = 'example@example.com';
+    protected string $noreplyEmail = 'noreply@example.com';
+    protected string $encryptionKey = '8CharKey';
+    protected string $adminName = 'admin';
+    protected string  $adminPassword = 'passwd';
 
-	// Admin e-mail address to send notifications to
-	protected $notificationEmail = 'example@example.com';
+    protected string $databaseType = 'sqlite';
+    protected string $databaseName = 'hashover';
+    protected string $databaseHost = 'localhost';
+    protected string $databasePort = '3306';
+    protected string $databaseUser = 'root';
+    protected string $databasePassword = 'password';
+    protected string $databaseCharset = 'utf8';
 
-	// E-mail address to use in notifications to normal users
-	protected $noreplyEmail = 'noreply@example.com';
+    protected string $smtpHost = 'smtp.gmail.com';
+    protected int $smtpPort = 465;
+    protected string $smtpCrypto = 'ssl';
+    protected bool $smtpAuth = true;
+    protected string $smtpUser = 'user';
+    protected string $smtpPassword = 'password';
 
-	// Unique encryption key (case-sensitive)
-	protected $encryptionKey = '8CharKey';
-
-	// Login name to gain admin rights (case-sensitive)
-	protected $adminName = 'admin';
-
-	// Login password to gain admin rights (case-sensitive)
-	protected $adminPassword = 'passwd';
-
-	// OPTIONAL SQL INFORMATION
-
-	// Type of database, sqlite or mysql
-	protected $databaseType = 'sqlite';
-
-	// Database name
-	protected $databaseName = 'hashover';
-
-	// SQL database host name
-	protected $databaseHost = 'localhost';
-
-	// SQL database port number
-	protected $databasePort = '3306';
-
-	// SQL database login user
-	protected $databaseUser = 'root';
-
-	// SQL database login password
-	protected $databasePassword = 'password';
-
-	// SQL database character set
-	protected $databaseCharset = 'utf8';
-
-	// OPTIONAL SMTP MAILER SETUP
-
-	// SMTP server host name
-	protected $smtpHost = 'smtp.gmail.com';
-
-	// SMTP server port number
-	protected $smtpPort = 465;
-
-	// SMTP server encryption method
-	protected $smtpCrypto = 'ssl';
-
-	// SMTP server requires login authentication
-	protected $smtpAuth = true;
-
-	// SMTP server user
-	protected $smtpUser = 'user';
-
-	// SMTP server password
-	protected $smtpPassword = 'password';
-
-	public function __construct()
+    public function __construct()
     {
         $this->encryptionKey = $_ENV['ENCRYPTION_KEY'];
         $this->notificationEmail = $_ENV['NOTIFICATION_EMAIL'];
@@ -96,5 +57,7 @@ class Secrets
         $this->smtpPort = $_ENV['SMTP_PORT'];
         $this->smtpUser = $_ENV['SMTP_USER'];
         $this->smtpPassword = $_ENV['SMTP_PASSWORD'];
+        $this->adminName = $_ENV['ADMIN_NAME'];
+        $this->adminPassword = $_ENV['ADMIN_PASSWORD'];
     }
 }

@@ -30,6 +30,8 @@ class Crypto extends Secrets
 
 	public function __construct ()
 	{
+	    parent::__construct();
+
 		// Throw exception if encryption key isn't at least 8 characters long
 		if (mb_strlen ($this->encryptionKey, '8bit') < 8) {
 			throw new \Exception (
