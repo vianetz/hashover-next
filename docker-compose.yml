@@ -23,6 +23,14 @@ services:
     volumes:
       - ./:/app:rw,cached
 
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - "3306:3306"
+
   mailhog:
     image: mailhog/mailhog
     ports:

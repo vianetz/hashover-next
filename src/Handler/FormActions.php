@@ -55,23 +55,20 @@ final class FormActions extends Javascript
 
         $this->hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
 
-        // Set page URL from POST/GET data
         $this->hashover->setup->setPageURL($request);
-
-        // Set page title from POST/GET data
         $this->hashover->setup->setPageTitle('request');
-
-        // Set thread name from POST/GET data
         $this->hashover->setup->setThreadName('request');
 
         if ($this->requestHelper->hasPostOrGet($request, 'login')) {
             $this->hashover->login->setLogin();
-            $this->formData->displayMessage('logged-in');
+            $response->getBody()->write($this->formData->displayMessage('logged-in'));
+            return $response;
         }
 
         if ($this->requestHelper->hasPostOrGet($request, 'logout')) {
             $this->hashover->login->clearLogin();
-            $this->formData->displayMessage('logged-out');
+            $response->getBody()->write($this->formData->displayMessage('logged-out'));
+            return $response;
         }
 
         $this->hashover->initiate();

@@ -59,5 +59,11 @@ class Secrets
         $this->smtpPassword = $_ENV['SMTP_PASSWORD'];
         $this->adminName = $_ENV['ADMIN_NAME'];
         $this->adminPassword = $_ENV['ADMIN_PASSWORD'];
+        $this->databaseName = $_ENV['DB_NAME'];
+        $this->databaseHost = $_ENV['DB_HOST'];
+        $this->databasePort = $_ENV['DB_PORT'] ?? $this->databasePort;
+        $this->databaseUser = $_ENV['DB_USER'];
+        $this->databasePassword = $_ENV['DB_PASSWORD'];
+        $this->databaseType = $_ENV['DB_TYPE'];
     }
 }

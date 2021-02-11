@@ -221,12 +221,11 @@ final class Comments extends Javascript
         if ($this->hashover->setup->enableStatistics) {
             $this->hashover->statistics->executionEnd();
 
-            // HashOver statistics
-            $data['statistics'] = array(
+            $data['statistics'] = [
                 'execution-time' => $this->hashover->statistics->executionTime,
                 'script-memory' => $this->hashover->statistics->scriptMemory,
-                'system-memory' => $this->hashover->statistics->systemMemory
-            );
+                'system-memory' => $this->hashover->statistics->systemMemory,
+            ];
         }
 
         $response->getBody()->write(Misc::jsonData($data));

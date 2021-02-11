@@ -23,16 +23,14 @@ use HashOver\Setup;
 
 final class LoaderJs implements MinifiedJs
 {
-    private Setup $setup;
     private JavaScriptBuild $build;
     
-    public function __construct(JavaScriptBuild $build, Setup $setup)
+    public function __construct(JavaScriptBuild $build)
     {
         $this->build = $build;
-        $this->setup = $setup;
     }
     
-    public function generate(): string
+    public function generate(Setup $setup): string
     {
         $this->build->registerFile('loader-constructor.js');
         $this->build->registerFile('onready.js');
@@ -40,6 +38,6 @@ final class LoaderJs implements MinifiedJs
         $this->build->registerFile('rootpath.js');
         $this->build->registerFile('cfgqueries.js');
 
-        return $this->setup->minifiesJavascript ? $this->build->build() : $this->build->getJs();
+        return $setup->minifiesJavascript ? $this->build->build() : $this->build->getJs();
     }
 }

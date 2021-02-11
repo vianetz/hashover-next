@@ -23,19 +23,15 @@ use HashOver\Setup;
 
 final class CommentsJs implements MinifiedJs
 {
-    private Setup $setup;
     private JavaScriptBuild $build;
 
-    public function __construct(JavaScriptBuild $build, Setup $setup)
+    public function __construct(JavaScriptBuild $build)
     {
-        $this->setup = $setup;
         $this->build = $build;
     }
 
-    public function generate(): string
+    public function generate(Setup $setup): string
     {
-        $this->setup->loadFrontendSettings();
-
         $this->build->registerFile('constructor.js');
         $this->build->registerFile('onready.js');
         $this->build->registerFile('script.js');
@@ -57,11 +53,11 @@ final class CommentsJs implements MinifiedJs
         $this->build->registerFile('eoltrim.js');
         $this->build->registerFile('strings.js');
         $this->build->registerFile('permalinks.js');
-        $this->build->registerFile('addratings.js', ['include' => ($this->setup->allowsLikes || $this->setup->allowsDislikes)]);
+        $this->build->registerFile('addratings.js', ['include' => ($setup->allowsLikes || $setup->allowsDislikes)]);
         $this->build->registerFile('optionalmethod.js');
-        $this->build->registerFile('markdown.js', ['include' => $this->setup->usesMarkdown]);
+        $this->build->registerFile('markdown.js', ['include' => $setup->usesMarkdown]);
         $this->build->registerFile('embedimage.js', [
-            'include' => $this->setup->allowsImages,
+            'include' => $setup->allowsImages,
             'dependencies' => ['openembeddedimage.js'],
         ]);
         $this->build->registerFile('parsecomment.js');
@@ -75,22 +71,22 @@ final class CommentsJs implements MinifiedJs
             ],
         ]);
         $this->build->registerFile('appendcomments.js', [
-            'include' => $this->setup->usesAjax,
+            'include' => $setup->usesAjax,
             'dependencies' => ['htmlchildren.js'],
         ]);
         $this->build->registerFile('messages.js');
         $this->build->registerFile('ajaxpost.js', [
-            'include' => $this->setup->usesAjax,
+            'include' => $setup->usesAjax,
             'dependencies' => [
                 'addcomments.js',
                 'htmlchildren.js',
             ],
         ]);
         $this->build->registerFile('ajaxedit.js', [
-            'include' => $this->setup->usesAjax,
+            'include' => $setup->usesAjax,
             'dependencies' => ['htmlchildren.js'],
         ]);
-        $this->build->registerFile('postrequest.js', ['include' => $this->setup->usesAjax]);
+        $this->build->registerFile('postrequest.js', ['include' => $setup->usesAjax]);
         $this->build->registerFile('postcomment.js');
         $this->build->registerFile('permalinkfile.js');
         $this->build->registerFile('cancelswitcher.js');
@@ -100,18 +96,18 @@ final class CommentsJs implements MinifiedJs
         $this->build->registerFile('replytocomment.js');
         $this->build->registerFile('editcomment.js');
         $this->build->registerFile('likecomment.js', [
-            'include' => ($this->setup->allowsLikes || $this->setup->allowsDislikes),
+            'include' => ($setup->allowsLikes || $setup->allowsDislikes),
             'dependencies' => ['mouseoverchanger.js'],
         ]);
         $this->build->registerFile('addcontrols.js');
-        $this->build->registerFile('appendcss.js', ['include' => $this->setup->appendsCss]);
-        $this->build->registerFile('appendrss.js', ['include' => $this->setup->appendsRss]);
+        $this->build->registerFile('appendcss.js', ['include' => $setup->appendsCss]);
+        $this->build->registerFile('appendrss.js', ['include' => $setup->appendsRss]);
         $this->build->registerFile('showinterfacelink.js', [
-            'include' => $this->setup->collapsesInterface,
+            'include' => $setup->collapsesInterface,
             'dependencies' => ['showinterface.js'],
         ]);
         $this->build->registerFile('showmorelink.js', [
-            'include' => $this->setup->collapsesComments,
+            'include' => $setup->collapsesComments,
             'dependencies' => [
                 'showmorecomments.js',
                 'hidemorelink.js',
@@ -120,6 +116,6 @@ final class CommentsJs implements MinifiedJs
         $this->build->registerFile('init.js');
         $this->build->registerFile('instantiate.js', ['include' => ! isset($_GET['nodefault'])]);
 
-        return $this->setup->minifiesJavascript ? $this->build->build() : $this->build->getJs();
+        return $setup->minifiesJavascript ? $this->build->build() : $this->build->getJs();
     }
 }

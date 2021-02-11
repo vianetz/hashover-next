@@ -6,7 +6,7 @@ namespace HashOver\Build;
 use HashOver\Setup;
 use HashOver\Statistics;
 
-final class StatisticsDecorator
+final class StatisticsDecorator implements MinifiedJs
 {
     private MinifiedJs $js;
     private Setup $setup;
@@ -19,13 +19,13 @@ final class StatisticsDecorator
         $this->statistics = $statistics;
     }
 
-    public function generate(): string
+    public function generate(Setup $setup): string
     {
         if ($this->setup->enableStatistics) {
             $this->statistics->executionStart();
         }
 
-        $output = $this->js->generate();
+        $output = $this->js->generate($setup);
 
         if ($this->setup->enableStatistics) {
             $this->statistics->executionEnd();

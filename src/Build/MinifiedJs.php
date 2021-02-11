@@ -19,7 +19,9 @@ declare(strict_types=1);
 
 namespace HashOver\Build;
 
+use HashOver\Setup;
+
 interface MinifiedJs
 {
-    public function generate(): string;
+    public function generate(Setup $setup): string;
 }
