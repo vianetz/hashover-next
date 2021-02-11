@@ -19,21 +19,23 @@ declare(strict_types=1);
 
 namespace HashOver;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 if (isset($_GET['jsonp'])) {
     require __DIR__ . '/../../backend/javascript-setup.php';
 } else {
     require __DIR__ . '/../../backend/json-setup.php';
 }
 
+$container = require __DIR__ . '/../../config/container.php';
+
 try {
-	// Instantiate HashOver class
-	$hashover = new \HashOver ('json');
+    $hashover = $container->get(\HashOver::class);
+    $hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
 
-	// Throw exception if requested by remote server
-	$hashover->setup->refererCheck ();
+	$hashover->setup->refererCheck();
 
-	// Set page URL from POST/GET data
-	$hashover->setup->setPageURL ('request');
+	$hashover->setup->setPageURL($container->get(ServerRequestInterface::class));
 
 	// Set page title from POST/GET data
 	$hashover->setup->setPageTitle ('request');
