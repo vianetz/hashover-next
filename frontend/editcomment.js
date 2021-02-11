@@ -6,13 +6,8 @@ HashOver.prototype.editComment = function (comment, callback)
 		return false;
 	}
 
-	// Reference to this object
 	var hashover = this;
-
-	// Path to comment edit information backend script
-	var editInfo = HashOver.backendPath + '/comment-info.php';
-
-	// Get permalink from comment JSON object
+	var editInfo = HashOver.backendPath + '/comment-info';
 	var permalink = comment.permalink;
 
 	// Get file

@@ -90,35 +90,43 @@ final class FormActions extends Javascript
             $this->hashover->defaultMetadata();
 
             if (empty($data)) {
-                $this->formData->displayMessage('post-fail');
+                $response->getBody()->write($this->formData->displayMessage('post-fail'));
+            } else {
+                $response->getBody()->write($this->displayJson($data));
             }
 
-            $response->getBody()->write($this->displayJson($data));
             return $response;
         }
 
         if ($this->requestHelper->hasPostOrGet($request, 'edit')) {
-            // Check IP address for spam
             $this->formData->checkForSpam($mode);
 
             $data = $this->writeComments->editComment();
 
-            // Check if edited comment saved successfully
-            if (! empty($data)) {
-                echo $this->displayJson($data);
+            if (empty($data)) {
+                $response->getBody()->write($this->formData->displayMessage('post-fail'));
             } else {
-                $this->formData->displayMessage('post-fail');
+                $response->getBody()->write($this->displayJson($data));
             }
+
+            return $response;
         }
 
         if ($this->requestHelper->hasPostOrGet($request, 'delete')) {
-            // Check IP address for spam
             $this->formData->checkForSpam($mode);
 
             $deleted = $this->writeComments->deleteComment();
 
-            return $deleted ? $this->formData->displayMessage('comment-deleted') : $this->formData->displayMessage('post-fail');
+            if ($deleted) {
+                $response->getBody()->write($this->formData->displayMessage('comment-deleted'));
+            } else {
+                $response->getBody()->write($this->formData->displayMessage('post-fail'));
+            }
+
+            return $response;
         }
+
+        return $response;
     }
 
     /**

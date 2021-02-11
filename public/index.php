@@ -30,6 +30,7 @@ use HashOver\Admin\Handler\SettingsHandler;
 use HashOver\Admin\Handler\ThreadsHandler;
 use HashOver\Admin\Handler\UpdateHandler;
 use HashOver\Admin\Handler\UrlQueriesHandler;
+use HashOver\Handler\CommentInfo;
 use HashOver\Handler\Comments;
 use HashOver\Handler\FormActions;
 use HashOver\Handler\LoadComments;
@@ -56,6 +57,7 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
     $r->addGroup('/backend', static function (RouteCollector $r): void {
         $r->addRoute(['GET', 'POST'], '/form-actions', FormActions::class);
         $r->addRoute(['GET', 'POST'], '/load-comments', LoadComments::class);
+        $r->addRoute(['GET', 'POST'], '/comment-info', CommentInfo::class);
     });
 });
 
