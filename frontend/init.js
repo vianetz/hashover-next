@@ -250,10 +250,11 @@ HashOver.prototype.init = function (id)
 	// Execution end time
 	this.execTime = Math.abs (Date.now () - execStart - this.htmlTime);
 
-	// Log execution time in console
-	console.log (this.strings.sprintf (
-		'HashOver: front-end %d ms, HTML %d ms', [ this.execTime, this.htmlTime ]
-	));
+	if (hashover.setup['enable-statistics']) {
+		console.log(this.strings.sprintf(
+			'HashOver: front-end %d ms, HTML %d ms', [this.execTime, this.htmlTime]
+		));
+	}
 
 	// Page onload compatibility wrapper
 	if (window.addEventListener) {

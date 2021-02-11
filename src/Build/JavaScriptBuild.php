@@ -102,6 +102,8 @@ final class JavaScriptBuild
             $this->minifier->add($file);
         }
 
+        $this->files = [];
+
         return $this->minifier->minify();
     }
 
@@ -111,6 +113,8 @@ final class JavaScriptBuild
         foreach ($this->files as $file) {
             $files[] = $this->includeFile($file);
         }
+
+        $this->files = [];
 
         return implode(PHP_EOL . PHP_EOL, $files);
     }

@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace HashOver;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 if (isset($_GET['jsonp'])) {
@@ -111,14 +112,12 @@ function get_json_response ($hashover)
 }
 
 try {
-	// Instanciate HashOver class
-	$hashover = new \HashOver ('json');
+    $hashover = $container->get(\HashOver::class);
+    $hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
 
-	// Throw exception if requested by remote server
-	$hashover->setup->refererCheck ();
+	$hashover->setup->refererCheck();
 
-	// Set page URL from POST/GET data
-	$hashover->setup->setPageURL ('request');
+	$hashover->setup->setPageURL($container->get(ServerRequestInterface::class));
 
 	// Initiate comment processing
 	$hashover->initiate ();

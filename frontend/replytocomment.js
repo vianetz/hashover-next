@@ -14,7 +14,7 @@ HashOver.prototype.replyToComment = function (permalink)
 	var form = this.createElement ('form', {
 		id: this.prefix ('reply-' + permalink),
 		className: 'hashover-reply-form',
-		action: this.setup['http-backend'] + '/form-actions.php',
+		action: this.setup['http-backend'] + '/form-actions',
 		method: 'post'
 	});
 

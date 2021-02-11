@@ -30,7 +30,9 @@ use HashOver\Admin\Handler\SettingsHandler;
 use HashOver\Admin\Handler\ThreadsHandler;
 use HashOver\Admin\Handler\UpdateHandler;
 use HashOver\Admin\Handler\UrlQueriesHandler;
-use HashOver\Handler\CommentsHandler;
+use HashOver\Handler\Comments;
+use HashOver\Handler\FormActions;
+use HashOver\Handler\LoadComments;
 use Laminas\Diactoros\ServerRequestFactory;
 use Middlewares\FastRoute;
 use Middlewares\RequestHandler;
@@ -50,7 +52,11 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
         $r->addRoute(['GET', 'POST'], '/settings/', SettingsHandler::class);
         $r->addRoute(['GET', 'POST'], '/updates/', UpdateHandler::class);
     });
-    $r->addRoute('GET', '/comments', CommentsHandler::class);
+    $r->addRoute(['GET', 'POST'], '/comments', Comments::class);
+    $r->addGroup('/backend', static function (RouteCollector $r): void {
+        $r->addRoute(['GET', 'POST'], '/form-actions', FormActions::class);
+        $r->addRoute(['GET', 'POST'], '/load-comments', LoadComments::class);
+    });
 });
 
 $middlewareQueue = [];

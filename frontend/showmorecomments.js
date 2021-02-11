@@ -9,8 +9,7 @@ HashOver.prototype.loadAllComments = function (element, callback)
 		return callback ();
 	}
 
-	// Otherwise, set request path
-	var requestPath = this.setup['http-backend'] + '/load-comments.php';
+	var requestPath = this.setup['http-backend'] + '/load-comments';
 
 	// Set URL queries
 	var queries = this.queries.concat ([
@@ -32,13 +31,14 @@ HashOver.prototype.loadAllComments = function (element, callback)
 		// Replace initial comments
 		hashover.instance.comments.primary = json.primary;
 
-		// And log backend execution time and memory usage in console
-		console.log (hashover.strings.sprintf (
-			'HashOver: backend %d ms, %s', [
-				json.statistics['execution-time'],
-				json.statistics['script-memory']
-			]
-		));
+		if (json.statistics) {
+			console.log(hashover.strings.sprintf(
+				'HashOver: backend %d ms, %s', [
+					json.statistics['execution-time'],
+					json.statistics['script-memory']
+				]
+			));
+		}
 
 		// Execute callback
 		callback ();

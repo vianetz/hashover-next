@@ -19,19 +19,17 @@ declare(strict_types=1);
 
 namespace HashOver\Build;
 
-use HashOver\Settings;
-use HashOver\Statistics;
+use HashOver\Setup;
 
 final class LoaderJs implements MinifiedJs
 {
-    private Settings $settings;
-    private Statistics $statistics;
+    private Setup $setup;
     private JavaScriptBuild $build;
     
-    public function __construct(JavaScriptBuild $build, Settings $settings)
+    public function __construct(JavaScriptBuild $build, Setup $setup)
     {
         $this->build = $build;
-        $this->settings = $settings;
+        $this->setup = $setup;
     }
     
     public function generate(): string
@@ -42,11 +40,6 @@ final class LoaderJs implements MinifiedJs
         $this->build->registerFile('rootpath.js');
         $this->build->registerFile('cfgqueries.js');
 
-        $output = $this->build->build(
-            $this->settings->minifiesJavascript,
-            $this->settings->minifyLevel
-        );
-
-        return $output;
+        return $this->setup->minifiesJavascript ? $this->build->build() : $this->build->getJs();
     }
 }

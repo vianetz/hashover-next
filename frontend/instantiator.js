@@ -11,7 +11,7 @@ HashOver.instantiator = function (id, options, instance)
 	var instance = specific ? instance : HashOver.instanceCount;
 
 	// Backend request path
-	var requestPath = HashOver.backendPath + '/comments-ajax.php';
+	var requestPath = HashOver.rootPath + '/comments';
 
 	// Get backend queries
 	var backendQueries = HashOver.getBackendQueries (options, instance);
@@ -57,16 +57,15 @@ HashOver.instantiator = function (id, options, instance)
 		// Initial number of collapsed comments
 		hashover.instance.collapseLimit = 0;
 
-		// Backend execution time and memory usage statistics
-		hashover.statistics = json.statistics;
-
-		// And log backend execution time and memory usage in console
-		console.log (hashover.strings.sprintf (
-			'HashOver: backend %d ms, %s', [
-				json.statistics['execution-time'],
-				json.statistics['script-memory']
-			]
-		));
+		if (json.statistics) {
+			hashover.statistics = json.statistics;
+			console.log(hashover.strings.sprintf(
+				'HashOver: backend %d ms, %s', [
+					json.statistics['execution-time'],
+					json.statistics['script-memory']
+				]
+			));
+		}
 
 		// Initiate HashOver
 		hashover.init (id);

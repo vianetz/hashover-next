@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+use HashOver\Domain\Url;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Setup extends Settings
 {
@@ -54,10 +56,13 @@ class Setup extends Settings
 		'hashover-reply', 'hashover-edit'
 	);
 
-	public function __construct ()
+	private Url $url;
+
+	public function __construct(Url $url)
 	{
-		// Construct parent class
-		parent::__construct ();
+		parent::__construct();
+
+		$this->url = $url;
 
 		// Get connection scheme
 		$this->scheme = $this->isHTTPS () ? 'https' : 'http';
@@ -317,28 +322,6 @@ class Setup extends Settings
 		return $default;
 	}
 
-	// Gets current page URL
-	protected function getPageURL ()
-	{
-		// Attempt to obtain URL via POST or GET
-		$request = $this->getRequest ('url');
-
-		// Return URL from POST or GET if it exists
-		if ($request !== false) {
-			return $request;
-		}
-
-		// Otherwise, return HTTP referer if it exists
-		if (!empty ($_SERVER['HTTP_REFERER'])) {
-			return $_SERVER['HTTP_REFERER'];
-		}
-
-		// Otherwise, throw exception
-		throw new \Exception (
-			'Failed to obtain page URL.'
-		);
-	}
-
 	// Gets configured URL queries to be ignored
 	protected function getIgnoredQueries ()
 	{
@@ -467,85 +450,57 @@ class Setup extends Settings
 		$this->threadName = $name;
 	}
 
-	// Sets page URL
-	public function setPageURL ($url = 'request')
-	{
-		// Request page URL by default
-		if ($url === 'request') {
-			$url = $this->getPageURL ();
-		}
+    public function setPageURL(ServerRequestInterface $request): void
+    {
+        $uri = $this->url->getPageUrl($request);
 
-		// Strip HTML tags from page URL
-		$url = strip_tags (html_entity_decode ($url, false, 'UTF-8'));
+        $this->setWebsite($request->getUri()->getHost());
 
-		// Turn page URL into array
-		$parts = parse_url ($url);
+        // Check if URL has a path and is not the index
+        if (! empty($uri->getPath()) && $uri->getPath() !== '/') {
+            $this->filePath = $uri->getPath();
 
-		// Throw exception if URL doesn't have a scheme or host
-		if (empty ($parts['scheme']) or empty ($parts['host'])) {
-			throw new \Exception (
-				'URL needs a hostname and scheme.'
-			);
-		}
+            // And set thread name as path without slash
+            $thread_name = mb_substr($uri->getPath(), 1);
+        } else {
+            $this->filePath = '/';
+            $thread_name = 'index';
+        }
 
-		// Set various paths to be website-specific
-		$this->setWebsite ($parts['host']);
+        if (! empty($uri->getQuery())) {
+            // If so, filter queries in page URL
+            $this->filterURLQueries($uri->getQuery());
 
-		// Check if URL has a path and is not the index
-		if (!empty ($parts['path']) and $parts['path'] !== '/') {
-			// If so, set file path property
-			$this->filePath = $parts['path'];
+            // Store a string version of page URL queries
+            $this->urlQueries = implode('&', $this->urlQueryList);
 
-			// And set thread name as path without slash
-			$thread_name = mb_substr ($parts['path'], 1);
-		} else {
-			// If not, set file path as a single slash
-			$this->filePath = '/';
+            // Store a string version of thread name URL queries
+            $this->threadQueries = implode('&', $this->threadQueryList);
 
-			// And set thread name as index
-			$thread_name = 'index';
-		}
+            // And add queries to thread name
+            $thread_name .= '-' . $this->threadQueries;
+        }
 
-		// Check if URL has queries
-		if (!empty ($parts['query'])) {
-			// If so, filter queries in page URL
-			$this->filterURLQueries ($parts['query']);
+        $url = $uri->getScheme() . '://' . $uri->getHost();
 
-			// Store a string version of page URL queries
-			$this->urlQueries = implode ('&', $this->urlQueryList);
+        if (! empty($uri->getPort())) {
+            $url .= ':' . $uri->getPort();
+        }
 
-			// Store a string version of thread name URL queries
-			$this->threadQueries = implode ('&', $this->threadQueryList);
+        // Add file path to URL
+        $url .= $this->filePath;
 
-			// And add queries to thread name
-			$thread_name .= '-' . $this->threadQueries;
-		}
+        // Add optional queries to URL
+        if (!empty ($this->urlQueries)) {
+            $url .= '?' . $this->urlQueries;
+        }
 
-		// Encode HTML characters in page URL
-		$url = htmlspecialchars ($url, false, 'UTF-8', false);
+        // Set thread directory name to page URL
+        $this->setThreadName($thread_name);
 
-		// Final URL scheme and host
-		$url = $parts['scheme'] . '://' . $parts['host'];
-
-		// Add optional port to URL
-		if (!empty ($parts['port'])) {
-			$url .= ':' . $parts['port'];
-		}
-
-		// Add file path to URL
-		$url .= $this->filePath;
-
-		// Add optional queries to URL
-		if (!empty ($this->urlQueries)) {
-			$url .= '?' . $this->urlQueries;
-		}
-
-		// Set thread directory name to page URL
-		$this->setThreadName ($thread_name);
-
-		// And set page URL property
-		$this->pageURL = $url;
-	}
+        // And set page URL property
+        $this->pageURL = $url;
+    }
 
 	// Sets page title
 	public function setPageTitle ($title = 'request')

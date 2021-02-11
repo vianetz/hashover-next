@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
+use HashOver\Backend\EmailSender;
 use HashOver\Build\JavaScriptBuild;
 
 $definitions = [
@@ -21,6 +22,10 @@ $definitions = [
         return new \HashOver\Build\StatisticsDecorator($c->get(\HashOver\Statistics::class), $previous, $c->get(\HashOver\Setup::class));
     }),
     \Psr\Http\Message\ResponseInterface::class => \DI\create(\Laminas\Diactoros\Response::class),
+    \Psr\Http\Message\ServerRequestInterface::class => \DI\create(\Laminas\Diactoros\ServerRequest::class),
+    \HashOver\Backend\EmailSender::class => static function (\Psr\Container\ContainerInterface $c) {
+        return new EmailSender($c->get(\Psr\Log\LoggerInterface::class), (string)\DI\env('SMTP_HOST'), (int)\DI\env('SMTP_HOST'), (string)\DI\env('SMTP_USER'), (string)\DI\env('SMTP_PASSWORD'));
+    },
 ];
 
 $containerBuilder = new ContainerBuilder();

@@ -58,7 +58,7 @@ HashOver.prototype.editComment = function (comment, callback)
 		var form = hashover.createElement ('form', {
 			id: hashover.prefix ('edit-' + permalink),
 			className: 'hashover-edit-form',
-			action: hashover.setup['http-backend'] + '/form-actions.php',
+			action: hashover.setup['http-backend'] + '/form-actions',
 			method: 'post'
 		});
 

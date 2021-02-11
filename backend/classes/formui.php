@@ -656,7 +656,7 @@ class FormUI
 			'id' => $this->prefix ('form', false),
 			'class' => 'hashover-form hashover-balloon',
 			'name' => 'hashover-form',
-			'action' => $this->setup->getBackendPath ('form-actions.php'),
+			'action' => $this->setup->getBackendPath ('form-actions'),
 			'method' => 'post',
             'onSubmit' => "hashover.postComment(this, document.getElementById('hashover-post-button'), ''); return false;"
 		));

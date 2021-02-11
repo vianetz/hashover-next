@@ -79,7 +79,7 @@ class PHPMode
 				'id' => $this->ui->prefix ('reply-' . $permalink),
 				'class' => 'hashover-reply-form',
 				'method' => 'post',
-				'action' => $this->setup->getBackendPath ('form-actions.php')
+				'action' => $this->setup->getBackendPath ('form-actions')
 			));
 
 			$form->innerHTML ($this->ui->replyForm ($permalink, $this->setup->pageURL, $this->setup->threadName, $this->setup->pageTitle, $file));
@@ -119,7 +119,7 @@ class PHPMode
 				'id' => $this->ui->prefix ('edit-' . $permalink),
 				'class' => 'hashover-edit-form',
 				'method' => 'post',
-				'action' => $this->setup->getBackendPath ('form-actions.php')
+				'action' => $this->setup->getBackendPath ('form-actions')
 			), false);
 
 			$edit_form = $this->ui->editForm ($permalink, $this->setup->pageURL, $this->setup->threadName, $this->setup->pageTitle, $file, $name, $email, $website, $body, $status, $subscribed);

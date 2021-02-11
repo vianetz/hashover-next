@@ -16,11 +16,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-
-class HashOver
+final class HashOver
 {
+    public const HASHOVER_MODE_JSON = 'json';
+    public const HASHOVER_MODE_PHP = 'php';
+
 	protected $mode;
-	protected $setupChecks;
+	protected \HashOver\SetupChecks $setupChecks;
 	protected $sortComments;
 	protected $popularList = array ();
 	protected $popularCount = 0;
@@ -28,8 +30,8 @@ class HashOver
 	protected $commentCount;
 	protected $collapseCount = 0;
 
-	public $statistics;
-	public $setup;
+	public \HashOver\Statistics $statistics;
+	public \HashOver\Setup $setup;
 	public $login;
 	public $cookies;
 	public $thread;
@@ -40,35 +42,34 @@ class HashOver
 	public $comments = array ();
 	public $ui;
 
-	public function __construct ($mode = 'php')
-	{
-		// Store output mode (javascript or php)
-		$this->mode = $mode;
+    public function __construct(
+        \HashOver\Statistics $statistics,
+        \HashOver\Setup $setup,
+        \HashOver\SetupChecks $setupChecks,
+        \HashOver\Login $login,
+        \HashOver\Cookies $cookies,
+        \HashOver\Thread $thread,
+        \HashOver\Templater $templater,
+        string $mode = self::HASHOVER_MODE_PHP
+    ) {
+        // Store output mode (javascript or php)
+        $this->mode = $mode;
 
-		// Instantiate statistics class
-		$this->statistics = new HashOver\Statistics ();
+        $this->statistics = $statistics;
+        $this->statistics->executionStart();
 
-		// Start execution time
-		$this->statistics->executionStart ();
+        $this->setup = $setup;
+        $this->setupChecks = $setupChecks;
+        $this->login = $login;
+        $this->cookies = $cookies;
+        $this->thread = $thread;
+        $this->templater = $templater;
+    }
 
-		// Instantiate general setup class
-		$this->setup = new HashOver\Setup ();
-
-		//Instantiate setup checks class
-		$this->setupChecks = new HashOver\SetupChecks ($this->setup);
-
-		// Instantiate login class
-		$this->login = new HashOver\Login ($this->setup);
-
-		// Instantiate cookies class
-		$this->cookies = new HashOver\Cookies ($this->setup, $this->login);
-
-		// Instantiate class for reading comments
-		$this->thread = new HashOver\Thread ($this->setup);
-
-		// Instantiate comment theme templater class
-		$this->templater = new HashOver\Templater ($this->setup);
-	}
+    public function setMode(string $mode): void
+    {
+        $this->mode = $mode;
+    }
 
 	// Returns a localized comment count
 	public function getCommentCount ($plural = 'showing-comments', $singular = 'showing-comment')

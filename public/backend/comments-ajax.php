@@ -19,6 +19,8 @@ declare(strict_types=1);
 
 namespace HashOver;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 if (isset($_GET['jsonp'])) {
     require __DIR__ . '/../../backend/javascript-setup.php';
 } else {
@@ -28,12 +30,13 @@ if (isset($_GET['jsonp'])) {
 $container = require __DIR__ . '/../../config/container.php';
 
 try {
-    $hashover = new \HashOver ('json');
+    $hashover = $container->get(\HashOver::class);
+    $hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
 
     // Throw exception if requested by remote server
     $hashover->setup->refererCheck();
 
-    $hashover->setup->setPageURL('request');
+    $hashover->setup->setPageURL($container->get(ServerRequestInterface::class));
     $hashover->setup->setPageTitle('request');
     $hashover->setup->setThreadName('request');
     $hashover->setup->setWebsite('request');

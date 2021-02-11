@@ -167,8 +167,7 @@ class FormData
 			return $this->kickback ('hashover-form-section');
 		}
 
-		// Otherwise, display JSON for JavaScript frontend
-		echo Misc::jsonData (array (
+		return Misc::jsonData (array (
 			'message' => $locale,
 			'type' => $message_type
 		));

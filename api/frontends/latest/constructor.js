@@ -77,8 +77,9 @@ function HashOverLatest (options)
 		// Thread information from HashOver back-end
 		hashover.instance = json.instance;
 
-		// Backend execution time and memory usage statistics
-		hashover.statistics = json.statistics;
+		if (json.statistics) {
+			hashover.statistics = json.statistics;
+		}
 
 		// Initiate HashOver latest comments
 		hashover.init ();

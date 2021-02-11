@@ -33,7 +33,9 @@
             "HashOver\\Admin\\": "src/Admin",
             "HashOver\\Backend\\": "src/Backend",
             "HashOver\\Build\\": "src/Build",
-            "HashOver\\Handler\\": "src/Handler"
+            "HashOver\\Domain\\": "src/Domain",
+            "HashOver\\Handler\\": "src/Handler",
+            "HashOver\\Helper\\": "src/Helper"
         }
     },
     "scripts": {
