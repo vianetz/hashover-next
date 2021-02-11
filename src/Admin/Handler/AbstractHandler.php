@@ -20,20 +20,19 @@ declare(strict_types=1);
 namespace HashOver\Admin\Handler;
 
 use HashOver\DataFiles;
-use HashOver\Handler\HandlerInterface;
 use HashOver\Locale;
 
-abstract class AbstractHandler implements HandlerInterface
+abstract class AbstractHandler
 {
     protected \HashOver $hashover;
     protected DataFiles $dataFiles;
 
-    public function __construct()
+    public function __construct(\HashOver $hashover, Locale $locale, DataFiles $dataFiles)
     {
-        $this->hashover = new \HashOver();
+        $this->hashover = $hashover;
         $this->hashover->setup->setsCookies = true;
-        $this->hashover->locale = new Locale($this->hashover->setup);
-        $this->dataFiles = new DataFiles($this->hashover->setup);
+        $this->hashover->locale = $locale;
+        $this->dataFiles = $dataFiles;
 
         $this->checkAllowed();
     }

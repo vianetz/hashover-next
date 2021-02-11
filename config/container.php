@@ -17,9 +17,10 @@ $definitions = [
     \HashOver\Build\CommentsJs::class => DI\decorate(static function ($previous, \Psr\Container\ContainerInterface $c) {
         return new \HashOver\Build\StatisticsDecorator($c->get(\HashOver\Statistics::class), $previous, $c->get(\HashOver\Setup::class));
     }),
-    \HashOver\Handler\LoaderJs::class => DI\decorate(static function ($previous, \Psr\Container\ContainerInterface $c) {
-        return new \HashOver\Build\StatisticsDecorator($previous, $c->get(\HashOver\Handler\LoaderJs::class));
+    \HashOver\Build\LoaderJs::class => DI\decorate(static function ($previous, \Psr\Container\ContainerInterface $c) {
+        return new \HashOver\Build\StatisticsDecorator($c->get(\HashOver\Statistics::class), $previous, $c->get(\HashOver\Setup::class));
     }),
+    \Psr\Http\Message\ResponseInterface::class => \DI\create(\Laminas\Diactoros\Response::class),
 ];
 
 $containerBuilder = new ContainerBuilder();

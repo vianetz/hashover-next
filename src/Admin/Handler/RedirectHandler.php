@@ -3,18 +3,28 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
-use HashOver\Handler\HandlerInterface;
+use HashOver;
+use Psr\Http\Message\ResponseInterface;
 
-final class RedirectHandler implements HandlerInterface
+final class RedirectHandler
 {
-    public function run(): void
-    {
-        $hashover = new \HashOver();
+    private HashOver $hashover;
+    private ResponseInterface $response;
 
-        if ($hashover->login->isAdmin()) {
-            header('Location: /admin/moderation/');
+    public function __construct(HashOver $hashover, ResponseInterface $response)
+    {
+        $this->hashover = $hashover;
+        $this->response = $response;
+    }
+
+    public function __invoke(): ResponseInterface
+    {
+        if ($this->hashover->login->isAdmin()) {
+            $response = $this->response->withHeader('Location', '/admin/moderation/');
         } else {
-            header('Location: /admin/login/');
+            $response = $this->response->withHeader('Location', '/admin/login/');
         }
+
+        return $response;
     }
 }

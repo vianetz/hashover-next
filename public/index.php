@@ -30,47 +30,35 @@ use HashOver\Admin\Handler\SettingsHandler;
 use HashOver\Admin\Handler\ThreadsHandler;
 use HashOver\Admin\Handler\UpdateHandler;
 use HashOver\Admin\Handler\UrlQueriesHandler;
+use HashOver\Handler\CommentsHandler;
+use Laminas\Diactoros\ServerRequestFactory;
+use Middlewares\FastRoute;
+use Middlewares\RequestHandler;
+use Narrowspark\HttpEmitter\SapiEmitter;
+use Relay\Relay;
 
-setup_autoloader();
+$container = require __DIR__ . '/../config/container.php';
 
 $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteCollector $r): void {
     $r->addGroup('/admin', static function (RouteCollector $r): void {
-        $r->addRoute('GET', '', RedirectHandler::class);
-        $r->addRoute(['GET', 'POST'], '/login', LoginHandler::class);
-        $r->addRoute('GET', '/moderation', ModerationHandler::class);
-        $r->addRoute('GET', '/moderation/threads', ThreadsHandler::class);
-        $r->addRoute(['GET', 'POST'], '/blocklist', BlocklistHandler::class);
-        $r->addRoute(['GET', 'POST'], '/url-queries', UrlQueriesHandler::class);
-        $r->addRoute(['GET', 'POST'], '/settings', SettingsHandler::class);
-        $r->addRoute(['GET', 'POST'], '/updates', UpdateHandler::class);
+        $r->addRoute('GET', '/', RedirectHandler::class);
+        $r->addRoute(['GET', 'POST'], '/login/', LoginHandler::class);
+        $r->addRoute('GET', '/moderation/', ModerationHandler::class);
+        $r->addRoute('GET', '/moderation/threads/', ThreadsHandler::class);
+        $r->addRoute(['GET', 'POST'], '/blocklist/', BlocklistHandler::class);
+        $r->addRoute(['GET', 'POST'], '/url-queries/', UrlQueriesHandler::class);
+        $r->addRoute(['GET', 'POST'], '/settings/', SettingsHandler::class);
+        $r->addRoute(['GET', 'POST'], '/updates/', UpdateHandler::class);
     });
+    $r->addRoute('GET', '/comments', CommentsHandler::class);
 });
 
-// Fetch method and URI from somewhere
-$httpMethod = $_SERVER['REQUEST_METHOD'];
-$uri = $_SERVER['REQUEST_URI'];
+$middlewareQueue = [];
+$middlewareQueue[] = new FastRoute($dispatcher);
+$middlewareQueue[] = new RequestHandler($container);
 
-// Strip query string (?foo=bar) and decode URI
-if (false !== $pos = strpos($uri, '?')) {
-    $uri = substr($uri, 0, $pos);
-}
-$uri = rtrim(rawurldecode($uri), '/');
+$requestHandler = new Relay($middlewareQueue);
+$response = $requestHandler->handle(ServerRequestFactory::fromGlobals());
 
-$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
-switch ($routeInfo[0]) {
-    case \FastRoute\Dispatcher::NOT_FOUND:
-        // ... 404 Not Found
-        break;
-    case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-        $allowedMethods = $routeInfo[1];
-        // ... 405 Method Not Allowed
-        break;
-    case \FastRoute\Dispatcher::FOUND:
-        /** @var \HashOver\Handler\HandlerInterface $handler */
-        $handler = $container->get($routeInfo[1]);
-        $vars = $routeInfo[2];
-
-        $handler->run();
-
-        break;
-}
+$emitter = new SapiEmitter();
+$emitter->emit($response);

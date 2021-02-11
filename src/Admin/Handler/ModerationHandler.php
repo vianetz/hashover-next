@@ -59,7 +59,7 @@ final class ModerationHandler extends AbstractHandler
         $table->appendChild($thead);
     }
 
-    public function run(): void
+    public function __invoke(): void
     {
         // Get current website
         $current_website = $this->hashover->setup->website;

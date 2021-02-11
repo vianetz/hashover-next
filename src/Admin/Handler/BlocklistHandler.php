@@ -24,7 +24,7 @@ use HashOver\Misc;
 
 final class BlocklistHandler extends AbstractHandler
 {
-    public function run(): void
+    public function __invoke(): void
     {
         $blocklist = array();
 

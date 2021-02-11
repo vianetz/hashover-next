@@ -5,5 +5,4 @@ namespace HashOver\Handler;
 
 interface HandlerInterface
 {
-    public function run(): void;
 }

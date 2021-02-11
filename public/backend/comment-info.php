@@ -19,11 +19,15 @@ declare(strict_types=1);
 
 namespace HashOver;
 
+use Psr\Log\LoggerInterface;
+
 if (isset($_GET['jsonp'])) {
     require __DIR__ . '/../../backend/javascript-setup.php';
 } else {
     require __DIR__ . '/../../backend/json-setup.php';
 }
+
+$container = require __DIR__ . '/../../config/container.php';
 
 // Returns comment data or authentication error
 function get_json_response ($hashover)
@@ -127,7 +131,7 @@ try {
 
 } catch (\Throwable $error) {
     /** @var \Psr\Log\LoggerInterface $logger */
-    $logger = $container->get(\Monolog\Logger::class);
+    $logger = $container->get(LoggerInterface::class);
     $logger->error($error->getMessage() . ', ' . $error->getTraceAsString());
     echo Misc::displayError('An error occured.', 'json');
 }

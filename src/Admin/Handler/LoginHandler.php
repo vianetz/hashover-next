@@ -21,7 +21,7 @@ namespace HashOver\Admin\Handler;
 
 final class LoginHandler extends AbstractHandler
 {
-    public function run(): void
+    public function __invoke(): void
     {
         // Check if the user submitted login information
         if (!empty ($_POST['name']) and !empty ($_POST['password'])) {

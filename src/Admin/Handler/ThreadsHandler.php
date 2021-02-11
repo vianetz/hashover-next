@@ -21,7 +21,7 @@ namespace HashOver\Admin\Handler;
 
 final class ThreadsHandler extends AbstractHandler
 {
-    public function run(): void
+    public function __invoke(): void
     {
         $template = [
             'title' => $this->hashover->locale->text['moderation'],

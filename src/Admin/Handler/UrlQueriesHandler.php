@@ -24,7 +24,7 @@ use HashOver\Misc;
 
 final class UrlQueriesHandler extends AbstractHandler
 {
-    public function run(): void
+    public function __invoke(): void
     {
         // Default URL Query Pair array
         $ignored_queries = array();

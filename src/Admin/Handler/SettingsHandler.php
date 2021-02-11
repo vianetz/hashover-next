@@ -654,7 +654,7 @@ final class SettingsHandler extends AbstractHandler
         return $paragraph;
     }
 
-    public function run(): void
+    public function __invoke(): void
     {
         // Get array of UI elements to create
         $ui = $this->ui_array($this->hashover->setup, $this->hashover->locale);

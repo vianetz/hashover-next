@@ -20,7 +20,7 @@ declare(strict_types=1);
 namespace HashOver;
 
 use HashOver\Backend\SendNotification;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 if (isset($_GET['jsonp'])) {
     require __DIR__ . '/../../backend/javascript-setup.php';
@@ -108,7 +108,7 @@ try {
     $hashover->initiate();
     $hashover->finalize();
 
-    $email = new Backend\EmailSender($container->get(Logger::class), $_ENV['SMTP_HOST'], (int)$_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
+    $email = new Backend\EmailSender($container->get(LoggerInterface::class), $_ENV['SMTP_HOST'], (int)$_ENV['SMTP_PORT'], $_ENV['SMTP_USER'], $_ENV['SMTP_PASSWORD']);
     $sendNotification = new SendNotification(
         $email,
         $hashover->setup,
@@ -187,7 +187,7 @@ try {
     }
 } catch (\Throwable $error) {
     /** @var \Psr\Log\LoggerInterface $logger */
-    $logger = $container->get(\Monolog\Logger::class);
+    $logger = $container->get(LoggerInterface::class);
     $logger->error($error->getMessage() . ', ' . $error->getTraceAsString());
     echo Misc::displayError('An error occured.', 'json');
 }
