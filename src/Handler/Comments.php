@@ -44,9 +44,6 @@ final class Comments extends Javascript
         $response = $this->setContentType($request, $response);
 
         $this->hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
-
-        // Throw exception if requested by remote server
-        $this->hashover->setup->refererCheck();
     
         $this->hashover->setup->setPageURL($request);
         $this->hashover->setup->setPageTitle('request');

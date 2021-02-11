@@ -55,9 +55,6 @@ final class FormActions extends Javascript
 
         $this->hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
 
-        // Throw exception if requested by remote server
-        $this->hashover->setup->refererCheck();
-
         // Set page URL from POST/GET data
         $this->hashover->setup->setPageURL($request);
 

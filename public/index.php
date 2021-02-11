@@ -34,6 +34,7 @@ use HashOver\Handler\CommentInfo;
 use HashOver\Handler\Comments;
 use HashOver\Handler\FormActions;
 use HashOver\Handler\LoadComments;
+use HashOver\Handler\Referrer;
 use Laminas\Diactoros\ServerRequestFactory;
 use Middlewares\FastRoute;
 use Middlewares\RequestHandler;
@@ -63,6 +64,7 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
 
 $middlewareQueue = [];
 $middlewareQueue[] = new FastRoute($dispatcher);
+$middlewareQueue[] = new Referrer($container->get(Setup::class));
 $middlewareQueue[] = new RequestHandler($container);
 
 $requestHandler = new Relay($middlewareQueue);

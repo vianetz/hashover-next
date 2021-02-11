@@ -193,22 +193,6 @@ class Setup extends Settings
 		$this->website = $host;
 	}
 
-	// Gets a domain with a port from given URL
-	protected function getDomainWithPort ($url = '')
-	{
-		$url = parse_url ($url);
-
-		// Throw exception if URL or host is empty
-		if ($url === false or empty ($url['host'])) {
-			throw new \Exception (
-				'Failed to obtain domain name.'
-			);
-		}
-
-		// Otherwise, return domain without port
-		return $url['host'] . (!empty($url['port']) ? ':' . $url['port'] : '');
-	}
-
 	// Enables and sets up remote access
 	public function setupRemoteAccess ()
 	{
@@ -222,57 +206,6 @@ class Setup extends Settings
 		$this->syncSettings ();
 	}
 
-	/**
-     * Checks remote request against allowed domains setting
-     */
-	public function refererCheck()
-	{
-		if (empty($_SERVER['HTTP_REFERER'])) {
-		    $this->setupRemoteAccess();
-			return true;
-		}
-
-		// Otherwise, get HTTP referer domain with port
-		$domain = $this->getDomainWithPort ($_SERVER['HTTP_REFERER']);
-
-		// Return true if referer domain is the same server
-		if ($domain === $this->domain) {
-			return true;
-		}
-
-		// Otherwise, escape wildcard for regular expression
-		$sub_regex = '/^' . preg_quote ('\*\.') . '/S';
-
-		// Run through allowed domains
-		foreach ($this->allowedDomains as $allowed_domain) {
-			// Escape allowed domain for regular expression
-			$safe_domain = preg_quote ($allowed_domain);
-
-			// Replace subdomain wildcard with proper regular expression
-			$domain_regex = preg_replace ($sub_regex, '(?:.*?\.)*', $safe_domain);
-
-			// Final domain regular expression
-			$domain_regex = '/^' . $domain_regex . '$/iS';
-
-			// Check if script was requested from an allowed domain
-			if (preg_match ($domain_regex, $domain)) {
-				$this->setupRemoteAccess ();
-
-				$referer = parse_url($_SERVER['HTTP_REFERER']);
-				$refererDomain = $referer['scheme'] . '://' . $referer['host'] . (!empty($referer['port']) ? ':' . $referer['port'] : '');
-
-				header ('Access-Control-Allow-Origin: ' . $refererDomain);
-				header ('Access-Control-Allow-Credentials: true');
-
-				return true;
-			}
-		}
-
-		// Otherwise, throw exception
-		throw new \Exception (
-			'External use not allowed.'
-		);
-	}
 
 	// Strips magic quote escape slashes from string if present
 	public function stripMagicQuotes ($data)

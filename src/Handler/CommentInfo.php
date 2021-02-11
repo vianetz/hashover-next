@@ -44,8 +44,6 @@ final class CommentInfo extends Javascript
 
         $this->hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
 
-        $this->hashover->setup->refererCheck();
-
         $this->hashover->setup->setPageURL($request);
         $this->hashover->initiate();
         $data = $this->getJsonResponse();
