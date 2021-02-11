@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2017-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,9 +17,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
-// Do some standard HashOver setup work
-require ('standard-setup.php');
-
-// Setup class autoloader
-setup_autoloader ();
+require __DIR__ . '/../src/autoload.php';

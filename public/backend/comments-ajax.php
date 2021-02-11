@@ -25,6 +25,8 @@ if (isset($_GET['jsonp'])) {
     require __DIR__ . '/../../backend/json-setup.php';
 }
 
+$container = require __DIR__ . '/../../config/container.php';
+
 try {
     $hashover = new \HashOver ('json');
 
@@ -217,6 +219,6 @@ try {
     echo Misc::jsonData($data);
 } catch (\Throwable $error) {
     /** @var \Psr\Log\LoggerInterface $logger */
-    $logger = $container->get(\Monolog\Logger::class);
+    $logger = $container->get(\Psr\Log\LoggerInterface::class);
     $logger->error($error->getMessage());
 }

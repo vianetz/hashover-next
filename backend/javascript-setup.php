@@ -22,13 +22,4 @@ namespace HashOver;
 header('Content-Type: application/javascript');
 
 require __DIR__ . '/nocache-headers.php';
-require __DIR__ . '/standard-setup.php';
-
-setup_autoloader(static function($error) {
-    $js_error = 'var hashover = document.getElementById (\'hashover\') || document.body;' . PHP_EOL;
-    $js_error .= 'var error = \'<p><b>HashOver</b>: ' . $error . '</p>\';' . PHP_EOL . PHP_EOL;
-    $js_error .= 'hashover.innerHTML += error;';
-
-    // Display JavaScript code
-    echo $js_error;
-});
+require __DIR__ . '/../src/autoload.php';

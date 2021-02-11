@@ -27,9 +27,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 \define('APP_DIR', __DIR__ . '/../');
 
-function setup_autoloader($method = 'echo')
+function setup_autoloader()
 {
-    // Register a class autoloader
     spl_autoload_register(function ($uri) {
         $uri = strtolower($uri);
 
@@ -38,7 +37,7 @@ function setup_autoloader($method = 'echo')
 
         $file = basename($uri) . '.php';
 
-        @include __DIR__ . '/classes/' . $file;
+        @include APP_DIR . '/backend/classes/' . $file;
     });
 }
 

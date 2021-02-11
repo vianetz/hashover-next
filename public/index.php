@@ -19,8 +19,7 @@ declare(strict_types=1);
 
 namespace HashOver;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../backend/standard-setup.php';
+require_once __DIR__ . '/../src/autoload.php';
 
 use FastRoute\RouteCollector;
 use HashOver\Admin\Handler\BlocklistHandler;

@@ -25,7 +25,7 @@ chdir (realpath ('../'));
 
 // Do some standard HashOver setup work
 require ('backend/nocache-headers.php');
-require ('backend/standard-setup.php');
+require __DIR__ . '/../src/autoload.php';
 
 // Setup class autoloader
 setup_autoloader (function ($error) {

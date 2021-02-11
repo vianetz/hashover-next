@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/backend/standard-setup.php';
+require_once __DIR__ . '/src/autoload.php';
 
 \HashOver\setup_autoloader();

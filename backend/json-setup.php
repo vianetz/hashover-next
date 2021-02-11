@@ -1,4 +1,5 @@
-<?php namespace HashOver;
+<?php
+declare(strict_types=1);
 
 // Copyright (C) 2017-2019 Jacob Barkdull
 // This file is part of HashOver.
@@ -16,18 +17,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace HashOver;
 
-// Tell browser output is JSON
-header ('Content-Type: application/json');
+header('Content-Type: application/json');
 
-// Do some standard HashOver setup work
-require ('nocache-headers.php');
-require ('standard-setup.php');
-
-// Setup class autoloader
-setup_autoloader (function ($error) {
-	echo json_encode (array (
-		'message' => $error,
-		'type' => 'error'
-	));
-});
+require __DIR__ . '/nocache-headers.php';
+require __DIR__ . '/../src/autoload.php';

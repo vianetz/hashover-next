@@ -5,7 +5,7 @@ namespace HashOver\Build;
 
 use Composer\Script\Event;
 
-require_once __DIR__ . '/../../backend/standard-setup.php';
+require_once __DIR__ . '/../autoload.php';
 
 final class BuildJsScript
 {
