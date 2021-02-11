@@ -31,7 +31,6 @@ use HashOver\Admin\Handler\SettingsHandler;
 use HashOver\Admin\Handler\ThreadsHandler;
 use HashOver\Admin\Handler\UpdateHandler;
 use HashOver\Admin\Handler\UrlQueriesHandler;
-use HashOver\Handler\CommentsJsHandler;
 
 setup_autoloader();
 
@@ -46,8 +45,6 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
         $r->addRoute(['GET', 'POST'], '/settings', SettingsHandler::class);
         $r->addRoute(['GET', 'POST'], '/updates', UpdateHandler::class);
     });
-    $r->addRoute(['GET'], '/comments.js', CommentsJsHandler::class);
-    $r->addRoute(['GET'], '/comments.php', CommentsJsHandler::class);
 });
 
 // Fetch method and URI from somewhere

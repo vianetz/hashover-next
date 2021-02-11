@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// Copyright (C) 2017-2019 Jacob Barkdull
+// Copyright (C) 2018-2019 Jacob Barkdull
 // This file is part of HashOver.
 //
 // HashOver is free software: you can redistribute it and/or modify
@@ -17,32 +17,9 @@ declare(strict_types=1);
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace HashOver;
+namespace HashOver\Build;
 
-use Dotenv\Dotenv;
-
-ini_set('default_charset', 'UTF-8');
-
-require __DIR__ . '/../vendor/autoload.php';
-
-\define('APP_DIR', __DIR__ . '/../');
-
-function setup_autoloader($method = 'echo')
+interface MinifiedJs
 {
-    // Register a class autoloader
-    spl_autoload_register(function ($uri) {
-        $uri = strtolower($uri);
-
-        // Convert to UNIX style
-        $uri = str_replace('\\', '/', $uri);
-
-        $file = basename($uri) . '.php';
-
-        @include __DIR__ . '/classes/' . $file;
-    });
+    public function generate(): string;
 }
-
-setup_autoloader();
-
-$dotenv = Dotenv::createImmutable(APP_DIR);
-$dotenv->load();

@@ -37,6 +37,8 @@ Display remote images            |                         |
 
 ```
 composer install
+# Do all settings and then execute
+composer build-js
 ```
 
 

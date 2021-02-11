@@ -30,6 +30,8 @@ if (isset($_GET['jsonp'])) {
     $request = $_POST;
 }
 
+$container = require __DIR__ . '/../../config/container.php';
+
 // Converts a file name (1-2) to a permalink (hashover-c1r1)
 function file_permalink($file)
 {

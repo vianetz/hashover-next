@@ -22,17 +22,18 @@ namespace HashOver\Build;
 final class JavaScriptBuild
 {
     private string $directory;
-    protected array $files = array();
+    private array $files = [];
+    private Minifier $minifier;
 
-    public function __construct(string $directory = '.')
+    public function __construct(Minifier $minifier, string $directory = '.')
     {
+        $this->minifier = $minifier;
         $this->directory = __DIR__ . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR;
     }
 
-    protected function addFile($file)
+    protected function addFile(string $file): void
     {
-        // Add file to files array if it isn't already present
-        if (!in_array($file, $this->files, true)) {
+        if (! in_array($file, $this->files, true)) {
             $this->files[] = $file;
         }
     }
@@ -59,84 +60,58 @@ final class JavaScriptBuild
         return true;
     }
 
-    protected function includeFile($file)
+    protected function includeFile(string $file)
     {
-        // Attempt to read JavaScript file
         $file = @file_get_contents($file);
 
         // Check if the file read successfully
         if ($file !== false) {
-            // If so, return the contents
             return trim($file);
         }
 
-        // Otherwise throw exception
-        throw new \Exception (
-            sprintf('Unable to include "%s"', $file)
-        );
+        throw new \Exception(sprintf('Unable to include "%s"', $file));
     }
 
-    public function registerFile($file, array $options = array())
+    public function registerFile(string $file, array $options = []): bool
     {
         $file = $this->directory . $file;
 
-        if (!empty ($options)) {
-            // Check if there is an include condition
-            if (isset ($options['include'])) {
-                // If so, return void if include is false
-                if ($options['include'] === false) {
-                    return;
-                }
+        if (! empty($options)) {
+            if (isset($options['include']) && ! $options['include']) {
+                return false;
             }
 
-            // Add optional dependencies to files array
-            if (!empty ($options['dependencies'])) {
+            if (! empty($options['dependencies'])) {
                 $dependencies = $options['dependencies'];
                 $this->addDependencies($file, $dependencies);
             }
         }
 
-        // Check if the file exists
-        if (file_exists($file)) {
-            // If so, add file to files array
-            $this->addFile($file);
-        } else {
-            // If not, throw exception
-            throw new \Exception (
-                sprintf('"%s" does not exist.', $file)
-            );
+        if (! file_exists($file)) {
+            throw new \Exception(sprintf('"%s" does not exist.', $file));
         }
+
+        $this->addFile($file);
 
         return true;
     }
 
-    public function build(bool $minify = false, int $minify_level = 0): string
+    public function build(): string
+    {
+        foreach ($this->files as $file) {
+            $this->minifier->add($file);
+        }
+
+        return $this->minifier->minify();
+    }
+
+    public function getJs(): string
     {
         $files = [];
-
-        // Attempt to include registered JavaScript files
         foreach ($this->files as $file) {
             $files[] = $this->includeFile($file);
         }
 
-        // Join the included JavaScript files
-        $javascript = implode(PHP_EOL . PHP_EOL, $files);
-
-        // Minify the JavaScript if told to
-        if (!isset ($_GET['unminified'])) {
-            if ($minify === true and $minify_level > 0) {
-                // Instantiate JavaScript minification class
-                $minifier = new \HashOver\JavaScriptMinifier();
-
-                // Minify JavaScript build result
-                $minified = $minifier->minify($javascript, $minify_level);
-
-                // Set minified result as JavaScript output
-                $javascript = $minified;
-            }
-        }
-
-        // Return normal JavaScript code
-        return $javascript;
+        return implode(PHP_EOL . PHP_EOL, $files);
     }
 }
