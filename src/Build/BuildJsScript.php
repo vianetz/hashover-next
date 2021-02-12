@@ -37,6 +37,18 @@ final class BuildJsScript
 
     private static function writeToFile(string $filename, string $contents): void
     {
+        self::createFolders(self::OUTPUT_DIR . \dirname($filename));
         file_put_contents(self::OUTPUT_DIR . $filename, $contents);
+    }
+
+    private static function createFolders(string $pathname): void
+    {
+        if (is_dir($pathname)) {
+            return;
+        }
+
+        if (! mkdir($pathname, 0777, true) && ! is_dir($pathname)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $pathname));
+        }
     }
 }

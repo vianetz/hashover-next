@@ -41,7 +41,8 @@ class Translations extends \ArrayObject
  */
 class Locale
 {
-    private $setup;
+    private Setup $setup;
+    public Translations $text;
 
     public function __construct(Setup $setup)
     {

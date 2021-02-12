@@ -39,7 +39,7 @@ Display remote images            |                         |
 ## Installation
 
 ```
-composer install
+composer install --no-dev
 # Edit settings in config/settings.json and then execute
 composer hashover:build-js
 ```
