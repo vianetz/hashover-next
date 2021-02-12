@@ -23,8 +23,11 @@ $definitions = [
     }),
     \Psr\Http\Message\ResponseInterface::class => \DI\create(\Laminas\Diactoros\Response::class),
     \Psr\Http\Message\ServerRequestInterface::class => \DI\create(\Laminas\Diactoros\ServerRequest::class),
-    \HashOver\Backend\EmailSender::class => static function (\Psr\Container\ContainerInterface $c) {
-        return new EmailSender($c->get(\Psr\Log\LoggerInterface::class), (string)\DI\env('SMTP_HOST'), (int)\DI\env('SMTP_HOST'), (string)\DI\env('SMTP_USER'), (string)\DI\env('SMTP_PASSWORD'));
+    Swift_Mailer::class => static function (\Psr\Container\ContainerInterface $c) {
+        $transport = new Swift_SmtpTransport((string)\DI\env('SMTP_HOST'), (int)\DI\env('SMTP_PORT'));
+        $transport->setUsername((string)\DI\env('SMTP_USER'))
+            ->setPassword((string)\DI\env('SMTP_PASSWORD'));
+        return new Swift_Mailer($transport);
     },
     Latte\Engine::class => static function (\Psr\Container\ContainerInterface $c) {
         $latte = new \Latte\Engine();

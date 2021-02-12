@@ -84,28 +84,28 @@
 	<body>
 		<div id="main">
 			<div id="header">
-				<img id="avatar" src="{avatar}" width="128" height="128" alt="avatar">
-				<p id="name">{name}</p>
-				<p>{domain}</p>
+				<img id="avatar" src="{$avatar}" width="128" height="128" alt="avatar">
+				<p id="name">{$name}</p>
+				<p>{$domain}</p>
 			</div>
 
 			<div class="container">
-				{html-comment}
+				{$htmlComment}
 			</div>
 
-			<p id="in-reply-to">{in-reply-to}</p>
+			<p id="in-reply-to">{$inReplyTo}</p>
 
 			<div id="reply" class="container">
-				{html-reply}
+				{$htmlReply}
 			</div>
 
 			<div class="footer">
-				<p>{page}: <a href="{url}">{title}</a></p>
-				<p>{comment}: <a href="{permalink}">{permalink}</a></p>
+				<p>{$page}: <a href="{$url}">{$title}</a></p>
+				<p>{$comment}: <a href="{$permalink}">{$permalink}</a></p>
 			</div>
 
 			<center class="footer">
-				<p>{sent-by}</p>
+				<p>{$sentBy}</p>
 			</center>
 		</div>
 	</body>

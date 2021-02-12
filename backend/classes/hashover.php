@@ -49,7 +49,7 @@ final class HashOver
         \HashOver\Login $login,
         \HashOver\Cookies $cookies,
         \HashOver\Thread $thread,
-        \HashOver\Templater $templater,
+        \HashOver\Domain\Templater $templater,
         string $mode = self::HASHOVER_MODE_PHP
     ) {
         // Store output mode (javascript or php)

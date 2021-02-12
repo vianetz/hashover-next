@@ -17,17 +17,20 @@ declare(strict_types=1);
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace HashOver;
+namespace HashOver\Domain;
+
+use HashOver\Setup;
+use Latte\Engine;
 
 final class Templater
 {
-    // Setup information
-    protected $setup;
+    private Engine $latte;
+    private Setup $setup;
 
-    // Store arguments passed during instantiation
-    public function __construct(Setup $setup)
+    public function __construct(Setup $setup, Engine $latte)
     {
         $this->setup = $setup;
+        $this->latte = $latte;
     }
 
     /**
@@ -47,57 +50,20 @@ final class Templater
         throw new \Exception('Failed to load template file "' . $file . '".');
     }
 
-    // Parses file from any location
-    public function parseTemplate($file, array $template = array())
+    public function parseTemplate(string $fileName, array $templateVars = array()): string
     {
-        // Read template file
-        $data = $this->loadFile($file);
-
-        // Local callback for preg_replace
-        $parser = function ($grp) use (&$template) {
-            // Store key for pretty code
-            $key = $grp[2];
-
-            // Store whitespace for pretty code
-            $whitespace = $grp[1];
-
-            // Return data from template if it exists
-            if (!empty ($template[$key])) {
-                return $whitespace . $template[$key];
-            }
-
-            // Otherwise, return nothing
-            return '';
-        };
-
-        // Curly brace variable regular expression
-        $curly_regex = '/(\s*)\{([a-z_-]+)\}/i';
-
-        // Convert string to OS-specific line endings
-        $template = preg_replace('/\r\n|\r|\n/', PHP_EOL, $template);
-
-        // Replace curly brace variable with data from template
-        $template = preg_replace_callback($curly_regex, $parser, $data);
-
-        // Remove blank lines
-        $template = preg_replace('/^[\s\n]+$/m', '', $template);
-
-        return $template;
+        return $this->latte->renderToString($fileName, $templateVars);
     }
 
-    // Parses file from the theme directory
-    public function parseTheme($file, array $template = array())
+    public function parseTheme($file, array $template = []): string
     {
-        // Get the file path for the configured theme
         $path = $this->setup->getThemePath($file, false);
         $path = $this->setup->getAbsolutePath('public' . DIRECTORY_SEPARATOR . $path);
 
-        // Parse the theme file as template
-        if (!empty ($template)) {
+        if (! empty($template)) {
             return $this->parseTemplate($path, $template);
         }
 
-        // Otherwise, return theme file as-is
         return $this->loadFile($path);
     }
 }

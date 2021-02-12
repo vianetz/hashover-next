@@ -9,7 +9,7 @@ use HashOver\HTMLTag;
 use HashOver\Locale;
 use HashOver\Misc;
 use HashOver\Setup;
-use HashOver\Templater;
+use HashOver\Domain\Templater;
 use HashOver\Thread;
 
 final class SendNotification
@@ -29,8 +29,8 @@ final class SendNotification
         $this->emailSender = $emailSender;
         $this->crypto = $crypto;
         $this->avatars = $avatars;
-        $this->templater = $templater;
         $this->thread = $thread;
+        $this->templater = $templater;
     }
 
     /**
@@ -50,15 +50,15 @@ final class SendNotification
         $templateVars['avatar'] = $this->avatars->getGravatar($hash, true, 128);
         $templateVars['name'] = $name;
         $templateVars['domain'] = $this->setup->website;
-        $templateVars['text-comment'] = $this->indentWordwrap($data['body']);
+        $templateVars['textComment'] = $this->indentWordwrap($data['body']);
         $templateVars['from'] = sprintf($this->locale->text['from'], $name);
         $templateVars['comment'] = $this->locale->text['comment'];
         $templateVars['page'] = $this->locale->text['page'];
-        $templateVars['new-comment'] = $newComment;
+        $templateVars['newComment'] = $newComment;
         $templateVars['permalink'] = $this->setup->pageURL . '#' . $permalink;
         $templateVars['url'] = $this->setup->pageURL;
         $templateVars['title'] = $this->setup->pageTitle;
-        $templateVars['sent-by'] = sprintf($this->locale->text['sent-by'], $this->setup->website);
+        $templateVars['sentBy'] = sprintf($this->locale->text['sent-by'], $this->setup->website);
         $reply = $this->thread->data->read($replyTo);
 
         // Check if the reply comment read successfully
@@ -66,29 +66,27 @@ final class SendNotification
             // If so, decide name of recipient
             $reply_name = Misc::getArrayItem($reply, 'name') ?: $this->setup->defaultName;
 
-            // Add reply name to data
-            $templateVars['reply-name'] = $reply_name;
+            $templateVars['replyName'] = $reply_name;
 
-            // Add "In reply to" locale string to data
-            $templateVars['in-reply-to'] = sprintf($this->locale->text['thread'], $reply_name);
+            $templateVars['inReplyTo'] = sprintf($this->locale->text['thread'], $reply_name);
 
             // Add indented body of recipient's comment to data
-            $templateVars['text-reply'] = $this->indentWordwrap($reply['body']);
+            $templateVars['textReply'] = $this->indentWordwrap($reply['body']);
 
             // And add HTML version of the reply comment to data
             if ($this->setup->mailType !== 'text') {
-                $templateVars['html-reply'] = $this->paragraphsTags($reply['body'], "\t\t\t\t");
+                $templateVars['htmlReply'] = $this->paragraphsTags($reply['body'], "\t\t\t\t");
             }
         }
 
-        $text_body = $this->templater->parseTheme('email-notification.txt', $templateVars);
+        $textBody = $this->templater->parseTheme('email-notification.txt', $templateVars);
         $this->emailSender->subject($newComment . ' - ' . $this->setup->website);
-        $this->emailSender->text($text_body);
+        $this->emailSender->text($textBody);
 
         if ($this->setup->mailType !== 'text') {
-            $templateVars['html-comment'] = $this->paragraphsTags($data['body'], "\t\t\t\t");
-            $html_body = $this->templater->parseTheme('email-notification.html', $templateVars);
-            $this->emailSender->html($html_body);
+            $templateVars['htmlComment'] = $this->paragraphsTags($data['body'], "\t\t\t\t");
+            $htmlBody = $this->templater->parseTheme('email-notification.html', $templateVars);
+            $this->emailSender->html($htmlBody);
         }
 
         // Only send admin notification if it's not admin posting
@@ -184,7 +182,7 @@ final class SendNotification
         $ps = preg_split('/(\r\n|\r|\n){2}/S', $text);
 
         // Wrap each paragraph in <p> tags and place <br> tags after each line
-        for ($i = 0, $il = count($ps); $i < $il; $i++) {
+        for ($i = 0, $il = \count($ps); $i < $il; $i++) {
             // Place <br> tags after each line
             $paragraph = preg_replace('/(\r\n|\r|\n)/S', '<br>\\1', $ps[$i]);
 

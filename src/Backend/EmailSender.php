@@ -25,16 +25,13 @@ final class EmailSender
 {
     private \Swift_Message $message;
     private LoggerInterface $logger;
-    private \Swift_Transport $transport;
+    private \Swift_Mailer $mailer;
 
-    public function __construct(LoggerInterface $logger, string $smtpHost, int $smtpPort, string $smtpUser, string $smtpPassword)
+    public function __construct(LoggerInterface $logger, \Swift_Message $message, \Swift_Mailer $mailer)
     {
-        $this->message = new \Swift_Message();
+        $this->message = $message;
         $this->logger = $logger;
-
-        $this->transport = (new \Swift_SmtpTransport($smtpHost, $smtpPort))
-            ->setUsername($smtpUser)
-            ->setPassword($smtpPassword);
+        $this->mailer = $mailer;
     }
 
     public function to(string $email, string $name = null): void
@@ -71,7 +68,7 @@ final class EmailSender
     {
         try {
             $this->logger->info('Sending email to ' . implode(', ', array_keys($this->message->getTo())) . ' with subject ' . $this->message->getSubject());
-            return (new \Swift_Mailer($this->transport))->send($this->message) > 0;
+            return ($this->mailer)->send($this->message) > 0;
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage());
             return false;

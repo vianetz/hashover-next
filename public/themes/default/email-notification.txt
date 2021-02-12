@@ -1,17 +1,17 @@
-{from}
+{$from}
 
-{text-comment}
+{$textComment}
 
-{in-reply-to}
+{$inReplyTo}
 
-{text-reply}
-
-----
-
-{comment}: {permalink}
-
-{page}: {url}
+{$textReply}
 
 ----
 
-{sent-by}
+{$comment}: {$permalink}
+
+{$page}: {$url}
+
+----
+
+{$sentBy}
