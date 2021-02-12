@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
-use HashOver\Backend\EmailSender;
 use HashOver\Build\JavaScriptBuild;
 
 $definitions = [
@@ -24,9 +23,14 @@ $definitions = [
     \Psr\Http\Message\ResponseInterface::class => \DI\create(\Laminas\Diactoros\Response::class),
     \Psr\Http\Message\ServerRequestInterface::class => \DI\create(\Laminas\Diactoros\ServerRequest::class),
     Swift_Mailer::class => static function (\Psr\Container\ContainerInterface $c) {
-        $transport = new Swift_SmtpTransport((string)\DI\env('SMTP_HOST'), (int)\DI\env('SMTP_PORT'));
-        $transport->setUsername((string)\DI\env('SMTP_USER'))
-            ->setPassword((string)\DI\env('SMTP_PASSWORD'));
+        if ($c->get(\HashOver\Setup::class)->mailer !== 'sendmail') {
+            $transport = new Swift_SmtpTransport((string)$_ENV['SMTP_HOST'], (int)$_ENV['SMTP_PORT']);
+            $transport->setUsername((string)$_ENV['SMTP_USER'])
+                ->setPassword((string)$_ENV['SMTP_PASSWORD']);
+        } else {
+            $transport = new Swift_SendmailTransport(ini_get('sendmail_path'));
+        }
+
         return new Swift_Mailer($transport);
     },
     Latte\Engine::class => static function (\Psr\Container\ContainerInterface $c) {
@@ -38,8 +42,8 @@ $definitions = [
 
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->useAnnotations(false);
-#$containerBuilder->enableCompilation(__DIR__ . '/tmp');
-#$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
+$containerBuilder->enableCompilation(__DIR__ . '/tmp');
+$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
 $containerBuilder->addDefinitions($definitions);
 
 return $containerBuilder->build();

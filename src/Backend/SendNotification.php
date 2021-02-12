@@ -75,7 +75,7 @@ final class SendNotification
 
             // And add HTML version of the reply comment to data
             if ($this->setup->mailType !== 'text') {
-                $templateVars['htmlReply'] = $this->paragraphsTags($reply['body'], "\t\t\t\t");
+                $templateVars['htmlReply'] = $reply['body'];
             }
         }
 
@@ -84,7 +84,7 @@ final class SendNotification
         $this->emailSender->text($textBody);
 
         if ($this->setup->mailType !== 'text') {
-            $templateVars['htmlComment'] = $this->paragraphsTags($data['body'], "\t\t\t\t");
+            $templateVars['htmlComment'] = $data['body'];
             $htmlBody = $this->templater->parseTheme('email-notification.html', $templateVars);
             $this->emailSender->html($htmlBody);
         }
@@ -112,12 +112,12 @@ final class SendNotification
         }
 
         // Otherwise, decrypt reply e-mail address
-        $reply_email = $this->crypto->decrypt($reply['email'], $reply['encryption']);
+        $replyEmail = $this->crypto->decrypt($reply['email'], $reply['encryption']);
 
         // Check if reply e-mail is different than login's and admin's
-        if ($reply_email !== $email && $reply_email !== $notificationEmail) {
+        if ($replyEmail !== $email && $replyEmail !== $notificationEmail) {
             // If so, set message to be sent to reply comment e-mail
-            $this->emailSender->to($reply_email);
+            $this->emailSender->to($replyEmail);
 
             // Check if users are allowed to reply by email
             if ($this->setup->allowsUserReplies) {
@@ -169,31 +169,5 @@ final class SendNotification
         $paragraphs = str_replace("\n", "\r\n    ", $paragraphs);
 
         return implode("\r\n\r\n", $paragraphs);
-    }
-
-    /**
-     * Converts text paragraphs to HTML paragraph tags
-     */
-    private function paragraphsTags(string $text, string $indention = ''): string
-    {
-        $paragraphs = [];
-
-        // Break comment into paragraphs
-        $ps = preg_split('/(\r\n|\r|\n){2}/S', $text);
-
-        // Wrap each paragraph in <p> tags and place <br> tags after each line
-        for ($i = 0, $il = \count($ps); $i < $il; $i++) {
-            // Place <br> tags after each line
-            $paragraph = preg_replace('/(\r\n|\r|\n)/S', '<br>\\1', $ps[$i]);
-
-            // Create <p> tag
-            $pTag = new HTMLTag('p', $paragraph);
-
-            // Add paragraph to HTML
-            $paragraphs[] = $pTag->asHTML($indention);
-        }
-
-        // Convert paragraphs array to string
-        return implode("\r\n\r\n" . $indention, $paragraphs);
     }
 }

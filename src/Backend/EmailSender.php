@@ -68,7 +68,7 @@ final class EmailSender
     {
         try {
             $this->logger->info('Sending email to ' . implode(', ', array_keys($this->message->getTo())) . ' with subject ' . $this->message->getSubject());
-            return ($this->mailer)->send($this->message) > 0;
+            return $this->mailer->send($this->message) > 0;
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage());
             return false;
