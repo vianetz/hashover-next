@@ -69,8 +69,6 @@ final class ModerationHandler extends AbstractHandler
         }
 
         $template = [
-            'title' => $this->hashover->locale->text['moderation'],
-            'subTitle' => $this->hashover->locale->text['moderation-sub'],
             'leftId' => 'threads-column',
             'threads' => $allThreadData,
             'currentWebsite' => $website,
@@ -86,8 +84,6 @@ final class ModerationHandler extends AbstractHandler
 
             $allWebsitesData = [];
             if (\count($websites) > 1) {
-                $template['websiteTitle'] = $this->hashover->locale->text['websites'];
-
                 sort($websites, SORT_NATURAL);
 
                 foreach ($websites as $name) {

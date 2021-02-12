@@ -58,7 +58,7 @@ abstract class AbstractHandler
         return $response;
     }
 
-    protected function render(string $templateName, array $templateData): ResponseInterface
+    protected function render(string $templateName, array $templateData = []): ResponseInterface
     {
         $templateData = $this->mergeTemplateData($templateData);
 
@@ -76,22 +76,15 @@ abstract class AbstractHandler
         $data = array_merge($data, [
             'root' => rtrim($this->hashover->setup->httpRoot, '/'),
             'admin' => $this->hashover->setup->getHttpPath('admin'),
-            'moderation' => $this->hashover->locale->text['moderation'],
-            'ipBlocking' => $this->hashover->locale->text['block-ip-addresses'],
-            'urlFiltering' => $this->hashover->locale->text['filter-url-queries'],
-            'settings' => $this->hashover->locale->text['settings'],
-            'updates' => $this->hashover->locale->text['check-for-updates'],
-            'docs' => $this->hashover->locale->text['documentation'],
-            'logout' => $this->hashover->locale->text['logout'],
             'language' => $language,
         ]);
 
         if (! empty($_GET['status'])) {
             if ($_GET['status'] === 'success') {
-                $data['message'] = $this->hashover->locale->text['successful-save'];
+                $data['message'] = 'successful-save';
                 $data['messageStatus'] = 'success';
             } else {
-                $data['message'] = $this->hashover->locale->text['failed-to-save'];
+                $data['message'] = 'failed-to-save';
                 $data['error'] = $this->hashover->locale->permissionsInfo('config');
                 $data['messageStatus'] = 'error';
             }

@@ -1,18 +1,21 @@
-{layout 'admin.html'}
+{layout 'admin.layout.html'}
+
+{define title}{_'url-queries-title'}{/define}
+{define subTitle}{_'url-queries-sub'}{/define}
 
 {block content}
 <form method="post" class="general-style" action="/admin/url-queries">
     <div id="queries-list" class="p-spaced">
         <span n:foreach="$inputs as $input">
 			<div>
-				<input class="name" type="text" name="names[]" value="{$input[nameValue]}" size="15" placeholder="{$input[namePlaceholder]}" title="{$input[nameTip]}"/>
-				<input class="value" type="text" name="values[]" value="{$input[value]}" size="15" placeholder="{$input[valuePlaceholder]}" title="{$input[valueTip]}"/>
+				<input class="name" type="text" name="names[]" value="{$input[nameValue]}" size="15" placeholder="{_'name'}" title="{_'url-queries-name-tip'}"/>
+				<input class="value" type="text" name="values[]" value="{$input[value]}" size="15" placeholder="{_'value'}" title="{_'url-queries-value-tip'}"/>
 			</div>
 		</span>
     </div>
 
     <p>
-        <input id="save-button" type="submit" value="{$saveButton}">
+        <input id="save-button" type="submit" value="{_'save'}">
         <input id="new-button" type="button" value="+">
     </p>
 </form>

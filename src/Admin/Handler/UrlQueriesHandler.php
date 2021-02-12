@@ -71,21 +71,10 @@ final class UrlQueriesHandler extends AbstractHandler
 
             $inputs[] = [
                 'nameValue' => $queryParts[0],
-                'namePlaceholder' => $this->hashover->locale->text['name'],
-                'nameTip' => $this->hashover->locale->text['url-queries-name-tip'],
                 'value' => Misc::getArrayItem($queryParts, 1) ?: '',
-                'valuePlaceholder' => $this->hashover->locale->text['value'],
-                'valueTip' => $this->hashover->locale->text['url-queries-value-tip'],
             ];
         }
 
-        $template = [
-            'title' => $this->hashover->locale->text['url-queries-title'],
-            'subTitle' => $this->hashover->locale->text['url-queries-sub'],
-            'inputs' => $inputs,
-            'saveButton' => $this->hashover->locale->text['save'],
-        ];
-
-        return $this->render('url-queries.html', $template);
+        return $this->render('url-queries.html', ['inputs' => $inputs]);
     }
 }

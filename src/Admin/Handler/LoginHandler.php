@@ -49,14 +49,6 @@ final class LoginHandler extends AbstractHandler
             return $this->redirect($request, $admin_path . '/');
         }
 
-        $template = [
-            'title' => $this->hashover->locale->text['login'],
-            'sub-title' => $this->hashover->locale->text['admin-required'],
-            'name' => $this->hashover->locale->text['name'],
-            'password' => $this->hashover->locale->text['password'],
-            'login' => $this->hashover->locale->text['login'],
-        ];
-
-        return $this->render('login.html', $template);
+        return $this->render('login.html');
     }
 }

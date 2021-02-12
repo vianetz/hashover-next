@@ -2,7 +2,7 @@
 
 <html lang="en" dir="ltr">
 <head>
-    <title>HashOver - {$title}</title>
+    <title>HashOver - {_'login'}</title>
 
     <link type="text/css" rel="stylesheet" href="/themes/default/general.css">
     <link type="text/css" rel="stylesheet" href="/static/admin/admin.css">
@@ -25,14 +25,14 @@
 <body>
 <form id="login" class="general-style red animate-all" method="post">
     <div id="padding">
-        <h1>{$title}</h1>
+        <h1>{_'login'}</h1>
 
-        <input type="text" name="name" placeholder="{$name}">
-        <input type="password" name="password" placeholder="{$password}">
+        <input type="text" name="name" placeholder="{_'name'}">
+        <input type="password" name="password" placeholder="{_'password'}">
     </div>
 
     <p>
-        <input type="submit" value="{$login}">
+        <input type="submit" value="{_'login'}">
     </p>
 </form>
 </body>

@@ -36,14 +36,19 @@ $definitions = [
     Latte\Engine::class => static function (\Psr\Container\ContainerInterface $c) {
         $latte = new \Latte\Engine();
         $latte->setTempDirectory(sys_get_temp_dir());
+        $latte->addFilter('translate', [$c->get(\HashOver\Domain\Translator::class), 'translate']);
         return $latte;
     },
 ];
 
+$config = require __DIR__ . '/global.php';
+
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->useAnnotations(false);
-$containerBuilder->enableCompilation(__DIR__ . '/tmp');
-$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
+if ($config['enableContainerCompile']) {
+    $containerBuilder->enableCompilation($config['tmpDir']);
+    $containerBuilder->writeProxiesToFile(true, $config['tmpDir'] . '/proxies');
+}
 $containerBuilder->addDefinitions($definitions);
 
 return $containerBuilder->build();

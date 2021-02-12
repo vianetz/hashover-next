@@ -25,11 +25,6 @@ final class ThreadsHandler extends AbstractHandler
 {
     public function __invoke(): ResponseInterface
     {
-        $template = [
-            'title' => $this->hashover->locale->text['moderation'],
-            'back' => $this->hashover->locale->text['back'],
-        ];
-
-        return $this->render('threads.html', $template);
+        return $this->render('threads.html');
     }
 }

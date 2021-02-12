@@ -25,11 +25,6 @@ final class UpdateHandler extends AbstractHandler
 {
     public function __invoke(): ResponseInterface
     {
-        $template = [
-            'title' => $this->hashover->locale->text['check-for-updates'],
-            'subTitle' => $this->hashover->locale->text['coming-soon'],
-        ];
-
-        return $this->render('updates.html', $template);
+        return $this->render('updates.html');
     }
 }

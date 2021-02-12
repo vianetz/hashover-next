@@ -57,20 +57,10 @@ final class BlocklistHandler extends AbstractHandler
         }
 
         $inputs = [];
-        for ($i = 0, $il = max(3, count($blocklist)); $i < $il; $i++) {
-            $inputs[] = [
-                'value' => Misc::getArrayItem($blocklist, $i) ?: '',
-                'title' => $this->hashover->locale->text['blocklist-ip-tip'],
-            ];
+        for ($i = 0, $il = max(3, \count($blocklist)); $i < $il; $i++) {
+            $inputs[] = ['value' => Misc::getArrayItem($blocklist, $i) ?: ''];
         }
 
-        $template = [
-            'title' => $this->hashover->locale->text['blocklist-title'],
-            'subTitle' => $this->hashover->locale->text['blocklist-sub'],
-            'inputs' => $inputs,
-            'saveButton' => $this->hashover->locale->text['save'],
-        ];
-
-        return $this->render('blocklist.html', $template);
+        return $this->render('blocklist.html', ['inputs' => $inputs]);
     }
 }

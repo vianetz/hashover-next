@@ -1,4 +1,7 @@
-{layout 'admin.html'}
+{layout 'admin.layout.html'}
+
+{define title}{_'moderation'}{/define}
+{define subTitle}{_'moderation-sub'}{/define}
 
 {block content}
 <table id="moderation" class="general-style" cellspacing="0" cellpadding="0">
@@ -22,7 +25,7 @@
 
         <td id="{$rightId}" valign="top">
             <table id="websites" cellspacing="0" cellpadding="8" n:if="$websites">
-                <thead><tr><th>{$websiteTitle}</th></tr></thead>
+                <thead><tr><th>{_'websites'}</th></tr></thead>
                 <tbody>
                     <tr n:foreach="$websites as $website"><td><a href="{$website[link]}">{$website[title]}</a></td></tr>
                 </tbody>

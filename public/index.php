@@ -26,7 +26,6 @@ use HashOver\Admin\Handler\BlocklistHandler;
 use HashOver\Admin\Handler\LoginHandler;
 use HashOver\Admin\Handler\ModerationHandler;
 use HashOver\Admin\Handler\RedirectHandler;
-use HashOver\Admin\Handler\SettingsHandler;
 use HashOver\Admin\Handler\ThreadsHandler;
 use HashOver\Admin\Handler\UpdateHandler;
 use HashOver\Admin\Handler\UrlQueriesHandler;
@@ -51,7 +50,6 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
         $r->addRoute('GET', '/moderation/threads/', ThreadsHandler::class);
         $r->addRoute(['GET', 'POST'], '/blocklist/', BlocklistHandler::class);
         $r->addRoute(['GET', 'POST'], '/url-queries/', UrlQueriesHandler::class);
-        $r->addRoute(['GET', 'POST'], '/settings/', SettingsHandler::class);
         $r->addRoute(['GET', 'POST'], '/updates/', UpdateHandler::class);
     });
     $r->addRoute(['GET', 'POST'], '/comments', Comments::class);

@@ -1,15 +1,18 @@
-{layout 'admin.html'}
+{layout 'admin.layout.html'}
+
+{define title}{_'blocklist-title'}{/define}
+{define subTitle}{_'blocklist-sub'}{/define}
 
 {block content}
 <form method="post" class="general-style">
     <p id="ip-list">
         <span n:foreach="$inputs as $input">
-			<input class="addresses" type="text" name="addresses[]" value="{$input[value]}" size="15" maxlength="15" placeholder="127.0.0.1" title="{$input[title]}" />
+			<input class="addresses" type="text" name="addresses[]" value="{$input[value]}" size="15" maxlength="15" placeholder="127.0.0.1" title="{_'blocklist-ip-tip'}"/>
 		</span>
     </p>
 
     <p>
-        <input id="save-button" type="submit" value="{$saveButton}">
+        <input id="save-button" type="submit" value="{_'save'}">
         <input id="new-button" type="button" value="+">
     </p>
 </form>

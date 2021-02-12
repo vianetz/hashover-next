@@ -5,11 +5,10 @@ namespace HashOver\Backend;
 
 use HashOver\Avatars;
 use HashOver\Crypto;
-use HashOver\HTMLTag;
+use HashOver\Domain\Templater;
 use HashOver\Locale;
 use HashOver\Misc;
 use HashOver\Setup;
-use HashOver\Domain\Templater;
 use HashOver\Thread;
 
 final class SendNotification
