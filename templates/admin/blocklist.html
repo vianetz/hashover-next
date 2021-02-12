@@ -1,12 +1,18 @@
-<form method="post" class="general-style">
-	<p id="ip-list">
-		{inputs}
-	</p>
+{layout 'admin.html'}
 
-	<p>
-		<input id="save-button" type="submit" value="{save-button}">
-		<input id="new-button" type="button" value="+">
-	</p>
+{block content}
+<form method="post" class="general-style">
+    <p id="ip-list">
+        <span n:foreach="$inputs as $input">
+			<input class="addresses" type="text" name="addresses[]" value="{$input[value]}" size="15" maxlength="15" placeholder="127.0.0.1" title="{$input[title]}" />
+		</span>
+    </p>
+
+    <p>
+        <input id="save-button" type="submit" value="{$saveButton}">
+        <input id="new-button" type="button" value="+">
+    </p>
 </form>
 
 <script type="text/javascript" src="/static/admin/blocklist.js"></script>
+{/block}

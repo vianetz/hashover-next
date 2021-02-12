@@ -19,51 +19,44 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 final class LoginHandler extends AbstractHandler
 {
-    public function __invoke(): void
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
-        // Check if the user submitted login information
-        if (!empty ($_POST['name']) and !empty ($_POST['password'])) {
-            // If so, attempt to log them in
+        $parsedBody = $request->getParsedBody();
+        $queryParams = $request->getQueryParams();
+        if (! empty($parsedBody['name']) && ! empty($parsedBody['password'])) {
             $this->hashover->login->setAdminLogin();
 
-            // Check if user is admin
-            if ($this->hashover->login->isAdmin() === true) {
-                // If so, login as admin
+            if ($this->hashover->login->isAdmin()) {
                 $this->hashover->login->adminLogin();
             } else {
-                // If not, logout
                 $this->hashover->login->clearLogin();
-
-                // Sleep 5 seconds
                 sleep(5);
             }
 
-            $this->redirect();
+            return $this->redirect($request);
         }
 
-        // Check if we're logging out
-        if (isset ($_GET['logout'])) {
-            // If so, attempt to log the user out
+        if (isset($queryParams['logout'])) {
             $this->hashover->login->clearLogin();
 
-            // Get path to main admin page
             $admin_path = $this->hashover->setup->getHttpPath('admin');
 
-            // And redirect user to main admin page
-            $this->redirect($admin_path . '/');
+            return $this->redirect($request, $admin_path . '/');
         }
 
-        // Template data
-        $template = array(
+        $template = [
             'title' => $this->hashover->locale->text['login'],
             'sub-title' => $this->hashover->locale->text['admin-required'],
             'name' => $this->hashover->locale->text['name'],
             'password' => $this->hashover->locale->text['password'],
-            'login' => $this->hashover->locale->text['login']
-        );
+            'login' => $this->hashover->locale->text['login'],
+        ];
 
-        echo $this->hashover->templater->parseTemplate(APP_DIR . '/templates/admin/login.html', $template);
+        return $this->render('login.html', $template);
     }
 }

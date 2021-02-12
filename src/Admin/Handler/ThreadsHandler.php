@@ -19,15 +19,17 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
+use Psr\Http\Message\ResponseInterface;
+
 final class ThreadsHandler extends AbstractHandler
 {
-    public function __invoke(): void
+    public function __invoke(): ResponseInterface
     {
         $template = [
             'title' => $this->hashover->locale->text['moderation'],
             'back' => $this->hashover->locale->text['back'],
         ];
 
-        echo $this->parse_templates('admin', 'threads.html', $template, $this->hashover);
+        return $this->render('threads.html', $template);
     }
 }

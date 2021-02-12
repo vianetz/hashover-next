@@ -1,12 +1,21 @@
-<form method="post" class="general-style">
-	<div id="queries-list" class="p-spaced">
-		{inputs}
-	</div>
+{layout 'admin.html'}
 
-	<p>
-		<input id="save-button" type="submit" value="{save-button}">
-		<input id="new-button" type="button" value="+">
-	</p>
+{block content}
+<form method="post" class="general-style" action="/admin/url-queries">
+    <div id="queries-list" class="p-spaced">
+        <span n:foreach="$inputs as $input">
+			<div>
+				<input class="name" type="text" name="names[]" value="{$input[nameValue]}" size="15" placeholder="{$input[namePlaceholder]}" title="{$input[nameTip]}"/>
+				<input class="value" type="text" name="values[]" value="{$input[value]}" size="15" placeholder="{$input[valuePlaceholder]}" title="{$input[valueTip]}"/>
+			</div>
+		</span>
+    </div>
+
+    <p>
+        <input id="save-button" type="submit" value="{$saveButton}">
+        <input id="new-button" type="button" value="+">
+    </p>
 </form>
 
 <script type="text/javascript" src="/static/admin/url-queries.js"></script>
+{/block}

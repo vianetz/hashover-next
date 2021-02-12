@@ -19,169 +19,95 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
-use HashOver\HTMLTag;
+use HashOver\DataFiles;
+use HashOver\Helper\RequestHelper;
+use HashOver\Locale;
+use Latte\Engine;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class ModerationHandler extends AbstractHandler
 {
-    private function add_table_row(HTMLTag $body, HTMLTag $child)
+    private RequestHelper $requestHelper;
+
+    public function __construct(\HashOver $hashover, Locale $locale, DataFiles $dataFiles, ResponseInterface $response, Engine $latte, RequestHelper $requestHelper)
     {
-        // Create table row and column
-        $tr = new HTMLTag('tr');
-        $td = new HTMLTag('td');
-
-        // Append child element to column
-        $td->appendChild($child);
-
-        // Append column to row
-        $tr->appendChild($td);
-
-        // Append row to table body
-        $body->appendChild($tr);
+        parent::__construct($hashover, $locale, $dataFiles, $response, $latte);
+        $this->requestHelper = $requestHelper;
     }
 
-    private function add_table_head(HTMLTag $table, $html)
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
-        // Create table head, row and column
-        $thead = new HTMLTag ('thead');
-        $th = new HTMLTag ('tr', false, false);
-        $td = new HTMLTag ('th', false, false);
+        $currentWebsite = $this->hashover->setup->website;
+        $website = $this->requestHelper->getPostOrGet($request, 'website') ?? $currentWebsite;
 
-        // Append child element to column
-        $td->innerHTML($html);
-
-        // Append column to row
-        $th->appendChild($td);
-
-        // Append row to head
-        $thead->appendChild($th);
-
-        // Append row to table body
-        $table->appendChild($thead);
-    }
-
-    public function __invoke(): void
-    {
-        // Get current website
-        $current_website = $this->hashover->setup->website;
-
-        // Attempt to get website from GET data
-        $website = $this->hashover->setup->getRequest('website', $current_website);
-
-        // Set website if GET website is different
-        if ($website !== $current_website) {
+        if ($website !== $currentWebsite) {
             $this->hashover->setup->setWebsite($website);
         }
 
-        // Attempt to get array of comment threads
         $threads = $this->hashover->thread->queryThreads();
 
-        // Create comment thread table
-        $threads_table = new HTMLTag ('table', array(
-            'id' => 'threads',
-            'cellspacing' => '0',
-            'cellpadding' => '8'
-        ));
-
-        // Create comment thread table body
-        $threads_body = new HTMLTag ('tbody');
-
-        // Add table head if multiple website support is enabled
-        if ($this->hashover->setup->supportsMultisites === true) {
-            $this->add_table_head($threads_table, $website);
-        }
-
-        // Run through comment threads
+        $allThreadData = [];
         foreach ($threads as $thread) {
-            // Read and parse JSON metadata file
             $data = $this->hashover->thread->data->readMeta('page-info', $thread);
 
-            // Check if metadata was read successfully
-            if ($data === false or empty ($data['url']) or empty ($data['title'])) {
+            if (! $data || empty($data['url']) || empty($data['title'])) {
                 continue;
             }
 
-            // Create row div
-            $div = new HTMLTag ('div');
+            $threadData = [];
+            $threadData['link'] = 'threads/?' . http_build_query([
+                'website' => $website,
+                'thread' => $thread,
+                'title' => $data['title'],
+                'url' => $data['url'],
+            ]);
+            $threadData['title'] = $data['title'];
+            $threadData['url'] = $data['url'];
 
-            // Add thread hyperlink to row div
-            $div->appendChild(new HTMLTag ('a', array(
-                'href' => 'threads/?' . implode('&amp;', array(
-                        'website=' . urlencode($website),
-                        'thread=' . urlencode($thread),
-                        'title=' . urlencode($data['title']),
-                        'url=' . urlencode($data['url'])
-                    )),
-
-                'innerHTML' => $data['title']
-            )));
-
-            // Add thread URL line to row div
-            $div->appendChild(new HTMLTag ('p', array(
-                'children' => array(new HTMLTag ('small', $data['url'], false))
-            )));
-
-            // And row div to table body
-            $this->add_table_row($threads_body, $div);
+            $allThreadData[] = $threadData;
         }
 
-        // Add table body to table
-        $threads_table->appendChild($threads_body);
-
-        // Template data
-        $template = array(
+        $template = [
             'title' => $this->hashover->locale->text['moderation'],
-            'sub-title' => $this->hashover->locale->text['moderation-sub'],
-            'left-id' => 'threads-column',
-            'threads' => $threads_table->asHTML("\t\t\t\t"),
-        );
+            'subTitle' => $this->hashover->locale->text['moderation-sub'],
+            'leftId' => 'threads-column',
+            'threads' => $allThreadData,
+            'currentWebsite' => $website,
+        ];
 
-        // Check if multiple website support is enabled
-        if ($this->hashover->setup->supportsMultisites === true) {
-            // If so, attempt to get array of websites
+        if ($this->hashover->setup->supportsMultisites) {
             $websites = $this->hashover->thread->queryWebsites();
 
             // Add domain to array of websites if it isn't present
-            if (!in_array($this->hashover->setup->domain, $websites)) {
+            if (! \in_array($this->hashover->setup->domain, $websites)) {
                 $websites[] = $this->hashover->setup->domain;
             }
 
-            // Check if other websites exist
-            if (count($websites) > 1) {
-                // If so, create comment thread table
-                $websites_table = new HTMLTag ('table', array(
-                    'id' => 'websites',
-                    'cellspacing' => '0',
-                    'cellpadding' => '8'
-                ));
+            $allWebsitesData = [];
+            if (\count($websites) > 1) {
+                $template['websiteTitle'] = $this->hashover->locale->text['websites'];
 
-                // Add table head
-                $this->add_table_head($websites_table, $this->hashover->locale->text['websites']);
-
-                // Sort the websites
                 sort($websites, SORT_NATURAL);
 
-                // Run through website directories
                 foreach ($websites as $name) {
-                    // Skip current website
                     if ($name === $website) {
                         continue;
                     }
 
-                    // Create website hyperlink
-                    $this->add_table_row($websites_table, new HTMLTag ('a', array(
-                        'href' => '?website=' . urlencode($name),
-                        'innerHTML' => $name
-                    ), false));
+                    $websiteData = [
+                        'link' => '?website=' . urlencode($name),
+                        'title' => $name,
+                    ];
+
+                    $allWebsitesData[] = $websiteData;
                 }
 
-                // And add other websites to template
-                $template = array_merge($template, array(
-                    'right-id' => 'websites-column',
-                    'websites' => $websites_table->asHTML("\t\t\t\t")
-                ));
+                $template['rightId'] = 'websites-column';
+                $template['websites'] = $allWebsitesData;
             }
         }
 
-        echo $this->parse_templates('admin', 'moderation.html', $template, $this->hashover);
+        return $this->render('moderation.html', $template);
     }
 }

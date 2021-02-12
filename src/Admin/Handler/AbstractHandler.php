@@ -21,105 +21,83 @@ namespace HashOver\Admin\Handler;
 
 use HashOver\DataFiles;
 use HashOver\Locale;
+use Latte\Engine;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractHandler
 {
     protected \HashOver $hashover;
     protected DataFiles $dataFiles;
+    protected ResponseInterface $response;
+    protected Engine $latte;
 
-    public function __construct(\HashOver $hashover, Locale $locale, DataFiles $dataFiles)
+    public function __construct(\HashOver $hashover, Locale $locale, DataFiles $dataFiles, ResponseInterface $response, Engine $latte)
     {
         $this->hashover = $hashover;
         $this->hashover->setup->setsCookies = true;
         $this->hashover->locale = $locale;
         $this->dataFiles = $dataFiles;
+        $this->response = $response;
+        $this->latte = $latte;
 
         $this->checkAllowed();
     }
 
-    // Redirects the user back to where they came from
-    protected function redirect($url = '')
+    protected function redirect(ServerRequestInterface $request, string $url = ''): ResponseInterface
     {
-        // Check if we're redirecting to a specific URL
-        if (!empty ($url)) {
-            // If so, use it
-            header('Location: ' . $url);
+        $queryParams = $request->getQueryParams();
+        if (! empty($url)) {
+            $response = $this->response->withHeader('Location', $url);
+        } elseif (! empty($queryParams['redirect'])) {
+            $response = $this->response->withHeader('Location', $queryParams['redirect']);
         } else {
-            // If not, check if there is a redirect specified
-            if (!empty ($_GET['redirect'])) {
-                // If so, use it
-                header('Location: ' . $_GET['redirect']);
-            } else {
-                // If not, redirect to moderation
-                header('Location: ../moderation/');
-            }
+            $response = $this->response->withHeader('Location', '../moderation/');
         }
 
-        // Exit after redirect
-        exit;
+        return $response;
     }
 
-    // Parse and return template files
-    protected function parse_templates($template, $fragment, array $data, \HashOver $hashover)
+    protected function render(string $templateName, array $templateData): ResponseInterface
     {
-        // Parse page fragment template file
-        $page = $hashover->templater->parseTemplate(APP_DIR . '/templates/admin/' . $fragment, $data);
+        $templateData = $this->mergeTemplateData($templateData);
 
-        // Indent page fragment by two tabs
-        $page = str_replace(PHP_EOL, PHP_EOL . "\t\t", $page);
+        $response = $this->response;
+        $response->getBody()->write($this->latte->renderToString(APP_DIR . '/templates/admin/' . $templateName, $templateData));
 
-        // Get configured language in en-us format
-        $language = str_replace('_', '-', strtolower($hashover->setup->language));
+        return $response;
+    }
 
-        // Fallback to English if documentation does not exist for configured language
+    private function mergeTemplateData(array $data): array
+    {
+        $language = str_replace('_', '-', strtolower($this->hashover->setup->language));
         $language = file_exists('/docs/' . $language) ? $language : 'en-us';
 
-        // Merge some default informatin into template data
-        $data = array_merge($data, array(
-            // HTTP root directory
-            'root' => rtrim($hashover->setup->httpRoot, '/'),
-
-            // HTTP admin root directory
-            'admin' => $hashover->setup->getHttpPath('admin'),
-
-            // Navigation locale strings
-            'moderation' => $hashover->locale->text['moderation'],
-            'ip-blocking' => $hashover->locale->text['block-ip-addresses'],
-            'url-filtering' => $hashover->locale->text['filter-url-queries'],
-            'settings' => $hashover->locale->text['settings'],
-            'updates' => $hashover->locale->text['check-for-updates'],
-            'docs' => $hashover->locale->text['documentation'],
-            'logout' => $hashover->locale->text['logout'],
-
-            // Configured language in en-us format
+        $data = array_merge($data, [
+            'root' => rtrim($this->hashover->setup->httpRoot, '/'),
+            'admin' => $this->hashover->setup->getHttpPath('admin'),
+            'moderation' => $this->hashover->locale->text['moderation'],
+            'ipBlocking' => $this->hashover->locale->text['block-ip-addresses'],
+            'urlFiltering' => $this->hashover->locale->text['filter-url-queries'],
+            'settings' => $this->hashover->locale->text['settings'],
+            'updates' => $this->hashover->locale->text['check-for-updates'],
+            'docs' => $this->hashover->locale->text['documentation'],
+            'logout' => $this->hashover->locale->text['logout'],
             'language' => $language,
+        ]);
 
-            // Parsed page template
-            'content' => $page
-        ));
-
-        // Check if form has been submitted
-        if (!empty ($_GET['status'])) {
-            // If so, check if form submission was successful
+        if (! empty($_GET['status'])) {
             if ($_GET['status'] === 'success') {
-                // If so, add success message locale to template data
-                $data['message'] = $hashover->locale->text['successful-save'];
-
-                // And add message status to template data
-                $data['message-status'] = 'success';
+                $data['message'] = $this->hashover->locale->text['successful-save'];
+                $data['messageStatus'] = 'success';
             } else {
-                // If so, add error message locale to template data
-                $data['message'] = $hashover->locale->text['failed-to-save'];
-
-                // Add file permissions explanation to template data
-                $data['error'] = $hashover->locale->permissionsInfo('config');
-
-                // And add message status to template data
-                $data['message-status'] = 'error';
+                $data['message'] = $this->hashover->locale->text['failed-to-save'];
+                $data['error'] = $this->hashover->locale->permissionsInfo('config');
+                $data['messageStatus'] = 'error';
             }
         }
 
-        return $hashover->templater->parseTemplate(APP_DIR . '/templates/admin/' . $template . '.html', $data);
+        return $data;
     }
 
     protected function checkAllowed(): void

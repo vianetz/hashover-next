@@ -9,14 +9,17 @@ self-hosted system and allows completely anonymous comments to be posted, the
 only required information is the comment itself.
 
 ## Purpose of this fork
-This repository is a modern implementation of the [great original hashover-next](https://github.com/jacobwb/hashover-next) with the following goals:
+This repository is a complete refactoring of the [great original hashover-next](https://github.com/jacobwb/hashover-next) with the following goals:
+- Improve application security (by using a router, environment variables as secrets, adding separate `htdocs` folder, removing superglobals, dependency injection, etc.)
 - PHP 8 compatibility
-- Dependency management with composer
+- Dependency management and autoloading with composer
 - Replace components with external libraries, e.g. Swiftmailer
 - Add application logging
-- Improve application security (by using a router, environment variables as secrets, adding separate `htdocs` folder, removing superglobals, dependency injection, etc.)
 - Provide Docker container
 - Implement unit tests
+
+## Status of refactoring
+Currently the base functionality has been refactored. All reworked code is in `src`.
 
 Notable Features
 ---

@@ -19,15 +19,17 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
+use Psr\Http\Message\ResponseInterface;
+
 final class UpdateHandler extends AbstractHandler
 {
-    public function __invoke(): void
+    public function __invoke(): ResponseInterface
     {
         $template = [
             'title' => $this->hashover->locale->text['check-for-updates'],
-            'sub-title' => $this->hashover->locale->text['coming-soon'],
+            'subTitle' => $this->hashover->locale->text['coming-soon'],
         ];
 
-        echo $this->parse_templates('admin', 'updates.html', $template, $this->hashover);
+        return $this->render('updates.html', $template);
     }
 }

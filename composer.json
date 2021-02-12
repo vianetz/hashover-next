@@ -22,7 +22,8 @@
         "relay/relay": "^2.1",
         "middlewares/fast-route": "^2.0",
         "middlewares/request-handler": "^2.0",
-        "narrowspark/http-emitter": "^1.0"
+        "narrowspark/http-emitter": "^1.0",
+        "latte/latte": "^2.10"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.74",

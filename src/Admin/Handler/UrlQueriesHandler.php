@@ -19,106 +19,73 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
-use HashOver\HTMLTag;
 use HashOver\Misc;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class UrlQueriesHandler extends AbstractHandler
 {
-    public function __invoke(): void
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
-        // Default URL Query Pair array
-        $ignored_queries = array();
+        $ignoredQueries = [];
+        $parsedBody = $request->getParsedBody();
 
-        $queries_file = $this->hashover->setup->getAbsolutePath('config/ignored-queries.json');
+        $queriesFile = $this->hashover->setup->getAbsolutePath('config/ignored-queries.json');
 
-        if (!empty ($_POST['names']) and is_array($_POST['names'])
-            and !empty ($_POST['values']) and is_array($_POST['values'])) {
-            // If so, run through submitted queries
-            for ($i = 0, $il = count($_POST['names']); $i < $il; $i++) {
-                // Add each non-empty query to the pair array
-                if (!empty ($_POST['names'][$i])) {
-                    // Start the query pair with the query name
-                    $query_pair = $_POST['names'][$i];
-
-                    // Check if the query has a value
-                    if (!empty ($_POST['values'][$i])) {
-                        // If so, add it to the pair
-                        $query_pair .= '=' . $_POST['values'][$i];
-                    }
-
-                    // Add the query pair to the URL Query Pair array
-                    $ignored_queries[] = $query_pair;
+        if (! empty($parsedBody['names']) && \is_array($parsedBody['names'])
+            && ! empty($parsedBody['values']) && \is_array($parsedBody['values'])) {
+            for ($i = 0, $il = \count($parsedBody['names']); $i < $il; $i++) {
+                if (empty($parsedBody['names'][$i])) {
+                    continue;
                 }
+
+                $queryPair = $parsedBody['names'][$i];
+                if (! empty($parsedBody['values'][$i])) {
+                    $queryPair .= '=' . $parsedBody['values'][$i];
+                }
+
+                $ignoredQueries[] = $queryPair;
             }
 
             if ($this->hashover->login->verifyAdmin()) {
-                // If so, attempt to save the JSON data
-                $saved = $this->dataFiles->saveJSON($queries_file, $ignored_queries);
+                $saved = $this->dataFiles->saveJSON($queriesFile, $ignoredQueries);
 
                 if ($saved) {
-                    $this->redirect('./?status=success');
+                    return $this->redirect($request, './?status=success');
                 }
             }
 
-            $this->redirect('./?status=failure');
+            return $this->redirect($request, './?status=failure');
         }
 
-        // Otherwise, load and parse URL Query Pairs file
-        $json = $this->dataFiles->readJSON($queries_file);
-
-        // Check for JSON parse error
-        if (is_array($json)) {
-            $ignored_queries = $json;
+        $json = $this->dataFiles->readJSON($queriesFile);
+        if (\is_array($json)) {
+            $ignoredQueries = $json;
         }
 
-        // URL Query Pair inputs
-        $inputs = new HTMLTag('span');
+        $inputs = [];
+        for ($i = 0, $il = max(3, \count($ignoredQueries)); $i < $il; $i++) {
+            $query = Misc::getArrayItem($ignoredQueries, $i) ?: '';
 
-        // Create URL Query Pair inputs
-        for ($i = 0, $il = max(3, count($ignored_queries)); $i < $il; $i++) {
-            // Use URL query pairs from file or blank
-            $query = Misc::getArrayItem($ignored_queries, $i) ?: '';
+            $queryParts = explode('=', $query);
 
-            // Split query pair by equals sign
-            $query_parts = explode('=', $query);
-
-            // Create div tag for name and value inputs
-            $input = new HTMLTag ('div');
-
-            // Add input for query name to input div
-            $input->appendChild(new HTMLTag ('input', array(
-                'class' => 'name',
-                'type' => 'text',
-                'name' => 'names[]',
-                'value' => $query_parts[0],
-                'size' => '15',
-                'placeholder' => $this->hashover->locale->text['name'],
-                'title' => $this->hashover->locale->text['url-queries-name-tip']
-            ), false, true));
-
-            // Add input for query value to input div
-            $input->appendChild(new HTMLTag ('input', array(
-                'class' => 'value',
-                'type' => 'text',
-                'name' => 'values[]',
-                'value' => Misc::getArrayItem($query_parts, 1) ?: '',
-                'size' => '25',
-                'placeholder' => $this->hashover->locale->text['value'],
-                'title' => $this->hashover->locale->text['url-queries-value-tip']
-            ), false, true));
-
-            // Add input to inputs container
-            $inputs->appendChild($input);
+            $inputs[] = [
+                'nameValue' => $queryParts[0],
+                'namePlaceholder' => $this->hashover->locale->text['name'],
+                'nameTip' => $this->hashover->locale->text['url-queries-name-tip'],
+                'value' => Misc::getArrayItem($queryParts, 1) ?: '',
+                'valuePlaceholder' => $this->hashover->locale->text['value'],
+                'valueTip' => $this->hashover->locale->text['url-queries-value-tip'],
+            ];
         }
 
         $template = [
             'title' => $this->hashover->locale->text['url-queries-title'],
-            'sub-title' => $this->hashover->locale->text['url-queries-sub'],
-            'inputs' => $inputs->getInnerHTML("\t\t"),
-            'save-button' => $this->hashover->locale->text['save']
+            'subTitle' => $this->hashover->locale->text['url-queries-sub'],
+            'inputs' => $inputs,
+            'saveButton' => $this->hashover->locale->text['save'],
         ];
 
-        // Load and parse HTML template
-        echo $this->parse_templates('admin', 'url-queries.html', $template, $this->hashover);
+        return $this->render('url-queries.html', $template);
     }
 }

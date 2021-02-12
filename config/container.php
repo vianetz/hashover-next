@@ -26,12 +26,17 @@ $definitions = [
     \HashOver\Backend\EmailSender::class => static function (\Psr\Container\ContainerInterface $c) {
         return new EmailSender($c->get(\Psr\Log\LoggerInterface::class), (string)\DI\env('SMTP_HOST'), (int)\DI\env('SMTP_HOST'), (string)\DI\env('SMTP_USER'), (string)\DI\env('SMTP_PASSWORD'));
     },
+    Latte\Engine::class => static function (\Psr\Container\ContainerInterface $c) {
+        $latte = new \Latte\Engine();
+        $latte->setTempDirectory(sys_get_temp_dir());
+        return $latte;
+    },
 ];
 
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->useAnnotations(false);
-$containerBuilder->enableCompilation(__DIR__ . '/tmp');
-$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
+#$containerBuilder->enableCompilation(__DIR__ . '/tmp');
+#$containerBuilder->writeProxiesToFile(true, __DIR__ . '/tmp/proxies');
 $containerBuilder->addDefinitions($definitions);
 
 return $containerBuilder->build();

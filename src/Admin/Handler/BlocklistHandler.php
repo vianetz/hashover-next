@@ -19,76 +19,58 @@ declare(strict_types=1);
 
 namespace HashOver\Admin\Handler;
 
-use HashOver\HTMLTag;
 use HashOver\Misc;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class BlocklistHandler extends AbstractHandler
 {
-    public function __invoke(): void
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
-        $blocklist = array();
+        $blocklist = [];
 
-        // Blocklist JSON file location
         $blocklist_file = $this->hashover->setup->getAbsolutePath('config/blocklist.json');
 
-        // Check if the form has been submitted
-        if (!empty ($_POST['addresses']) and is_array($_POST['addresses'])) {
-            // If so, run through submitted addresses
-            foreach ($_POST['addresses'] as $address) {
-                // Add each non-empty address value to the blocklist array
-                if (!empty ($address)) {
+        $parsedBody = $request->getParsedBody();
+        if (! empty($parsedBody['addresses']) && \is_array($parsedBody['addresses'])) {
+            foreach ($parsedBody['addresses'] as $address) {
+                if (! empty($address)) {
                     $blocklist[] = $address;
                 }
             }
 
-            // Check if the user login is admin
-            if ($this->hashover->login->verifyAdmin() === true) {
-                // If so, attempt to save the JSON data
+            if ($this->hashover->login->verifyAdmin()) {
                 $saved = $this->dataFiles->saveJSON($blocklist_file, $blocklist);
 
-                // If saved successfully, redirect with success indicator
-                if ($saved === true) {
-                    $this->redirect('./?status=success');
+                if ($saved) {
+                    return $this->redirect($request, './?status=success');
                 }
             }
 
-            $this->redirect('./?status=failure');
+            return $this->redirect($request, './?status=failure');
         }
 
         $json = $this->dataFiles->readJSON($blocklist_file);
 
-        // Check for JSON parse error
-        if (is_array($json)) {
+        if (\is_array($json)) {
             $blocklist = $json;
         }
 
-        // IP Address inputs
-        $inputs = new HTMLTag('span');
-
-        // Create IP address inputs
+        $inputs = [];
         for ($i = 0, $il = max(3, count($blocklist)); $i < $il; $i++) {
-            // Create input tag
-            $input = new HTMLTag ('input', array(
-                'class' => 'addresses',
-                'type' => 'text',
-                'name' => 'addresses[]',
+            $inputs[] = [
                 'value' => Misc::getArrayItem($blocklist, $i) ?: '',
-                'size' => '15',
-                'maxlength' => '15',
-                'placeholder' => '127.0.0.1',
                 'title' => $this->hashover->locale->text['blocklist-ip-tip'],
-            ), false, true);
-
-            $inputs->appendChild($input);
+            ];
         }
 
         $template = [
             'title' => $this->hashover->locale->text['blocklist-title'],
-            'sub-title' => $this->hashover->locale->text['blocklist-sub'],
-            'inputs' => $inputs->getInnerHTML("\t\t"),
-            'save-button' => $this->hashover->locale->text['save'],
+            'subTitle' => $this->hashover->locale->text['blocklist-sub'],
+            'inputs' => $inputs,
+            'saveButton' => $this->hashover->locale->text['save'],
         ];
 
-        echo $this->parse_templates('admin', 'blocklist.html', $template, $this->hashover);
+        return $this->render('blocklist.html', $template);
     }
 }

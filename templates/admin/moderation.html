@@ -1,13 +1,34 @@
-<table id="moderation" class="general-style" cellspacing="0" cellpadding="0">
-	<tbody>
-		<tr>
-			<td id="{left-id}" valign="top">
-				{threads}
-			</td>
+{layout 'admin.html'}
 
-			<td id="{right-id}" valign="top">
-				{websites}
-			</td>
-		</tr>
-	</tbody>
+{block content}
+<table id="moderation" class="general-style" cellspacing="0" cellpadding="0">
+    <tbody>
+    <tr>
+        <td id="{$leftId}" valign="top">
+            <table id="threads" cellspacing="0" cellpadding="8">
+                <thead>
+                    <tr><th>{$currentWebsite}</th></tr>
+                </thead>
+                <tbody>
+                    <tr n:foreach="$threads as $thread">
+                        <td>
+                            <div><a href="{$thread[link]}">{$thread[title]}</a></div>
+                            <p><small>{$thread[url]}</small></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+
+        <td id="{$rightId}" valign="top">
+            <table id="websites" cellspacing="0" cellpadding="8" n:if="$websites">
+                <thead><tr><th>{$websiteTitle}</th></tr></thead>
+                <tbody>
+                    <tr n:foreach="$websites as $website"><td><a href="{$website[link]}">{$website[title]}</a></td></tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
 </table>
+{/block}
