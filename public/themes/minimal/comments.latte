@@ -57,9 +57,7 @@
         </div>
 
         <label n:if="$enableLabels" for="hashover-main-comment" class="hashover-comment-label">{_'post-button'}</label>
-        <textarea id="{='main-comment'|hashoverPrefix:false}" n:class="hashover-textarea, hashover-main-textarea, $isCommentFailed ? hashover-emphasized-input" title="{if $reply}{_'reply-form'}{else}{_'comment-form'}{/if}" name="comment" cols="63" rows="6" required="required" placeholder="{if $reply}{_'reply-form'}{else}{_'comment-form'}{/if}">
-            {$comment}
-        </textarea>
+        <textarea id="{='main-comment'|hashoverPrefix:false}" n:class="hashover-textarea, hashover-main-textarea, $isCommentFailed ? hashover-emphasized-input" title="{if $reply}{_'reply-form'}{else}{_'comment-form'}{/if}" name="comment" cols="63" rows="6" required="required" placeholder="{if $reply}{_'reply-form'}{else}{_'comment-form'}{/if}">{$comment}</textarea>
         <div id="{='main-formatting-message'|hashoverPrefix:false}" n:class="hashover-formatting-message, $isPhpMode ? 'hashover-message-open hashover-php-message-open'">
             <div class="hashover-formatting-table">
                 <div>
