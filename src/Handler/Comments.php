@@ -132,7 +132,7 @@ final class Comments extends Javascript
                 'theme-css' => $this->setup->getThemePath('comments.css'),
                 'rss-api' => $this->setup->getHttpPath('api/rss.php'),
                 'image-format' => $this->setup->imageFormat,
-                'device-type' => ($this->setup->isMobile === true) ? 'mobile' : 'desktop',
+                'device-type' => $this->setup->isMobile ? 'mobile' : 'desktop',
                 'collapses-interface' => $this->setup->collapsesInterface,
                 'collapses-comments' => $this->setup->collapsesComments,
                 'allows-images' => $this->setup->allowsImages,
@@ -186,7 +186,7 @@ final class Comments extends Javascript
         }
     
         // Text for "Show X Other Comment(s)" link
-        if ($this->setup->collapsesComments !== false) {
+        if ($this->setup->collapsesComments) {
             // Check if at least 1 comment is to be shown
             if ($this->setup->collapseLimit >= 1) {
                 // Shorter variables
@@ -197,7 +197,7 @@ final class Comments extends Javascript
                 $other_count = ($total_count - 1) - $collapse_limit;
     
                 // Subtract deleted comment counts
-                if ($this->setup->countsDeletions === false) {
+                if (! $this->setup->countsDeletions) {
                     $other_count -= $this->hashover->thread->collapsedDeletedCount;
                 }
     
