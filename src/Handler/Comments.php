@@ -19,7 +19,9 @@ declare(strict_types=1);
 
 namespace HashOver\Handler;
 
+use HashOver\Backend\CommentsHtml;
 use HashOver\Misc;
+use HashOver\Setup;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -27,16 +29,20 @@ final class Comments extends Javascript
 {
     private \HashOver $hashover;
     private ResponseInterface $response;
+    private Setup $setup;
+    private CommentsHtml $commentsHtml;
 
-    public function __construct(ResponseInterface $response, \HashOver $hashover)
+    public function __construct(ResponseInterface $response, \HashOver $hashover, Setup $setup, CommentsHtml $commentsHtml)
     {
         $this->response = $response;
         $this->hashover = $hashover;
+        $this->setup = $setup;
+        $this->commentsHtml = $commentsHtml;
     }
 
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
-        if ($this->hashover->setup->enableStatistics) {
+        if ($this->setup->enableStatistics) {
             $this->hashover->statistics->executionStart();
         }
 
@@ -45,13 +51,13 @@ final class Comments extends Javascript
 
         $this->hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
     
-        $this->hashover->setup->setPageURL($request);
-        $this->hashover->setup->setPageTitle('request');
-        $this->hashover->setup->setThreadName('request');
-        $this->hashover->setup->setWebsite('request');
-        $this->hashover->setup->setInstance('request');
+        $this->setup->setPageURL($request);
+        $this->setup->setPageTitle('request');
+        $this->setup->setThreadName('request');
+        $this->setup->setWebsite('request');
+        $this->setup->setInstance('request');
     
-        $this->hashover->setup->loadFrontendSettings();
+        $this->setup->loadFrontendSettings();
     
         $this->hashover->initiate();
         $this->hashover->parsePrimary();
@@ -63,8 +69,8 @@ final class Comments extends Javascript
         $data = [];
     
         // Check if backend sorting and collapsing is enabled
-        if ($this->hashover->setup->collapsesComments === true
-            && $this->hashover->setup->usesAjax === true) {
+        if ($this->setup->collapsesComments === true
+            && $this->setup->usesAjax === true) {
             // If so, sort the comments first
             $this->hashover->sortPrimary();
     
@@ -73,9 +79,8 @@ final class Comments extends Javascript
         }
     
         // Check if we're preparing HashOver
-        if ($this->hashover->setup->getRequest('prepare') !== false) {
-            // If so, add locales to data
-            $data['locale'] = array(
+        if ($this->setup->getRequest('prepare') !== false) {
+            $data['locale'] = [
                 'cancel' => $this->hashover->locale->text['cancel'],
                 'dislike-comment' => $this->hashover->locale->text['dislike-comment'],
                 'disliked-comment' => $this->hashover->locale->text['disliked-comment'],
@@ -106,39 +111,38 @@ final class Comments extends Javascript
                 'email' => $this->hashover->locale->text['email'],
                 'name' => $this->hashover->locale->text['name'],
                 'password' => $this->hashover->locale->text['password'],
-                'website' => $this->hashover->locale->text['website']
-            );
-    
-            // Add setup information to data
-            $data['setup'] = array(
+                'website' => $this->hashover->locale->text['website'],
+            ];
+
+            $data['setup'] = [
                 'server-eol' => PHP_EOL,
-                'collapse-limit' => $this->hashover->setup->collapseLimit,
-                'default-sorting' => $this->hashover->setup->defaultSorting,
-                'default-name' => $this->hashover->setup->defaultName,
+                'collapse-limit' => $this->setup->collapseLimit,
+                'default-sorting' => $this->setup->defaultSorting,
+                'default-name' => $this->setup->defaultName,
                 'user-is-logged-in' => $this->hashover->login->userIsLoggedIn,
                 'user-is-admin' => $this->hashover->login->userIsAdmin,
-                'http-root' => $this->hashover->setup->httpRoot,
-                'http-backend' => $this->hashover->setup->httpBackend,
-                'allows-dislikes' => $this->hashover->setup->allowsDislikes,
-                'allows-likes' => $this->hashover->setup->allowsLikes,
-                'image-extensions' => $this->hashover->setup->imageTypes,
-                'image-placeholder' => $this->hashover->setup->getImagePath('place-holder'),
-                'stream-mode' => ($this->hashover->setup->replyMode === 'stream'),
-                'stream-depth' => $this->hashover->setup->streamDepth,
-                'theme-css' => $this->hashover->setup->getThemePath('comments.css'),
-                'rss-api' => $this->hashover->setup->getHttpPath('api/rss.php'),
-                'image-format' => $this->hashover->setup->imageFormat,
-                'device-type' => ($this->hashover->setup->isMobile === true) ? 'mobile' : 'desktop',
-                'collapses-interface' => $this->hashover->setup->collapsesInterface,
-                'collapses-comments' => $this->hashover->setup->collapsesComments,
-                'allows-images' => $this->hashover->setup->allowsImages,
-                'uses-markdown' => $this->hashover->setup->usesMarkdown,
-                'uses-cancel-buttons' => $this->hashover->setup->usesCancelButtons,
-                'uses-auto-login' => $this->hashover->setup->usesAutoLogin,
-                'uses-ajax' => $this->hashover->setup->usesAjax,
-                'allows-login' => $this->hashover->setup->allowsLogin,
-                'form-fields' => $this->hashover->setup->formFields
-            );
+                'http-root' => $this->setup->httpRoot,
+                'http-backend' => $this->setup->httpBackend,
+                'allows-dislikes' => $this->setup->allowsDislikes,
+                'allows-likes' => $this->setup->allowsLikes,
+                'image-extensions' => $this->setup->imageTypes,
+                'image-placeholder' => $this->setup->getImagePath('place-holder'),
+                'stream-mode' => ($this->setup->replyMode === 'stream'),
+                'stream-depth' => $this->setup->streamDepth,
+                'theme-css' => $this->setup->getThemePath('comments.css'),
+                'rss-api' => $this->setup->getHttpPath('api/rss.php'),
+                'image-format' => $this->setup->imageFormat,
+                'device-type' => ($this->setup->isMobile === true) ? 'mobile' : 'desktop',
+                'collapses-interface' => $this->setup->collapsesInterface,
+                'collapses-comments' => $this->setup->collapsesComments,
+                'allows-images' => $this->setup->allowsImages,
+                'uses-markdown' => $this->setup->usesMarkdown,
+                'uses-cancel-buttons' => $this->setup->usesCancelButtons,
+                'uses-auto-login' => $this->setup->usesAutoLogin,
+                'uses-ajax' => $this->setup->usesAjax,
+                'allows-login' => $this->setup->allowsLogin,
+                'form-fields' => $this->setup->formFields,
+            ];
     
             // And add UI HTML to data
             $data['ui'] = array(
@@ -160,41 +164,40 @@ final class Comments extends Javascript
                 'edit-form' => $this->hashover->ui->editForm()
             );
         }
-    
-        // HashOver instance information
-        $data['instance'] = array(
+
+        $data['instance'] = [
             'primary-count' => $this->hashover->thread->primaryCount - 1,
             'total-count' => $this->hashover->thread->totalCount - 1,
-            'page-url' => $this->hashover->setup->pageURL,
-            'page-title' => $this->hashover->setup->pageTitle,
-            'thread-name' => $this->hashover->setup->threadName,
-            'file-path' => $this->hashover->setup->filePath,
-            'initial-html' => $this->hashover->ui->initialHTML(false),
-            'comments' => $this->hashover->comments
-        );
+            'page-url' => $this->setup->pageURL,
+            'page-title' => $this->setup->pageTitle,
+            'thread-name' => $this->setup->threadName,
+            'file-path' => $this->setup->filePath,
+            'initial-html' => $this->commentsHtml->render($this->hashover->ui->commentCounts, $this->hashover->ui->comments, $this->hashover->ui->popularComments, false),
+            'comments' => $this->hashover->comments,
+        ];
     
         // Count according to `$showsReplyCount` setting
         $show_comments = $this->hashover->getCommentCount('show-comments', 'show-comment');
     
         // Add locales for show interface button
-        if ($this->hashover->setup->collapsesInterface !== false) {
+        if (! $this->setup->collapsesInterface) {
             $data['instance']['post-a-comment'] = $this->hashover->ui->postComment;
             $data['instance']['show-comments'] = $show_comments;
         }
     
         // Text for "Show X Other Comment(s)" link
-        if ($this->hashover->setup->collapsesComments !== false) {
+        if ($this->setup->collapsesComments !== false) {
             // Check if at least 1 comment is to be shown
-            if ($this->hashover->setup->collapseLimit >= 1) {
+            if ($this->setup->collapseLimit >= 1) {
                 // Shorter variables
                 $total_count = $this->hashover->thread->totalCount;
-                $collapse_limit = $this->hashover->setup->collapseLimit;
+                $collapse_limit = $this->setup->collapseLimit;
     
                 // Get number of comments after collapse limit
                 $other_count = ($total_count - 1) - $collapse_limit;
     
                 // Subtract deleted comment counts
-                if ($this->hashover->setup->countsDeletions === false) {
+                if ($this->setup->countsDeletions === false) {
                     $other_count -= $this->hashover->thread->collapsedDeletedCount;
                 }
     
@@ -218,7 +221,7 @@ final class Comments extends Javascript
             $data['instance']['more-link-text'] = $more_link_text;
         }
 
-        if ($this->hashover->setup->enableStatistics) {
+        if ($this->setup->enableStatistics) {
             $this->hashover->statistics->executionEnd();
 
             $data['statistics'] = [

@@ -99,7 +99,7 @@ class Settings extends SensitiveSettings
 	public function syncSettings ()
 	{
 		// Theme path
-		$this->themePath = 'themes/' . $this->theme;
+		$this->themePath = 'public/themes/' . $this->theme;
 
 		// Check if timezone is set to auto
 		if ($this->serverTimezone === 'auto') {
@@ -317,24 +317,24 @@ class Settings extends SensitiveSettings
 		return $path;
 	}
 
-	// Returns a client-side path for a file within the configured theme
-	public function getThemePath ($file, $http = true)
-	{
-		// Path to the requested file in the configured theme
-		$theme_file = $this->joinPaths ($this->themePath, $file);
+    /**
+     * Returns a client-side path for a file within the configured theme
+     */
+    public function getThemePath(string $file, bool $http = true): string
+    {
+        // Path to the requested file in the configured theme
+        $themeFile = $this->joinPaths($this->themePath, $file);
 
-		// Use the same file from the default theme if it doesn't exist
-		if (!file_exists ($this->getAbsolutePath ($theme_file))) {
-			$theme_file = 'themes/default/' . $file;
-		}
+        if (! file_exists($this->getAbsolutePath($themeFile))) {
+            $themeFile = 'themes/default/' . $file;
+        }
 
-		// Convert the theme file path for HTTP use if told to
-		if ($http !== false) {
-			$theme_file = $this->getHttpPath ($theme_file);
-		}
+        if ($http) {
+            $themeFile = $this->getHttpPath($themeFile);
+        }
 
-		return $theme_file;
-	}
+        return $themeFile;
+    }
 
 	// Checks if connection is on HTTPS/SSL
 	public function isHTTPS ()

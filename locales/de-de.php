@@ -70,6 +70,7 @@ $locale = array (
 	'delete-comment'	=> 'Möchtest du diesen Kommentar wirklich löschen?',
 	'post-a-comment'	=> 'Kommentar hinzufügen',
 	'post-a-comment-on'	=> 'Kommentar hinzufügen zu "%s"',
+	'on' => 'zu',
 	'most-popular-comment'	=> 'Beliebtester Kommentar',
 	'most-popular-comments'	=> 'Beliebteste Kommentare',
 	'showing-comment'	=> '%d Kommentar',

@@ -37,6 +37,7 @@ $definitions = [
         $latte = new \Latte\Engine();
         $latte->setTempDirectory(sys_get_temp_dir());
         $latte->addFilter('translate', [$c->get(\HashOver\Domain\Translator::class), 'translate']);
+        $latte->addFilter('hashoverPrefix', [$c->get(\HashOver\Helper\TemplateHelper::class), 'prefix']);
         return $latte;
     },
 ];

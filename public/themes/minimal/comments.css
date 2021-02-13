@@ -1,3 +1,6 @@
+.hashover .hide {
+  display: none;
+}
 .hashover .hashover-inputs label,
 .hashover .hashover-comment-label {
   padding: 5px;

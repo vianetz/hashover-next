@@ -40,7 +40,7 @@ final class HashOver
 	public $commentParser;
 	public $markdown;
 	public $comments = array ();
-	public $ui;
+	public \HashOver\FormUI $ui;
 
     public function __construct(
         \HashOver\Statistics $statistics,

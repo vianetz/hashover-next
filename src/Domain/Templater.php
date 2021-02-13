@@ -57,8 +57,7 @@ final class Templater
 
     public function parseTheme($file, array $template = []): string
     {
-        $path = $this->setup->getThemePath($file, false);
-        $path = $this->setup->getAbsolutePath('public' . DIRECTORY_SEPARATOR . $path);
+        $path = $this->setup->getAbsolutePath($this->setup->getThemePath($file, false));
 
         if (! empty($template)) {
             return $this->parseTemplate($path, $template);

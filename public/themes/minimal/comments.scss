@@ -3,6 +3,10 @@ $highlight-color: #e9edf0;
 $border-color: rgba(0, 0, 0, 0.125);
 
 .hashover {
+    .hide {
+        display: none;
+    }
+
     .hashover-inputs label,
     .hashover-comment-label {
         padding: 5px;
