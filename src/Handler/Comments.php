@@ -129,7 +129,7 @@ final class Comments extends Javascript
                 'image-placeholder' => $this->setup->getImagePath('place-holder'),
                 'stream-mode' => ($this->setup->replyMode === 'stream'),
                 'stream-depth' => $this->setup->streamDepth,
-                'theme-css' => $this->setup->getThemePath('comments.css'),
+                'theme-css' => $this->setup->getThemePath('comments.css', true),
                 'rss-api' => $this->setup->getHttpPath('api/rss.php'),
                 'image-format' => $this->setup->imageFormat,
                 'device-type' => $this->setup->isMobile ? 'mobile' : 'desktop',
@@ -143,9 +143,8 @@ final class Comments extends Javascript
                 'allows-login' => $this->setup->allowsLogin,
                 'form-fields' => $this->setup->formFields,
             ];
-    
-            // And add UI HTML to data
-            $data['ui'] = array(
+
+            $data['ui'] = [
                 'user-avatar' => $this->hashover->ui->userAvatar(),
                 'name-link' => $this->hashover->ui->nameElement('a'),
                 'name-span' => $this->hashover->ui->nameElement('span'),
@@ -159,10 +158,10 @@ final class Comments extends Javascript
                 'name-wrapper' => $this->hashover->ui->nameWrapper(),
                 'date-link' => $this->hashover->ui->dateLink(),
                 'comment-wrapper' => $this->hashover->ui->commentWrapper(),
-                'theme' => $this->hashover->templater->parseTheme('comments.html'),
+                'theme' => $this->hashover->templater->loadFile('comments.js.html'),
                 'reply-form' => $this->hashover->ui->replyForm(),
-                'edit-form' => $this->hashover->ui->editForm()
-            );
+                'edit-form' => $this->hashover->ui->editForm(),
+            ];
         }
 
         $data['instance'] = [

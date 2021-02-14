@@ -38,8 +38,10 @@ final class Templater
      */
     public function loadFile(string $file): string
     {
+        $path = $this->setup->getAbsolutePath('public/' . $this->setup->getThemePath($file, false));
+
         // Attempt to read template HTML file
-        $content = @file_get_contents($file);
+        $content = @file_get_contents($path);
 
         // Check if template file read successfully
         if ($content !== false) {
@@ -47,7 +49,7 @@ final class Templater
             return trim($content);
         }
 
-        throw new \Exception('Failed to load template file "' . $file . '".');
+        throw new \Exception('Failed to load template file "' . $path . '".');
     }
 
     public function parseTemplate(string $fileName, array $templateVars = array()): string
@@ -57,12 +59,7 @@ final class Templater
 
     public function parseTheme($file, array $template = []): string
     {
-        $path = $this->setup->getAbsolutePath($this->setup->getThemePath($file, false));
-
-        if (! empty($template)) {
-            return $this->parseTemplate($path, $template);
-        }
-
-        return $this->loadFile($path);
+        $path = $this->setup->getAbsolutePath('public/' . $this->setup->getThemePath($file, false));
+        return $this->parseTemplate($path, $template);
     }
 }
