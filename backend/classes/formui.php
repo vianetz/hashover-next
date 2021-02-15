@@ -43,7 +43,7 @@ class FormUI
 
 	public function __construct ($mode = 'javascript', Setup $setup, array $counts)
 	{
-	    $this->templateHelper = new TemplateHelper($setup);
+	    $this->templateHelper = new TemplateHelper($setup, $mode);
 
 		// Store parameters as properties
 		$this->mode = $mode;

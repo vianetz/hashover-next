@@ -8,19 +8,21 @@ use HashOver\Setup;
 final class TemplateHelper
 {
     private Setup $setup;
+    private string $mode;
 
-    public function __construct(Setup $setup)
+    public function __construct(Setup $setup, string $mode = \HashOver::HASHOVER_MODE_JAVASCRIPT)
     {
         $this->setup = $setup;
+        $this->mode = $mode;
     }
 
     /**
      * Returns pseudo-namespace prefixed string
      */
-    public function prefix(string $id = '', bool $template = true): string
+    public function prefix(string $id = '', bool $isPrefixAsTemplate = true): string
     {
         // Return template prefix in JavaScript mode
-        if ($template && $this->mode !== 'php') {
+        if ($isPrefixAsTemplate && $this->mode !== \HashOver::HASHOVER_MODE_PHP) {
             return '[hashover]-' . $id;
         }
 
@@ -36,5 +38,27 @@ final class TemplateHelper
         }
 
         return $prefix;
+    }
+
+    public function suffix(string $id, ?string $permalink = null): string
+    {
+        if (! empty($permalink)) {
+            $id .= '-' . $permalink;
+        }
+
+        return $id;
+    }
+
+    public function createQueryString(string $href, array $queries = [])
+    {
+        // Merge given URL queries with existing page URL queries
+        $queries = array_merge($this->setup->urlQueryList, $queries);
+
+        // Add URL queries to path if URL has queries
+        if (! empty($queries)) {
+            $href .= '?' . http_build_query($queries);
+        }
+
+        return $href;
     }
 }

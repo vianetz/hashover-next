@@ -1,0 +1,46 @@
+{block replyForm}
+<div class="hashover-balloon">
+    <div n:if="$enableAvatars" class="hashover-avatar-image">{='+'|avatar|noescape}</div>
+    {if ! $isLoggedIn}
+    {include 'comment-form-inputs.latte'}
+    {/if}
+
+    <label n:if="$setup->usesLabels" for="{='reply-comment'|hoPrefix}-{$permalink}" class="hashover-comment-label">{_'reply-to-comment'}</label>
+    <textarea id="{='reply-comment'|hoPrefix}-{$permalink}" n:class="hashover-textarea, hashover-reply-textarea, $isCommentFailed ? hashover-emphasized-input" title="{_'reply-form'}" name="comment" cols="63" rows="6" required="required" placeholder="{_'reply-form'}">{$comment}</textarea>
+
+    <div id="{='reply-message-container'|hoPrefix}-{$permalink}" class="hashover-message">
+        <div id="{='reply-message'|hoPrefix}-{$permalink}"></div>
+    </div>
+
+    <div id="{='reply-formatting-message'|hoPrefix}-{$permalink}" n:class="hashover-formatting-message, $isPhpMode ? 'hashover-message-open hashover-php-message-open'">
+        <div class="hashover-formatting-table">
+            <div>
+                <p class="hashover-title">{='allowed-'.$commentFormat|translate}</p>
+                <p>{=$commentFormat.'-format'|translate|noescape}</p>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="url" value="{$url}" />
+    <input type="hidden" name="thread" value="{$thread}" />
+    <input type="hidden" name="title" value="{$pageTitle}" />
+    <input n:if="$setup->remoteAccess" type="hidden" name="remote-access" value="true" />
+    <input n:if="$file" type="hidden" name="reply-to" value="{$file}" />
+
+    <div class="hashover-form-footer">
+        <span class="hashover-form-links">
+            <label n:if="$setup->emailField !== 'off'" for="{='reply-subscribe'|hoPrefix}-{$permalink}" class="hashover-reply-label" title="{_'subscribe-tip'}">
+                <input id="{='reply-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" checked="{$setup->subscribesUser}" />
+                {_'subscribe'}
+            </label>
+
+            <span n:if="!$isPhpMode" id="{='reply-formatting'|hoPrefix}-{$permalink}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
+        </span>
+        <span class="hashover-form-buttons">
+            <a n:if="$setup->usesCancelButtons" id="{='reply-cancel'|hoPrefix}-{$permalink}" class="hashover-submit hashover-reply-cancel" title="{_'cancel'}" rel="nofollow" href="{$setup->filePath|addQueryParams}#hashover-{$permalink}">{_'cancel'}</a>
+
+            <input id="{='reply-post'|hoPrefix}-{$permalink}" class="hashover-submit hashover-reply-post" type="submit" name="post" value="{_'post-reply'}" title="{_'post-reply'}" />
+        </span>
+    </div>
+</div>
+{/block}

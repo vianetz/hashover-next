@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace HashOver\Handler;
 
 use HashOver\Backend\CommentsHtml;
+use HashOver\Backend\ReplyFormHtml;
 use HashOver\Misc;
 use HashOver\Setup;
 use Psr\Http\Message\ResponseInterface;
@@ -31,13 +32,20 @@ final class Comments extends Javascript
     private ResponseInterface $response;
     private Setup $setup;
     private CommentsHtml $commentsHtml;
+    private ReplyFormHtml $replyFormHtml;
 
-    public function __construct(ResponseInterface $response, \HashOver $hashover, Setup $setup, CommentsHtml $commentsHtml)
-    {
+    public function __construct(
+        ResponseInterface $response,
+        \HashOver $hashover,
+        Setup $setup,
+        CommentsHtml $commentsHtml,
+        ReplyFormHtml $replyFormHtml
+    ) {
         $this->response = $response;
         $this->hashover = $hashover;
         $this->setup = $setup;
         $this->commentsHtml = $commentsHtml;
+        $this->replyFormHtml = $replyFormHtml;
     }
 
     public function __invoke(ServerRequestInterface $request): ResponseInterface
@@ -159,7 +167,7 @@ final class Comments extends Javascript
                 'date-link' => $this->hashover->ui->dateLink(),
                 'comment-wrapper' => $this->hashover->ui->commentWrapper(),
                 'theme' => $this->hashover->templater->loadFile('comments.js.html'),
-                'reply-form' => $this->hashover->ui->replyForm(),
+                'reply-form' => $this->replyFormHtml->render(),
                 'edit-form' => $this->hashover->ui->editForm(),
             ];
         }

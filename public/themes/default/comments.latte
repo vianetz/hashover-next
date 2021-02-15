@@ -1,12 +1,12 @@
 {include 'comment-form-new.latte'}
 
 {block comments}
-<div id="{='comments-section'|hashoverPrefix:false}" class="hashover-comments-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
-    <div n:if="$commentCounts[total] > 1" id="{='count-wrapper'|hashoverPrefix:false}" n:class="hashover-count-sort, hashover-dashed-title, !$isPhpMode && $collapseLimit <= 0 ? hide">
-        <span id="{='count'|hashoverPrefix:false}" class="hashover-count">{$commentCounts[show-count]}</span>
+<div id="{='comments-section'|hoPrefix:false}" class="hashover-comments-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
+    <div n:if="$commentCounts[total] > 1" id="{='count-wrapper'|hoPrefix:false}" n:class="hashover-count-sort, hashover-dashed-title, !$isPhpMode && $collapseLimit <= 0 ? hide">
+        <span id="{='count'|hoPrefix:false}" class="hashover-count">{$commentCounts[show-count]}</span>
 
-        <span n:if="!$isPhpMode && $commentCounts[total] > 2" id="{='sort'|hashoverPrefix:false}" class="hashover-select-wrapper hashover-sort-select">
-            <select id="{='sort-select'|hashoverPrefix:false}" name="sort" size="1" title="{_'sort'}">
+        <span n:if="!$isPhpMode && $commentCounts[total] > 2" id="{='sort'|hoPrefix:false}" class="hashover-select-wrapper hashover-sort-select">
+            <select id="{='sort-select'|hoPrefix:false}" name="sort" size="1" title="{_'sort'}">
                 <option value="ascending" n:attr="selected: $defaultSorting == 'ascending'">{_'sort-ascending'}</option>
                 <option value="descending" n:attr="selected: $defaultSorting == 'descending'">{_'sort-descending'}</option>
                 <option value="by-date" n:attr="selected: $defaultSorting == 'by-date'">{_'sort-by-date'}</option>
@@ -26,9 +26,9 @@
         </span>
     </div>
 
-    <div id="{='sort-section'|hashoverPrefix:false}" class="hashover-sort-section">{$comments}</div>
+    <div id="{='sort-section'|hoPrefix:false}" class="hashover-sort-section">{$comments}</div>
 
-    <div id="{='end-links'|hashoverPrefix:false}" class="hashover-end-links"  n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
+    <div id="{='end-links'|hoPrefix:false}" class="hashover-end-links"  n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
         {if $commentCounts[total] > 1 && $enableRssAppend}
         <a href="{$rssUrl}" class="hashover-rss-link" rel="nofollow" target="_blank" title="{_'rss-feed'}">{_'rss-feed'}</a>
         {/if}
@@ -37,10 +37,10 @@
 {/block}
 
 {block popular}
-<div n:if="$commentCounts[popular] > 0" id="{='popular-section'|hashoverPrefix:false}" class="hashover-popular-section"  n:attr="style: !$isPhpMode && ($enableCollapseInterface || $collapseLimit <= 0) ? 'display: none'">
+<div n:if="$commentCounts[popular] > 0" id="{='popular-section'|hoPrefix:false}" class="hashover-popular-section"  n:attr="style: !$isPhpMode && ($enableCollapseInterface || $collapseLimit <= 0) ? 'display: none'">
     <div class="hashover-dashed-title"><span class="hashover-title">
     {if $commentCounts[popular] !== 1}{_'most-popular-comments'}{else}{_'most-popular-comment'}{/if}
     </span></div>
-    <div id="{='top-comments'|hashoverPrefix:false}" class="hashover-top-comments"></div>
+    <div id="{='top-comments'|hoPrefix:false}" class="hashover-top-comments"></div>
 </div>
 {/block}

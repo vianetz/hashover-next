@@ -1,14 +1,14 @@
 {block commentForm}
 <div id="comments" n:if="$instanceNumber == 1"></div>
 <div class="hashover-requires-login-message" n:if="$isLoginRequired">{_'login-required'}</div>
-<div id="{='form-section'|hashoverPrefix:false}" class="hashover-form-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
+<div id="{='form-section'|hoPrefix:false}" class="hashover-form-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
     <span class="hashover-title hashover-main-title hashover-dashed-title">{_'post-a-comment'}{if $enableDisplayTitle} {_'on'} "{$pageTitle}"{/if}</span>
 
-    <div id="{='message-container'|hashoverPrefix:false}" n:class="hashover-title, hashover-message, ($cookie[message] && $isPhpMode) ? 'hashover-message-open hashover-php-message-open', $cookie[isError] ? hashover-message-error">
-        <div id="{='message'|hashoverPrefix:false}" class="hashover-main-message">{$cookie[message]}</div>
+    <div id="{='message-container'|hoPrefix:false}" n:class="hashover-title, hashover-message, ($cookie[message] && $isPhpMode) ? 'hashover-message-open hashover-php-message-open', $cookie[isError] ? hashover-message-error">
+        <div id="{='message'|hoPrefix:false}" class="hashover-main-message">{$cookie[message]}</div>
     </div>
 
-    <form id="{='form'|hashoverPrefix:false}" class="hashover-form hashover-balloon" name="hashover-form" action="{$formAction}" method="post" onsubmit="hashover.postComment(this, document.getElementById('hashover-post-button'), ''); return false;">
+    <form id="{='form'|hoPrefix:false}" class="hashover-form hashover-balloon" name="hashover-form" action="{$formAction}" method="post" onsubmit="hashover.postComment(this, document.getElementById('hashover-post-button'), ''); return false;">
         <div class="hashover-inputs">
             <div class="hashover-avatar-image" n:if="$enableAvatars">{$commentCounts[primary]|avatar|noescape}</div>
             {if $isLoggedIn}
@@ -34,8 +34,8 @@
         </div>
 
         <label n:if="$enableLabels" for="hashover-main-comment" class="hashover-comment-label">{_'post-button'}</label>
-        <textarea id="{='main-comment'|hashoverPrefix:false}" n:class="hashover-textarea, hashover-main-textarea, $isCommentFailed ? hashover-emphasized-input" title="{if $reply}{_'reply-form'}{else}{_'comment-form'}{/if}" name="comment" cols="63" rows="6" required="required" placeholder="{if $reply}{_'reply-form'}{else}{_'comment-form'}{/if}">{$comment}</textarea>
-        <div id="{='main-formatting-message'|hashoverPrefix:false}" n:class="hashover-formatting-message, $isPhpMode ? 'hashover-message-open hashover-php-message-open'">
+        <textarea id="{='main-comment'|hoPrefix:false}" n:class="hashover-textarea, hashover-main-textarea, $isCommentFailed ? hashover-emphasized-input" title="{_'comment-form'}" name="comment" cols="63" rows="6" required="required" placeholder="{_'comment-form'}">{$comment}</textarea>
+        <div id="{='main-formatting-message'|hoPrefix:false}" n:class="hashover-formatting-message, $isPhpMode ? 'hashover-message-open hashover-php-message-open'">
             <div class="hashover-formatting-table">
                 <div>
                     <p class="hashover-title">{='allowed-'.$commentFormat|translate}</p>
@@ -51,21 +51,21 @@
 
         <div class="hashover-form-footer">
             <span class="hashover-form-links">
-                <label for="{='main-subscribe'|hashoverPrefix:false}" class="hashover-main-label" title="{_'subscribe-tip'}">
-                    <input id="{='main-subscribe'|hashoverPrefix:false}" type="checkbox" name="subscribe" checked="{$enableSubscribeByDefault}" />
+                <label n:if="$enableEmailField" for="{='main-subscribe'|hoPrefix:false}" class="hashover-main-label" title="{_'subscribe-tip'}">
+                    <input id="{='main-subscribe'|hoPrefix:false}" type="checkbox" name="subscribe" checked="{$enableSubscribeByDefault}" />
                     {_'subscribe'}
                 </label>
 
-                <span n:if="!$isPhpMode" id="{='main-formatting'|hashoverPrefix:false}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
+                <span n:if="!$isPhpMode" id="{='main-formatting'|hoPrefix:false}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
             </span>
             <span class="hashover-form-buttons">
                 {if $isLoggedIn}
-                <input n:if="$enableLogin" id="{='login-button'|hashoverPrefix:false}" class="hashover-submit hashover-logout" name="logout" value="{_'logout'}" title="{_'logout'}" type="submit" />
+                <input n:if="$enableLogin" id="{='login-button'|hoPrefix:false}" class="hashover-submit hashover-logout" name="logout" value="{_'logout'}" title="{_'logout'}" type="submit" />
                 {else}
-                <input n:if="$enableLogin" id="{='login-button'|hashoverPrefix:false}" class="hashover-submit hashover-login" name="login" value="{_'login'}" title="{_'login-tip'}" type="submit" />
+                <input n:if="$enableLogin" id="{='login-button'|hoPrefix:false}" class="hashover-submit hashover-login" name="login" value="{_'login'}" title="{_'login-tip'}" type="submit" />
                 {/if}
 
-                <input id="{='post-button'|hashoverPrefix:false}" class="hashover-submit hashover-post-button" type="submit" name="post" value="{_'post-button'}" title="{_'post-button'}" />
+                <input id="{='post-button'|hoPrefix:false}" class="hashover-submit hashover-post-button" type="submit" name="post" value="{_'post-button'}" title="{_'post-button'}" />
             </span>
         </div>
     </form>

@@ -41,6 +41,7 @@ final class CommentsHtml
         }
 
         $templateVars = [
+            'setup' => $this->setup,
             'isMobile' => $this->setup->isMobile,
             'isVectorImage' => $this->setup->imageFormat === 'svg',
             'isLoggedIn' => $this->login->userIsLoggedIn,
@@ -51,7 +52,7 @@ final class CommentsHtml
             'instanceNumber' => $this->setup->instanceNumber,
             'isLoginRequired' => $this->setup->requiresLogin && ! $this->login->userIsLoggedIn,
             'enableCollapseInterface' => $this->setup->collapsesInterface,
-            'isPhpMode' => $this->mode === 'php',
+            'isPhpMode' => $this->mode === \HashOver::HASHOVER_MODE_PHP,
             'cookie' => [
                 'message' => $this->cookies->getValue('message') ?? $this->cookies->getValue('error'),
                 'isError' => $this->cookies->getValue('error') !== null,
@@ -65,7 +66,8 @@ final class CommentsHtml
             'isNameFailed' => $this->cookies->getValue('failed-on') === 'name',
             'isWebsiteFailed' => $this->cookies->getValue('failed-on') === 'website',
             'isPasswordFailed' => $this->cookies->getValue('failed-on') === 'password',
-            'reply' => $this->cookies->getValue('replied'),
+            'failedOnField' => $this->cookies->getValue('failed-on'),
+            'reply' => $this->cookies->getValue('replied'), // check if comment is a failed reply
             'commentFormat' => $this->setup->usesMarkdown ? 'markdown' : 'html',
             'url' => $this->setup->pageURL,
             'thread' => $this->setup->threadName,

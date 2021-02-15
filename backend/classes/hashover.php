@@ -19,6 +19,7 @@
 final class HashOver
 {
     public const HASHOVER_MODE_JSON = 'json';
+    public const HASHOVER_MODE_JAVASCRIPT = 'javascript';
     public const HASHOVER_MODE_PHP = 'php';
 
 	protected $mode;
