@@ -48,6 +48,7 @@ abstract class FormHtmlAbstract
             'userEmail' => $this->login->email,
             'isUserTwitter' => $isUserTwitter,
             'isLoggedIn' => $this->login->userIsLoggedIn,
+            'isUserAdmin' => $this->login->userIsAdmin,
             'comment' => $this->cookies->getValue('comment'),
             'commentFormat' => $this->setup->usesMarkdown ? 'markdown' : 'html',
             'isPhpMode' => $this->mode === \HashOver::HASHOVER_MODE_PHP,

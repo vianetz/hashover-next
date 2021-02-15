@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+use HashOver\Backend\ReplyFormHtml;
 
 class PHPMode
 {
@@ -42,7 +43,9 @@ class PHPMode
 	protected $paragraphRegex = '/(?:\r\n|\r|\n){2}/S';
 	protected $lineRegex = '/(?:\r\n|\r|\n)/S';
 
-	public function __construct (Setup $setup, CommentsUI $ui, array $comments, array $raw)
+	private ReplyFormHtml $replyFormHtml;
+
+	public function __construct (Setup $setup, CommentsUI $ui, array $comments, array $raw, ReplyFormHtml $replyFormHtml)
 	{
 		// Store parameters as properties
 		$this->setup = $setup;
@@ -55,6 +58,7 @@ class PHPMode
 		$this->locale = new Locale ($setup);
 		$this->templater = new Templater ($setup);
 		$this->markdown = new Markdown ();
+		$this->replyFormHtml = $replyFormHtml;
 	}
 
 	protected function fileFromPermalink ($permalink)
@@ -82,7 +86,7 @@ class PHPMode
 				'action' => $this->setup->getBackendPath ('form-actions')
 			));
 
-			$form->innerHTML ($this->ui->replyForm ($permalink, $this->setup->pageURL, $this->setup->threadName, $this->setup->pageTitle, $file));
+			$form->innerHTML($this->replyFormHtml->render($permalink, $this->setup->pageURL, $this->setup->threadName, $this->setup->pageTitle, $file));
 
 			return $form->asHTML ();
 		}

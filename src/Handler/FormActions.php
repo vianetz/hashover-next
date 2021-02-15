@@ -74,7 +74,7 @@ final class FormActions extends Javascript
         $this->hashover->initiate();
         $this->hashover->finalize();
 
-        $mode = $this->formData->viaAJAX ? 'javascript' : 'php';
+        $mode = $this->formData->viaAJAX ? \HashOver::HASHOVER_MODE_JAVASCRIPT : \HashOver::HASHOVER_MODE_PHP;
 
         if ($this->requestHelper->hasPostOrGet($request, 'post')) {
             $this->formData->checkForSpam($mode);

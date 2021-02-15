@@ -1,0 +1,45 @@
+{block editForm}
+<div class="hashover-title hashover-dashed-title">{_'edit-comment'}</div>
+{if $isUserAdmin}
+<span class="hashover-edit-status">
+    {_'status'}
+    <span class="hashover-select-wrapper">
+        <select id="{='edit-status'|hoPrefix}-{$permalink} name="status" size="1">
+            <option value="approved" n:attr="selected: ($approvalStatus === 'approved')">{_'status-approved'}</option>
+            <option value="pending" n:attr="selected: ($approvalStatus === 'pending')">{_'status-pending'}</option>
+            <option value="deleted" n:attr="selected: ($approvalStatus === 'deleted')">{_'status-deleted'}</option>
+        </select>
+    </span>
+</span>
+{/if}
+
+{include 'comment-form-inputs.latte'}
+
+
+<label n:if="$setup->usesLabels" for="{='edit-comment'|hoPrefix}-{$permalink}" class="hashover-comment-label">{_'edit-your-comment'}</label>
+<textarea id="{='edit-comment'|hoPrefix}-{$permalink}" n:class="hashover-textarea, hashover-edit-textarea, $isCommentFailed ? hashover-emphasized-input" title="{_'comment-form'}" name="comment" cols="63" rows="6" required="required" placeholder="{_'comment-form'}">{$comment}</textarea>
+
+<input type="hidden" name="url" value="{$url}" />
+<input type="hidden" name="thread" value="{$thread}" />
+<input type="hidden" name="title" value="{$pageTitle}" />
+<input n:if="$setup->remoteAccess" type="hidden" name="remote-access" value="true" />
+<input n:if="$file" type="hidden" name="file" value="{$file}" />
+
+<div class="hashover-form-footer">
+    <span class="hashover-form-links">
+        <label n:if="$setup->emailField !== 'off'" for="{='edit-subscribe'|hoPrefix}-{$permalink}" class="hashover-edit-label" title="{_'subscribe-tip'}">
+            <input id="{='edit-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" checked="{$setup->subscribesUser}" />
+            {_'subscribe'}
+        </label>
+
+        <span n:if="!$isPhpMode" id="{='edit-formatting'|hoPrefix}-{$permalink}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
+    </span>
+    <span class="hashover-form-buttons">
+        <a n:if="$setup->usesCancelButtons" id="{='edit-cancel'|hoPrefix}-{$permalink}" class="hashover-submit hashover-edit-cancel" title="{_'cancel'}" rel="nofollow" href="{$setup->filePath|addQueryParams}#hashover-{$permalink}">{_'cancel'}</a>
+
+        <input id="{='edit-post'|hoPrefix}-{$permalink}" class="hashover-submit hashover-edit-post" type="submit" name="edit" value="{_'save'}" title="{_'save'}" />
+
+        <input id="{='edit-delete'|hoPrefix}-{$permalink}" class="hashover-submit hashover-edit-delete" type="submit" name="delete" {if $isUserAdmin}value="{_'permanently-delete'}" title="{_'permanently-delete'}"{else}value="{_'delete'}" title="{_'delete'}"{/if} />
+    </span>
+</div>
+{/block}
