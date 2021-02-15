@@ -38,7 +38,7 @@ final class Templater
      */
     public function loadFile(string $file): string
     {
-        $path = $this->setup->getAbsolutePath('public/' . $this->setup->getThemePath($file, false));
+        $path = $this->setup->getAbsolutePath($this->setup->getThemePath($file, false));
 
         // Attempt to read template HTML file
         $content = @file_get_contents($path);
@@ -59,7 +59,7 @@ final class Templater
 
     public function parseTheme($file, array $template = []): string
     {
-        $path = $this->setup->getAbsolutePath('public/' . $this->setup->getThemePath($file, false));
+        $path = $this->setup->getAbsolutePath($this->setup->getThemePath($file, false));
         return $this->parseTemplate($path, $template);
     }
 }

@@ -99,7 +99,7 @@ class Settings extends SensitiveSettings
 	public function syncSettings ()
 	{
 		// Theme path
-		$this->themePath = 'themes/' . $this->theme;
+		$this->themePath = 'templates/themes/' . $this->theme;
 
 		// Check if timezone is set to auto
 		if ($this->serverTimezone === 'auto') {
@@ -325,12 +325,12 @@ class Settings extends SensitiveSettings
         // Path to the requested file in the configured theme
         $themeFile = $this->joinPaths($this->themePath, $file);
 
-        if (! file_exists($this->getAbsolutePath('public/' . $themeFile))) {
-            $themeFile = 'themes/default/' . $file;
+        if (! file_exists($this->getAbsolutePath($themeFile))) {
+            $themeFile = 'templates/themes/default/' . $file;
         }
 
         if ($http) {
-            $themeFile = $this->getHttpPath($themeFile);
+            $themeFile = $this->getHttpPath(str_replace('templates/', 'static/dist/', $themeFile));
         }
 
         return $themeFile;
