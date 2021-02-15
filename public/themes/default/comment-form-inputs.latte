@@ -1,0 +1,26 @@
+{block commentFormInputs}
+<div n:if="$enableNameField" n:class="hashover-input-cell, $enableNameRequired ? hashover-required-input">
+    <label n:if="$enableLabels" for="{='main-name'|hashoverPrefix:false}" class="hashover-name-label">{_'name'}</label>
+    <div n:class="hashover-name-input, $isNameFailed ? hashover-emphasized-input">
+        <input type="text" id="{='main-name'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'name'}" name="name" value="{$userName}" autocomplete="username" title="{_'name-tip'} n:attr="required: $enableNameRequired" />
+    </div>
+</div>
+<div n:if="$enablePasswordField" n:class="hashover-input-cell, $enablePasswordRequired ? hashover-required-input">
+    <label n:if="$enableLabels" for="{='main-password'|hashoverPrefix:false}" class="hashover-password-label">{_'password'}</label>
+    <div n:class="hashover-password-input, $isPasswordFailed ? hashover-emphasized-input">
+        <input type="password" id="{='main-password'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'password'}" name="password" value="" autocomplete="current-password" title="{_'password-tip'} n:attr="required: $enablePasswordRequired" />
+    </div>
+</div>
+<div n:if="$enableEmailField" n:class="hashover-input-cell, $enableEmailRequired ? hashover-required-input">
+    <label n:if="$enableLabels" for="{='main-email'|hashoverPrefix:false}" class="hashover-email-label">{_'email'}</label>
+    <div n:class="hashover-name-input, $isEmailFailed ? hashover-emphasized-input">
+        <input type="email" id="{='main-email'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'email'}" name="email" value="{$userEmail}" autocomplete="off" title="{_'email-tip'} n:attr="required: $enableEmailRequired" />
+    </div>
+</div>
+<div n:if="$enableWebsiteField" n:class="hashover-input-cell, $enableWebsiteRequired ? hashover-required-input">
+    <label n:if="$enableLabels" for="{='main-website'|hashoverPrefix:false}" class="hashover-website-label">{_'website'}</label>
+    <div n:class="hashover-website-input, $isWebsiteFailed ? hashover-emphasized-input">
+        <input type="url" id="{='main-website'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'website'}" name="website" value="{$userWebsite}" autocomplete="off" title="{_'website-tip'} n:attr="required: $enableWebsiteRequired" />
+    </div>
+</div>
+{/block}

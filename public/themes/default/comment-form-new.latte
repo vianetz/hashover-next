@@ -1,7 +1,7 @@
 {block commentForm}
 <div id="comments" n:if="$instanceNumber == 1"></div>
 <div class="hashover-requires-login-message" n:if="$isLoginRequired">{_'login-required'}</div>
-<div id="{='form-section'|hashoverPrefix:false}" n:class="hashover-form-section, (!$isPhpMode && $enableCollapseInterface) ? hide">
+<div id="{='form-section'|hashoverPrefix:false}" class="hashover-form-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
     <span class="hashover-title hashover-main-title hashover-dashed-title">{_'post-a-comment'}{if $enableDisplayTitle} {_'on'} "{$pageTitle}"{/if}</span>
 
     <div id="{='message-container'|hashoverPrefix:false}" n:class="hashover-title, hashover-message, ($cookie[message] && $isPhpMode) ? 'hashover-message-open hashover-php-message-open', $cookie[isError] ? hashover-message-error">
@@ -10,7 +10,7 @@
 
     <form id="{='form'|hashoverPrefix:false}" class="hashover-form hashover-balloon" name="hashover-form" action="{$formAction}" method="post" onsubmit="hashover.postComment(this, document.getElementById('hashover-post-button'), ''); return false;">
         <div class="hashover-inputs">
-            <div class="hashover-avatar-image" n:if="$enableAvatars">{$avatarHtml|noescape}</div>
+            <div class="hashover-avatar-image" n:if="$enableAvatars">{$commentCounts[primary]|avatar|noescape}</div>
             {if $isLoggedIn}
             <div n:class="hashover-comment-name, hashover-top-name, $isUserTwitter ? hashover-name-website : hashover-name-plain">
                 {if $userWebsite}
@@ -20,30 +20,7 @@
                 {/if}
             </div>
             {else}
-            <div n:if="$enableNameField" n:class="hashover-input-cell, $enableNameRequired ? hashover-required-input">
-                <label n:if="$enableLabels" for="{='main-name'|hashoverPrefix:false}" class="hashover-name-label">{_'name'}</label>
-                <div n:class="hashover-name-input, $isNameFailed ? hashover-emphasized-input">
-                    <input type="text" id="{='main-name'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'name'}" name="name" value="{$userName}" autocomplete="username" title="{_'name-tip'} n:attr="required: $enableNameRequired" />
-                </div>
-            </div>
-            <div n:if="$enablePasswordField" n:class="hashover-input-cell, $enablePasswordRequired ? hashover-required-input">
-                <label n:if="$enableLabels" for="{='main-password'|hashoverPrefix:false}" class="hashover-password-label">{_'password'}</label>
-                <div n:class="hashover-password-input, $isPasswordFailed ? hashover-emphasized-input">
-                    <input type="password" id="{='main-password'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'password'}" name="password" value="" autocomplete="current-password" title="{_'password-tip'} n:attr="required: $enablePasswordRequired" />
-                </div>
-            </div>
-            <div n:if="$enableEmailField" n:class="hashover-input-cell, $enableEmailRequired ? hashover-required-input">
-                <label n:if="$enableLabels" for="{='main-email'|hashoverPrefix:false}" class="hashover-email-label">{_'email'}</label>
-                <div n:class="hashover-name-input, $isEmailFailed ? hashover-emphasized-input">
-                    <input type="email" id="{='main-email'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'email'}" name="email" value="{$userEmail}" autocomplete="off" title="{_'email-tip'} n:attr="required: $enableEmailRequired" />
-                </div>
-            </div>
-            <div n:if="$enableWebsiteField" n:class="hashover-input-cell, $enableWebsiteRequired ? hashover-required-input">
-                <label n:if="$enableLabels" for="{='main-website'|hashoverPrefix:false}" class="hashover-website-label">{_'website'}</label>
-                <div n:class="hashover-website-input, $isWebsiteFailed ? hashover-emphasized-input">
-                    <input type="url" id="{='main-website'|hashoverPrefix:false}" class="hashover-input-info" placeholder="{_'website'}" name="website" value="{$userWebsite}" autocomplete="off" title="{_'website-tip'} n:attr="required: $enableWebsiteRequired" />
-                </div>
-            </div>
+            {include 'comment-form-inputs.latte'}
             {/if}
         </div>
 

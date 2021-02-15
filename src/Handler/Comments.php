@@ -179,7 +179,7 @@ final class Comments extends Javascript
         $show_comments = $this->hashover->getCommentCount('show-comments', 'show-comment');
     
         // Add locales for show interface button
-        if (! $this->setup->collapsesInterface) {
+        if ($this->setup->collapsesInterface) {
             $data['instance']['post-a-comment'] = $this->hashover->ui->postComment;
             $data['instance']['show-comments'] = $show_comments;
         }

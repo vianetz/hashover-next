@@ -6,7 +6,6 @@ namespace HashOver\Backend;
 use HashOver\Avatars;
 use HashOver\Cookies;
 use HashOver\Domain\Templater;
-use HashOver\HTMLTag;
 use HashOver\Login;
 use HashOver\Setup;
 
@@ -59,7 +58,6 @@ final class CommentsHtml
             ],
             'formAction' => $this->setup->getBackendPath('form-actions'),
             'enableAvatars' => $this->setup->iconMode !== 'none',
-            'avatarHtml' => $this->createAvatarElement((string)$commentCounts['primary']), // @todo
             'enableLabels' => $this->setup->usesLabels,
             'comment' => $this->cookies->getValue('comment'),
             'isCommentFailed' => $this->cookies->getValue('failed-on') === 'comment',
@@ -97,33 +95,5 @@ final class CommentsHtml
             $needsHashoverWrapper ? 'comments-latte-with-wrapper.latte' : 'comments.latte',
             $templateVars
         );
-    }
-
-    private function createAvatarElement(string $text): HTMLTag
-    {
-        // If avatars set to images
-        if ($this->setup->iconMode === 'image') {
-            // Logged in
-            if ($this->login->userIsLoggedIn === true) {
-                // Image source is avatar image
-                $hash = !empty ($this->login->email) ? md5(mb_strtolower(trim($this->login->email))) : '';
-                $avatar_src = $this->avatars->getGravatar($hash);
-            } else {
-                // Logged out
-                // Image source is local default image
-                $avatar_src = $this->setup->getImagePath('first-comment');
-            }
-
-            // Create avatar image element
-            $avatar = new HTMLTag ('div', array(
-                'style' => 'background-image: url(\'' . $avatar_src . '\');'
-            ), false);
-        } else {
-            // Avatars set to count
-            // Create element displaying comment number user will be
-            $avatar = new HTMLTag ('span', $text, false);
-        }
-
-        return $avatar;
     }
 }

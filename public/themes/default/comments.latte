@@ -1,7 +1,7 @@
-{include 'comment-new-form.latte'}
+{include 'comment-form-new.latte'}
 
 {block comments}
-<div id="{='comments-section'|hashoverPrefix:false}" n:class="hashover-comments-section, !$isPhpMode && $enableCollapseInterface ? hide">
+<div id="{='comments-section'|hashoverPrefix:false}" class="hashover-comments-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
     <div n:if="$commentCounts[total] > 1" id="{='count-wrapper'|hashoverPrefix:false}" n:class="hashover-count-sort, hashover-dashed-title, !$isPhpMode && $collapseLimit <= 0 ? hide">
         <span id="{='count'|hashoverPrefix:false}" class="hashover-count">{$commentCounts[show-count]}</span>
 
@@ -28,7 +28,7 @@
 
     <div id="{='sort-section'|hashoverPrefix:false}" class="hashover-sort-section">{$comments}</div>
 
-    <div id="{='end-links'|hashoverPrefix:false}" n:class="hashover-end-links, !$isPhpMode && $enableCollapsesInterface ? hide">
+    <div id="{='end-links'|hashoverPrefix:false}" class="hashover-end-links"  n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
         {if $commentCounts[total] > 1 && $enableRssAppend}
         <a href="{$rssUrl}" class="hashover-rss-link" rel="nofollow" target="_blank" title="{_'rss-feed'}">{_'rss-feed'}</a>
         {/if}
@@ -37,7 +37,7 @@
 {/block}
 
 {block popular}
-<div n:if="$commentCounts[popular] > 0" id="{='popular-section'|hashoverPrefix:false}" n:class="hashover-popular-section, !$isPhpMode && ($enableCollapseInterface || $collapseLimit <= 0) ? hide">
+<div n:if="$commentCounts[popular] > 0" id="{='popular-section'|hashoverPrefix:false}" class="hashover-popular-section"  n:attr="style: !$isPhpMode && ($enableCollapseInterface || $collapseLimit <= 0) ? 'display: none'">
     <div class="hashover-dashed-title"><span class="hashover-title">
     {if $commentCounts[popular] !== 1}{_'most-popular-comments'}{else}{_'most-popular-comment'}{/if}
     </span></div>

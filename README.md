@@ -1,4 +1,4 @@
-HashOver
+HashOver - a PHP comment system for e.g. static websites
 ===
 **HashOver** is a PHP comment system intended as a replacement for services like
 Disqus. HashOver is free and open source software, under the
@@ -10,13 +10,23 @@ only required information is the comment itself.
 
 ## Purpose of this fork
 This repository is a complete refactoring of the [great original hashover-next](https://github.com/jacobwb/hashover-next) with the following goals:
-- Improve application security (by using a router, environment variables as secrets, adding separate `htdocs` folder, removing superglobals, dependency injection, etc.)
+- Improve application security
 - PHP 8 compatibility
-- Dependency management and autoloading with composer
-- Replace components with external libraries, e.g. Swiftmailer
+- Build static JavaScript files to allow using security hashes and better minification
 - Add application logging
 - Provide Docker container
 - Implement unit tests
+
+### Main Differences to Original
+- Dependency management and autoloading with composer
+- Uses a router
+- Added PSR-3 logger
+- Environment variables used as secrets instead of PHP classes
+- Separate `public` folder to remove file exposure 
+- Removed superglobals
+- Used state-of-the-art patterns like dependency injection
+- Replaced components with external libraries, e.g. Swiftmailer
+- Integrated Latte HTML templating engine
 
 ## Status of refactoring
 Currently the base functionality has been refactored. All reworked code is in `src`.
@@ -38,12 +48,23 @@ Display remote images            |                         |
 
 ## Installation
 
-```
+HashOver supports 2 types of modes: PHP or JavaScript.  
+Depending on the mode you have to choose one of 2 installation methods.
+
+### JavaScript Mode
+1. Install libraries
+```shell
 composer install --no-dev
-# Edit settings in config/settings.json and then execute
+```
+1. Edit settings in `config/settings.json`
+1. Compile static assets with
+```shell
 composer hashover:build-js
 ```
-
+1. Integrate the JavaScript snippet into your website within the `<body>` HTML tag:
+```html
+<script src="/dist/comments.js" type="text/javascript" />
+```
 
 Information and Documentation
 ---
