@@ -15,7 +15,7 @@ HashOver.prototype.replyToComment = function (permalink)
 		id: this.prefix ('reply-' + permalink),
 		className: 'hashover-reply-form',
 		action: this.setup['http-backend'] + '/form-actions',
-		method: 'post'
+		method: 'post',
 	});
 
 	// Place reply fields into form
@@ -48,9 +48,9 @@ HashOver.prototype.replyToComment = function (permalink)
 	// Attach click event to formatting revealer hyperlink
 	this.formattingOnclick ('reply', permalink);
 
-	// Set onclick and onsubmit event handlers
-	this.duplicateProperties (postReply, [ 'onclick', 'onsubmit' ], function () {
-		return hashover.postComment (form, this, 'reply', permalink, link.onclick);
+	form.addEventListener('submit', function (evt) {
+		hashover.postComment(form, postReply, 'reply', permalink, link.onclick);
+		evt.preventDefault();
 	});
 
 	// Focus comment field

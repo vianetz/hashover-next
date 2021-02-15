@@ -110,9 +110,9 @@ HashOver.prototype.editComment = function (comment, callback)
 		// Attach click event to formatting revealer hyperlink
 		hashover.formattingOnclick ('edit', permalink);
 
-		// Set onclick and onsubmit event handlers
-		hashover.duplicateProperties (saveEdit, [ 'onclick', 'onsubmit' ], function () {
-			return hashover.postComment (form, this, 'edit', permalink, link.onclick);
+		form.addEventListener('submit', function (evt) {
+			hashover.postComment(form, saveEdit, 'edit', permalink, link.onclick);
+			evt.preventDefault();
 		});
 
 		// Remove loading class from edit link

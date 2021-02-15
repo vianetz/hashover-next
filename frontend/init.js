@@ -158,9 +158,9 @@ HashOver.prototype.init = function (id)
 	var postButton = this.getElement ('post-button');
 	var formElement = this.getElement ('form');
 
-	// Set onsubmit event handlers
-	this.duplicateProperties (postButton, formEvents, function () {
-		return hashover.postComment (formElement, postButton, 'main');
+	formElement.addEventListener('submit', function (evt) {
+		hashover.postComment(formElement, postButton, 'main');
+		evt.preventDefault();
 	});
 
 	// Check if login is enabled

@@ -27,6 +27,7 @@ This repository is a complete refactoring of the [great original hashover-next](
 - Used state-of-the-art patterns like dependency injection
 - Replaced components with external libraries, e.g. Swiftmailer
 - Integrated Latte HTML templating engine
+- New theme with minimum styles
 
 ## Status of refactoring
 Currently the base functionality has been refactored. All reworked code is in `src`.
