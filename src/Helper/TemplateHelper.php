@@ -21,7 +21,7 @@ final class TemplateHelper
     {
         // Return template prefix in JavaScript mode
         if ($template && $this->mode !== 'php') {
-            return '{hashover}-' . $id; // @todo
+            return '[hashover]-' . $id;
         }
 
         $prefix = 'hashover';

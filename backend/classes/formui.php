@@ -426,7 +426,7 @@ class FormUI
     }
 
 	// Creates hidden page info fields, ie. page URL, title, reply comment
-	protected function pageInfoFields (HTMLTag $form, $url = '{url}', $thread = '{thread}', $title = '{title}')
+	protected function pageInfoFields (HTMLTag $form, $url = '[url]', $thread = '[thread]', $title = '[title]')
 	{
 		// Create hidden page URL input element
 		$url_input = new HTMLTag ('input', array (
