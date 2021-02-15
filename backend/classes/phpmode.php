@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+use HashOver\Backend\EditFormHtml;
 use HashOver\Backend\ReplyFormHtml;
 
 class PHPMode
@@ -44,8 +45,9 @@ class PHPMode
 	protected $lineRegex = '/(?:\r\n|\r|\n)/S';
 
 	private ReplyFormHtml $replyFormHtml;
+	private EditFormHtml $editFormHtml;
 
-	public function __construct (Setup $setup, CommentsUI $ui, array $comments, array $raw, ReplyFormHtml $replyFormHtml)
+	public function __construct (Setup $setup, CommentsUI $ui, array $comments, array $raw, ReplyFormHtml $replyFormHtml, EditFormHtml $editFormHtml)
 	{
 		// Store parameters as properties
 		$this->setup = $setup;
@@ -59,6 +61,7 @@ class PHPMode
 		$this->templater = new Templater ($setup);
 		$this->markdown = new Markdown ();
 		$this->replyFormHtml = $replyFormHtml;
+		$this->editFormHtml = $editFormHtml;
 	}
 
 	protected function fileFromPermalink ($permalink)
@@ -126,7 +129,7 @@ class PHPMode
 				'action' => $this->setup->getBackendPath ('form-actions')
 			), false);
 
-			$edit_form = $this->ui->editForm ($permalink, $this->setup->pageURL, $this->setup->threadName, $this->setup->pageTitle, $file, $name, $email, $website, $body, $status, $subscribed);
+			$edit_form = $this->editFormHtml->render($permalink, $this->setup->pageURL, $this->setup->threadName, $this->setup->pageTitle, $file, $name, $email, $website, $body, $status, $subscribed);
 
 			$form->innerHTML ($edit_form);
 
