@@ -18,17 +18,18 @@
 
 use HashOver\Backend\EditFormHtml;
 use HashOver\Backend\ReplyFormHtml;
+use HashOver\Domain\Templater;
 
-class PHPMode
+final class PHPMode
 {
-	protected $setup;
-	protected $ui;
-	protected $comments;
-	protected $rawComments;
-	protected $crypto;
-	protected $locale;
-	protected $templater;
-	protected $markdown;
+	protected Setup $setup;
+	protected CommentsUI $ui;
+	protected array $comments;
+	protected array $rawComments;
+	protected Crypto $crypto;
+	protected Locale $locale;
+	protected Templater $templater;
+	protected Markdown $markdown;
 
 	protected $trimTagRegexes = array (
 		'blockquote' => '/(<blockquote>)([\s\S]*?)(<\/blockquote>)/iS',
@@ -47,22 +48,37 @@ class PHPMode
 	private ReplyFormHtml $replyFormHtml;
 	private EditFormHtml $editFormHtml;
 
-	public function __construct (Setup $setup, CommentsUI $ui, array $comments, array $raw, ReplyFormHtml $replyFormHtml, EditFormHtml $editFormHtml)
-	{
-		// Store parameters as properties
-		$this->setup = $setup;
-		$this->ui = $ui;
-		$this->comments = $comments;
-		$this->rawComments = $raw;
+    public function __construct(
+        Setup $setup,
+        CommentsUI $ui,
+        ReplyFormHtml $replyFormHtml,
+        EditFormHtml $editFormHtml,
+        Crypto $crypto,
+        Locale $locale,
+        Templater $templater,
+        Markdown $markdown
+    ) {
+        $this->setup = $setup;
+        $this->ui = $ui;
+        $this->crypto = $crypto;
+        $this->locale = $locale;
+        $this->templater = $templater;
+        $this->markdown = $markdown;
+        $this->replyFormHtml = $replyFormHtml;
+        $this->editFormHtml = $editFormHtml;
+    }
 
-		// Instantiate various classes
-		$this->crypto = new Crypto ();
-		$this->locale = new Locale ($setup);
-		$this->templater = new Templater ($setup);
-		$this->markdown = new Markdown ();
-		$this->replyFormHtml = $replyFormHtml;
-		$this->editFormHtml = $editFormHtml;
-	}
+    public function setComments(array $comments): self
+    {
+        $this->comments = $comments;
+        return $this;
+    }
+
+    public function setRawComments(array $rawComments): self
+    {
+        $this->rawComments = $rawComments;
+        return $this;
+    }
 
 	protected function fileFromPermalink ($permalink)
 	{

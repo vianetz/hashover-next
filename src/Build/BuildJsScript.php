@@ -19,7 +19,6 @@ final class BuildJsScript
 
         /** @var Setup $setup */
         $setup = $container->get(Setup::class);
-        $setup->loadFrontendSettings();
 
         self::writeToFile('dist/comments.js', $container->get(CommentsJs::class)->generate($setup));
         self::writeToFile('dist/loader.js', $container->get(LoaderJs::class)->generate($setup));

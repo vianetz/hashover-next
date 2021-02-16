@@ -69,7 +69,7 @@ final class Comments extends Javascript
         $this->setup->setWebsite('request');
         $this->setup->setInstance('request');
     
-        $this->setup->loadFrontendSettings();
+        $this->setup->loadFrontendSettings($request);
     
         $this->hashover->initiate();
         $this->hashover->parsePrimary();

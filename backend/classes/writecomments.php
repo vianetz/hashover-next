@@ -128,20 +128,25 @@ class WriteComments extends Secrets
 		'deleted'
 	);
 
-	public function __construct(SendNotification $sendNotification, Setup $setup, FormData $form_data, Thread $thread)
-	{
+	public function __construct(
+	    SendNotification $sendNotification,
+        Setup $setup,
+        FormData $form_data,
+        Thread $thread,
+        Locale $locale,
+        Login $login,
+        Cookies $cookies,
+        Crypto $crypto
+    ) {
 	    parent::__construct();
 
-		// Store parameters as properties
 		$this->setup = $setup;
 		$this->formData = $form_data;
 		$this->thread = $thread;
-
-		// Instantiate various classes
-		$this->locale = new Locale ($setup);
-		$this->login = new Login ($setup);
-		$this->cookies = new Cookies ($setup, $this->login);
-		$this->crypto = new Crypto ();
+		$this->locale = $locale;
+		$this->login = $login;
+		$this->cookies = $cookies;
+		$this->crypto = $crypto;
 		$this->sendNotification = $sendNotification;
 
 		// Setup initial login data

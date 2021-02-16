@@ -16,15 +16,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-
-// Parse comments and create deleted comment note
+/**
+ * Parse comments and create deleted comment note
+ */
 class CommentParser
 {
-	protected $setup;
-	protected $login;
-	protected $cookies;
-	protected $locale;
-	protected $avatars;
+	protected Setup $setup;
+	protected Login $login;
+	protected Cookies $cookies;
+	protected Locale $locale;
+	protected Avatars $avatars;
 
 	protected $timeModify;
 	protected $currentDate;
@@ -33,16 +34,13 @@ class CommentParser
 	protected $date;
 	protected $time;
 
-	public function __construct (Setup $setup)
+	public function __construct (Setup $setup, Login $login, Cookies $cookies, Locale $locale, Avatars $avatars)
 	{
-		// Store parameters as properties
 		$this->setup = $setup;
-
-		// Instantiate various classes
-		$this->login = new Login ($setup);
-		$this->cookies = new Cookies ($setup, $this->login);
-		$this->locale = new Locale ($setup);
-		$this->avatars = new Avatars ($setup);
+		$this->login = $login;
+		$this->cookies = $cookies;
+		$this->locale = $locale;
+		$this->avatars = $avatars;
 
 		// Get current time
 		$current_time = new \DateTime ();

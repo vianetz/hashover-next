@@ -17,6 +17,7 @@
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
 use HashOver\Domain\Url;
+use HashOver\Helper\RequestHelper;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Setup extends Settings
@@ -58,9 +59,9 @@ class Setup extends Settings
 
 	private Url $url;
 
-	public function __construct(Url $url)
+	public function __construct(Url $url, RequestHelper $requestHelper)
 	{
-		parent::__construct();
+		parent::__construct($requestHelper);
 
 		$this->url = $url;
 

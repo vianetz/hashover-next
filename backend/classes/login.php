@@ -19,11 +19,12 @@
 
 class Login extends Secrets
 {
-	protected $setup;
-	protected $cookies;
-	protected $formData;
-	protected $locale;
-	protected $crypto;
+	protected Setup $setup;
+	protected Cookies $cookies;
+	protected FormData $formData;
+	protected Locale $locale;
+	protected Crypto $crypto;
+	/** @var \HashOver\DefaultLogin $loginMethod */
 	protected $loginMethod;
 	protected $fieldNeeded;
 
@@ -35,18 +36,15 @@ class Login extends Secrets
 	public $userIsLoggedIn = false;
 	public $userIsAdmin = false;
 
-	public function __construct (Setup $setup)
+	public function __construct (Setup $setup, FormData $formData, Cookies $cookies, Locale $locale, Crypto $crypto)
 	{
 	    parent::__construct();
 
-		// Store parameters as properties
 		$this->setup = $setup;
-
-		// Instantiate various classes
-		$this->cookies = new Cookies ($setup, $this);
-		$this->formData = new FormData ($setup, $this->cookies);
-		$this->locale = new Locale ($setup);
-		$this->crypto = new Crypto ();
+		$this->cookies = $cookies;
+		$this->formData = $formData;
+		$this->locale = $locale;
+		$this->crypto = $crypto;
 
 		// Name of login method class to instantiate
 		$login_class = 'HashOver\\' . $setup->loginMethod;
@@ -243,6 +241,8 @@ class Login extends Secrets
 		if ($this->isAdmin () === false) {
 			return;
 		}
+
+		$this->setup->setsCookies = true; // for admin we always have to set cookies
 
 		// Set e-mail to admin e-mail address
 		$this->loginMethod->email = $this->notificationEmail;

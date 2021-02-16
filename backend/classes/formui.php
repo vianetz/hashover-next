@@ -21,14 +21,14 @@ use HashOver\Helper\TemplateHelper;
 class FormUI
 {
 	protected $mode;
-	protected $setup;
+	protected Setup $setup;
 	public $commentCounts;
 
-	protected $locale;
-	protected $avatars;
+	protected Locale $locale;
+	protected Avatars $avatars;
 	protected $misc;
-	protected $login;
-	protected $cookies;
+	protected Login $login;
+	protected Cookies $cookies;
 	protected $pageTitle;
 	protected $pageURL;
 
@@ -41,20 +41,16 @@ class FormUI
 
 	private TemplateHelper $templateHelper;
 
-	public function __construct ($mode = 'javascript', Setup $setup, array $counts)
+	public function __construct ($mode = 'javascript', Setup $setup, Locale $locale, Login $login, Cookies $cookies, Avatars $avatars)
 	{
 	    $this->templateHelper = new TemplateHelper($setup, $mode);
 
-		// Store parameters as properties
 		$this->mode = $mode;
 		$this->setup = $setup;
-		$this->commentCounts = $counts;
-
-		// Instantiate various classes
-		$this->locale = new Locale ($setup);
-		$this->login = new Login ($setup);
-		$this->cookies = new Cookies ($setup, $this->login);
-		$this->avatars = new Avatars ($setup);
+		$this->locale = $locale;
+		$this->login = $login;
+		$this->cookies = $cookies;
+		$this->avatars = $avatars;
 		$this->pageTitle = $this->setup->pageTitle;
 		$this->pageURL = $this->setup->pageURL;
 
@@ -80,6 +76,11 @@ class FormUI
 		// Create default login inputs elements
 		$this->defaultLoginInputs = $this->loginInputs ();
 	}
+
+	public function setCommentCounts(array $counts)
+    {
+        $this->commentCounts = $counts;
+    }
 
     /**
      * @deprecated

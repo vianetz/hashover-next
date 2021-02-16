@@ -26,6 +26,9 @@
 
 
 // Automated settings
+use HashOver\Helper\RequestHelper;
+use Psr\Http\Message\ServerRequestInterface;
+
 class Settings extends SensitiveSettings
 {
 	public $rootDirectory;
@@ -38,8 +41,13 @@ class Settings extends SensitiveSettings
 	public $formFields;
 	public bool $enableStatistics = false;
 
-	public function __construct ()
+	protected RequestHelper $requestHelper;
+	protected ServerRequestInterface $request;
+
+	public function __construct(RequestHelper $requestHelper)
 	{
+	    $this->requestHelper = $requestHelper;
+
 		// Set encoding
 		mb_internal_encoding ('UTF-8');
 
@@ -267,28 +275,20 @@ class Settings extends SensitiveSettings
 		return $data;
 	}
 
-	// Override default settings by with cfg URL queries
-	public function loadFrontendSettings ()
-	{
-		// Attempt to get user settings from GET data
-		if (!empty ($_GET['cfg'])) {
-			$settings = $_GET['cfg'];
-		}
+    /**
+     * Override default settings by with cfg URL queries
+     */
+    public function loadFrontendSettings(ServerRequestInterface $request)
+    {
+        $settings = $this->requestHelper->getPostOrGet($request, 'cfg');
 
-		// Attempt to get user settings from POST data
-		if (!empty ($_POST['cfg'])) {
-			$settings = $_POST['cfg'];
-		}
+        if (! empty($settings) && \is_array($settings)) {
+            $settings = $this->juggleStringArray($settings);
 
-		// Check if cfg queries is an array
-		if (!empty ($settings) and is_array ($settings)) {
-			// If so, type juggle cfg queries
-			$settings = $this->juggleStringArray ($settings);
-
-			// Only override settings safe to expose to the frontend
-			$this->overrideSettings ($settings, 'SafeSettings');
-		}
-	}
+            // Only override settings safe to expose to the frontend
+            $this->overrideSettings($settings, 'SafeSettings');
+        }
+    }
 
 	// Returns a server-side absolute file path
 	public function getAbsolutePath ($file)

@@ -41,14 +41,13 @@ class FormData
 		'zip'
 	);
 
-	public function __construct (Setup $setup, Cookies $cookies)
+	public function __construct (Setup $setup, Cookies $cookies, Locale $locale, SpamCheck $spamCheck)
 	{
 		// Store parameters as properties
 		$this->setup = $setup;
 
-		// Instantiate various classes
-		$this->locale = new Locale ($setup);
-		$this->spamCheck = new SpamCheck ($setup);
+		$this->locale = $locale;
+		$this->spamCheck = $spamCheck;
 		$this->cookies = $cookies;
 
 		// Use POST or GET based on whether request is for JSONP

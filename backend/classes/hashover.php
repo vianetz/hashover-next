@@ -22,7 +22,7 @@ final class HashOver
     public const HASHOVER_MODE_JAVASCRIPT = 'javascript';
     public const HASHOVER_MODE_PHP = 'php';
 
-	protected $mode;
+	protected string $mode;
 	protected \HashOver\SetupChecks $setupChecks;
 	protected $sortComments;
 	protected $popularList = array ();
@@ -30,6 +30,8 @@ final class HashOver
 	protected $rawComments = array ();
 	protected $commentCount;
 	protected $collapseCount = 0;
+
+	private \HashOver\PHPMode $phpMode;
 
 	public \HashOver\Statistics $statistics;
 	public \HashOver\Setup $setup;
@@ -51,6 +53,12 @@ final class HashOver
         \HashOver\Cookies $cookies,
         \HashOver\Thread $thread,
         \HashOver\Domain\Templater $templater,
+        \HashOver\Locale $locale,
+        \HashOver\CommentParser $commentParser,
+        \HashOver\SortComments $sortComments,
+        \HashOver\Markdown $markdown,
+        \HashOver\CommentsUI $commentsUi,
+        \HashOver\PHPMode $phpMode,
         string $mode = self::HASHOVER_MODE_PHP
     ) {
         // Store output mode (javascript or php)
@@ -65,6 +73,12 @@ final class HashOver
         $this->cookies = $cookies;
         $this->thread = $thread;
         $this->templater = $templater;
+        $this->locale = $locale;
+        $this->commentParser = $commentParser;
+        $this->sortComments = $sortComments;
+        $this->markdown = $markdown;
+        $this->ui = $commentsUi;
+        $this->phpMode = $phpMode;
     }
 
     public function setMode(string $mode): void
@@ -128,18 +142,6 @@ final class HashOver
 	// Begin initialization work
 	public function initiate ()
 	{
-		// Instantiate locales class
-		$this->locale = new HashOver\Locale ($this->setup);
-
-		// Instantiate comment parser class
-		$this->commentParser = new HashOver\CommentParser ($this->setup);
-
-		// Instantiate comment sorting class
-		$this->sortComments = new HashOver\SortComments ($this->setup);
-
-		// Instantiate markdown class
-		$this->markdown = new HashOver\Markdown ();
-
 		// Query a list of comments
 		$this->thread->queryComments ();
 
@@ -434,12 +436,7 @@ final class HashOver
 			'popular' => $this->popularCount
 		);
 
-		// Instantiate UI output class
-		$this->ui = new HashOver\CommentsUI (
-			$this->mode,
-			$this->setup,
-			$commentCounts
-		);
+		$this->ui->setCommentCounts($commentCounts);
 	}
 
 	// Display all comments as HTML
@@ -448,20 +445,15 @@ final class HashOver
 		// Set/update default page metadata
 		$this->defaultMetadata ();
 
-		// Instantiate PHP mode class
-		$phpmode = new HashOver\PHPMode (
-			$this->setup,
-			$this->ui,
-			$this->comments,
-			$this->rawComments
-		);
+		$this->phpMode->setComments($this->comments)
+            ->setRawComments($this->rawComments);
 
 		// Check if we have popular comments
 		if (!empty ($this->comments['popular'])) {
 			// If so, run popular comments through parser
 			foreach ($this->comments['popular'] as $comment) {
 				// Parse comment
-				$html = $phpmode->parseComment ($comment, null, true);
+				$html = $this->phpMode->parseComment ($comment, null, true);
 
 				// And add comment to popular comments properly
 				$this->ui->popularComments .= $html . PHP_EOL;
@@ -473,7 +465,7 @@ final class HashOver
 			// If so, run primary comments through parser
 			foreach ($this->comments['primary'] as $comment) {
 				// Parse comment
-				$html = $phpmode->parseComment ($comment, null);
+				$html = $this->phpMode->parseComment ($comment, null);
 
 				// And add comment to comments properly
 				$this->ui->comments .= $html . PHP_EOL;
