@@ -14,13 +14,14 @@ final class Translator
     public function __construct(Setup $setup)
     {
         $this->setup = $setup;
-
-        $localeFilePath = $this->getLocaleFile();
-        $this->includeLocaleFile($localeFilePath);
     }
 
     public function translate(?string $textIdentifier = null): string
     {
+        if (count($this->translations) === 0) {
+            $this->includeLocaleFile($this->getLocaleFile());
+        }
+
         return $this->translations[$textIdentifier] ?? '';
     }
 

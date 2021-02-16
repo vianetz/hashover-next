@@ -30,7 +30,6 @@ class CommentParser
 	protected $timeModify;
 	protected $currentDate;
 	protected $shortDateLocales;
-	protected $todayLocale;
 	protected $date;
 	protected $time;
 
@@ -72,9 +71,6 @@ class CommentParser
 			'm' => 'date-month',
 			'd' => 'date-day'
 		);
-
-		// Short date when a comment was posted today
-		$this->todayLocale = $this->locale->text['date-today'];
 
 		// Get date formatter for comment post date
 		$this->date = $this->getDateFormatter ($setup->datePattern);
@@ -139,7 +135,7 @@ class CommentParser
 		}
 
 		// Otherwise, inject time into today locale string
-		$date = sprintf ($this->todayLocale, $time);
+		$date = sprintf ($this->locale->text['date-today'], $time);
 
 		return $date;
 	}

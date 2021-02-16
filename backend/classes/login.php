@@ -26,7 +26,6 @@ class Login extends Secrets
 	protected Crypto $crypto;
 	/** @var \HashOver\DefaultLogin $loginMethod */
 	protected $loginMethod;
-	protected $fieldNeeded;
 
 	public $name;
 	public $password;
@@ -51,9 +50,6 @@ class Login extends Secrets
 
 		// Instantiate login method class
 		$this->loginMethod = new $login_class ($setup, $this->cookies, $this->locale);
-
-		// Error message to display to the user
-		$this->fieldNeeded = $this->locale->text['field-needed'];
 
 		// Check if user is logged in
 		$this->getLogin ();
@@ -161,7 +157,7 @@ class Login extends Secrets
 
 				// And throw exception
 				throw new \Exception (sprintf (
-					$this->fieldNeeded, $this->locale->text[$field]
+					$this->locale->text['field-needed'], $this->locale->text[$field]
 				));
 			}
 		}

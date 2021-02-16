@@ -62,34 +62,34 @@ final class Comments extends Javascript
         $response = $this->setContentType($request, $response);
 
         $this->hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
-    
+
         $this->setup->setPageURL($request);
         $this->setup->setPageTitle('request');
         $this->setup->setThreadName('request');
         $this->setup->setWebsite('request');
         $this->setup->setInstance('request');
-    
+
         $this->setup->loadFrontendSettings($request);
-    
+
         $this->hashover->initiate();
         $this->hashover->parsePrimary();
         $this->hashover->parsePopular();
         $this->hashover->finalize();
-    
+
         $this->hashover->defaultMetadata();
-    
+
         $data = [];
-    
+
         // Check if backend sorting and collapsing is enabled
         if ($this->setup->collapsesComments === true
             && $this->setup->usesAjax === true) {
             // If so, sort the comments first
             $this->hashover->sortPrimary();
-    
+
             // Then collapse the comments
             $this->hashover->collapseComments();
         }
-    
+
         // Check if we're preparing HashOver
         if ($this->setup->getRequest('prepare') !== false) {
             $data['locale'] = [
@@ -186,13 +186,20 @@ final class Comments extends Javascript
             'initial-html' => $this->commentsHtml->render($this->hashover->ui->commentCounts, $this->hashover->ui->comments, $this->hashover->ui->popularComments, false),
             'comments' => $this->hashover->comments,
         ];
-    
+
         // Count according to `$showsReplyCount` setting
         $show_comments = $this->hashover->getCommentCount('show-comments', 'show-comment');
-    
-        // Add locales for show interface button
+
+        $postComment = $this->locale->text['post-a-comment'];
+        if ($this->setup->displaysTitle !== false && ! empty($this->setup->pageTitle)) {
+            $postComment = sprintf(
+                $this->locale->text['post-a-comment-on'],
+                $this->setup->pageTitle
+            );
+        }
+
         if ($this->setup->collapsesInterface) {
-            $data['instance']['post-a-comment'] = $this->hashover->ui->postComment;
+            $data['instance']['post-a-comment'] = $postComment;
             $data['instance']['show-comments'] = $show_comments;
         }
     
@@ -203,15 +210,15 @@ final class Comments extends Javascript
                 // Shorter variables
                 $total_count = $this->hashover->thread->totalCount;
                 $collapse_limit = $this->setup->collapseLimit;
-    
+
                 // Get number of comments after collapse limit
                 $other_count = ($total_count - 1) - $collapse_limit;
-    
+
                 // Subtract deleted comment counts
                 if (! $this->setup->countsDeletions) {
                     $other_count -= $this->hashover->thread->collapsedDeletedCount;
                 }
-    
+
                 // Check if there is more than one other comment
                 if ($other_count !== 1) {
                     // If so, use the "Show X Other Comments" locale
@@ -220,14 +227,14 @@ final class Comments extends Javascript
                     // If not, use the "Show X Other Comment" locale
                     $more_link_text = $this->hashover->locale->text['show-other-comment'];
                 }
-    
+
                 // And inject the count into the locale string
                 $more_link_text = sprintf($more_link_text, $other_count);
             } else {
                 // If not, show count according to `$showsReplyCount` setting
                 $more_link_text = $show_comments;
             }
-    
+
             // Add "Show X Other Comment(s)" link to instance
             $data['instance']['more-link-text'] = $more_link_text;
         }
