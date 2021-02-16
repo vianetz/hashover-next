@@ -23,7 +23,6 @@ final class HashOver
     public const HASHOVER_MODE_PHP = 'php';
 
 	protected string $mode;
-	protected \HashOver\SetupChecks $setupChecks;
 	protected $sortComments;
 	protected $popularList = array ();
 	protected $popularCount = 0;
@@ -48,7 +47,6 @@ final class HashOver
     public function __construct(
         \HashOver\Statistics $statistics,
         \HashOver\Setup $setup,
-        \HashOver\SetupChecks $setupChecks,
         \HashOver\Login $login,
         \HashOver\Cookies $cookies,
         \HashOver\Thread $thread,
@@ -68,7 +66,6 @@ final class HashOver
         $this->statistics->executionStart();
 
         $this->setup = $setup;
-        $this->setupChecks = $setupChecks;
         $this->login = $login;
         $this->cookies = $cookies;
         $this->thread = $thread;

@@ -1,9 +1,9 @@
-.hashover .hide {
-  display: none;
-}
 .hashover .hashover-inputs label,
 .hashover .hashover-comment-label {
   padding: 5px;
+}
+.hashover .hashover-submit {
+  margin: 0 10px;
 }
 .hashover .hashover-form-footer {
   padding: 12px 12px 0 12px;

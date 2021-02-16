@@ -104,14 +104,16 @@ HashOver.prototype.editComment = function (comment, callback)
 
 		// Displays confirmation dialog for comment deletion
 		editDelete.onclick = function () {
-			return confirm (hashover.locale['delete-comment']);
+			if (confirm (hashover.locale['delete-comment'])) {
+				editDelete.classList.add('clicked');
+			}
 		};
 
 		// Attach click event to formatting revealer hyperlink
 		hashover.formattingOnclick ('edit', permalink);
 
 		form.addEventListener('submit', function (evt) {
-			hashover.postComment(form, saveEdit, 'edit', permalink, link.onclick);
+			hashover.postComment(form, editDelete.classList.contains('clicked') ? editDelete : saveEdit, 'edit', permalink, link.onclick);
 			evt.preventDefault();
 		});
 

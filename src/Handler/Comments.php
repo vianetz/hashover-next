@@ -22,6 +22,7 @@ namespace HashOver\Handler;
 use HashOver\Backend\CommentsHtml;
 use HashOver\Backend\EditFormHtml;
 use HashOver\Backend\ReplyFormHtml;
+use HashOver\Domain\Translator;
 use HashOver\Misc;
 use HashOver\Setup;
 use Psr\Http\Message\ResponseInterface;
@@ -35,6 +36,7 @@ final class Comments extends Javascript
     private CommentsHtml $commentsHtml;
     private ReplyFormHtml $replyFormHtml;
     private EditFormHtml $editFormHtml;
+    private Translator $translator;
 
     public function __construct(
         ResponseInterface $response,
@@ -42,7 +44,8 @@ final class Comments extends Javascript
         Setup $setup,
         CommentsHtml $commentsHtml,
         ReplyFormHtml $replyFormHtml,
-        EditFormHtml $editFormHtml
+        EditFormHtml $editFormHtml,
+        Translator $translator
     ) {
         $this->response = $response;
         $this->hashover = $hashover;
@@ -50,6 +53,7 @@ final class Comments extends Javascript
         $this->commentsHtml = $commentsHtml;
         $this->replyFormHtml = $replyFormHtml;
         $this->editFormHtml = $editFormHtml;
+        $this->translator = $translator;
     }
 
     public function __invoke(ServerRequestInterface $request): ResponseInterface
@@ -90,40 +94,39 @@ final class Comments extends Javascript
             $this->hashover->collapseComments();
         }
 
-        // Check if we're preparing HashOver
-        if ($this->setup->getRequest('prepare') !== false) {
+        if ($this->setup->getRequest('prepare')) {
             $data['locale'] = [
-                'cancel' => $this->hashover->locale->text['cancel'],
-                'dislike-comment' => $this->hashover->locale->text['dislike-comment'],
-                'disliked-comment' => $this->hashover->locale->text['disliked-comment'],
-                'disliked' => $this->hashover->locale->text['disliked'],
-                'dislike' => $this->hashover->locale->text['dislike'],
-                'dislikes' => $this->hashover->locale->text['dislikes'],
-                'external-image-tip' => $this->hashover->locale->text['external-image-tip'],
-                'field-needed' => $this->hashover->locale->text['field-needed'],
-                'like-comment' => $this->hashover->locale->text['like-comment'],
-                'liked-comment' => $this->hashover->locale->text['liked-comment'],
-                'liked' => $this->hashover->locale->text['liked'],
-                'like' => $this->hashover->locale->text['like'],
-                'likes' => $this->hashover->locale->text['likes'],
-                'today' => $this->hashover->locale->text['date-today'],
-                'unlike' => $this->hashover->locale->text['unlike'],
-                'commenter-tip' => $this->hashover->locale->text['commenter-tip'],
-                'subscribed-tip' => $this->hashover->locale->text['subscribed-tip'],
-                'unsubscribed-tip' => $this->hashover->locale->text['unsubscribed-tip'],
-                'replies' => $this->hashover->locale->text['replies'],
-                'reply' => $this->hashover->locale->text['reply'],
-                'no-email-warning' => $this->hashover->locale->text['no-email-warning'],
-                'invalid-email' => $this->hashover->locale->text['invalid-email'],
-                'reply-needed' => $this->hashover->locale->text['reply-needed'],
-                'comment-needed' => $this->hashover->locale->text['comment-needed'],
-                'delete-comment' => $this->hashover->locale->text['delete-comment'],
-                'loading' => $this->hashover->locale->text['loading'],
-                'click-to-close' => $this->hashover->locale->text['click-to-close'],
-                'email' => $this->hashover->locale->text['email'],
-                'name' => $this->hashover->locale->text['name'],
-                'password' => $this->hashover->locale->text['password'],
-                'website' => $this->hashover->locale->text['website'],
+                'cancel' => $this->translator->translate('cancel'),
+                'dislike-comment' => $this->translator->translate('dislike-comment'),
+                'disliked-comment' => $this->translator->translate('disliked-comment'),
+                'disliked' => $this->translator->translate('disliked'),
+                'dislike' => $this->translator->translate('dislike'),
+                'dislikes' => $this->translator->translate('dislikes'),
+                'external-image-tip' => $this->translator->translate('external-image-tip'),
+                'field-needed' => $this->translator->translate('field-needed'),
+                'like-comment' => $this->translator->translate('like-comment'),
+                'liked-comment' => $this->translator->translate('liked-comment'),
+                'liked' => $this->translator->translate('liked'),
+                'like' => $this->translator->translate('like'),
+                'likes' => $this->translator->translate('likes'),
+                'today' => $this->translator->translate('date-today'),
+                'unlike' => $this->translator->translate('unlike'),
+                'commenter-tip' => $this->translator->translate('commenter-tip'),
+                'subscribed-tip' => $this->translator->translate('subscribed-tip'),
+                'unsubscribed-tip' => $this->translator->translate('unsubscribed-tip'),
+                'replies' => $this->translator->translate('replies'),
+                'reply' => $this->translator->translate('reply'),
+                'no-email-warning' => $this->translator->translate('no-email-warning'),
+                'invalid-email' => $this->translator->translate('invalid-email'),
+                'reply-needed' => $this->translator->translate('reply-needed'),
+                'comment-needed' => $this->translator->translate('comment-needed'),
+                'delete-comment' => $this->translator->translate('delete-comment'),
+                'loading' => $this->translator->translate('loading'),
+                'click-to-close' => $this->translator->translate('click-to-close'),
+                'email' => $this->translator->translate('email'),
+                'name' => $this->translator->translate('name'),
+                'password' => $this->translator->translate('password'),
+                'website' => $this->translator->translate('website'),
             ];
 
             $data['setup'] = [
@@ -190,10 +193,10 @@ final class Comments extends Javascript
         // Count according to `$showsReplyCount` setting
         $show_comments = $this->hashover->getCommentCount('show-comments', 'show-comment');
 
-        $postComment = $this->locale->text['post-a-comment'];
+        $postComment = $this->translator->translate('post-a-comment');
         if ($this->setup->displaysTitle !== false && ! empty($this->setup->pageTitle)) {
             $postComment = sprintf(
-                $this->locale->text['post-a-comment-on'],
+                $this->translator->translate('post-a-comment-on'),
                 $this->setup->pageTitle
             );
         }
@@ -219,16 +222,12 @@ final class Comments extends Javascript
                     $other_count -= $this->hashover->thread->collapsedDeletedCount;
                 }
 
-                // Check if there is more than one other comment
                 if ($other_count !== 1) {
-                    // If so, use the "Show X Other Comments" locale
-                    $more_link_text = $this->hashover->locale->text['show-other-comments'];
+                    $more_link_text = $this->translator->translate('show-other-comments');
                 } else {
-                    // If not, use the "Show X Other Comment" locale
-                    $more_link_text = $this->hashover->locale->text['show-other-comment'];
+                    $more_link_text = $this->translator->translate('show-other-comment');
                 }
 
-                // And inject the count into the locale string
                 $more_link_text = sprintf($more_link_text, $other_count);
             } else {
                 // If not, show count according to `$showsReplyCount` setting

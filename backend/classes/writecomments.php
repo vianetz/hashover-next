@@ -17,6 +17,7 @@
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
 use HashOver\Backend\SendNotification;
+use HashOver\Domain\UserInputException;
 
 class WriteComments extends Secrets
 {
@@ -175,10 +176,7 @@ class WriteComments extends Secrets
 			}
 		}
 
-		// Throw exception as error message
-		throw new \Exception (
-			$this->locale->text['comment-needed']
-		);
+		throw new UserInputException($this->locale->text['comment-needed']);
 	}
 
 	// Encodes HTML entities

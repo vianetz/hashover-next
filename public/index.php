@@ -34,10 +34,12 @@ use HashOver\Handler\Comments;
 use HashOver\Handler\FormActions;
 use HashOver\Handler\LoadComments;
 use HashOver\Handler\Referrer;
+use HashOver\Handler\UserException;
 use Laminas\Diactoros\ServerRequestFactory;
 use Middlewares\FastRoute;
 use Middlewares\RequestHandler;
 use Narrowspark\HttpEmitter\SapiEmitter;
+use Psr\Http\Message\ResponseInterface;
 use Relay\Relay;
 
 $container = require __DIR__ . '/../config/container.php';
@@ -63,6 +65,7 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
 $middlewareQueue = [];
 $middlewareQueue[] = new FastRoute($dispatcher);
 $middlewareQueue[] = new Referrer($container->get(Setup::class));
+$middlewareQueue[] = new UserException($container->get(ResponseInterface::class));
 $middlewareQueue[] = new RequestHandler($container);
 
 $requestHandler = new Relay($middlewareQueue);

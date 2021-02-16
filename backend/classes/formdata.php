@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
+use HashOver\Domain\UserInputException;
 
 class FormData
 {
@@ -152,10 +153,7 @@ class FormData
 		// Message type as string
 		$message_type = ($error === true) ? 'error' : 'message';
 
-		// Get message text from locales if it exists
-		if (!empty ($this->locale->text[$locale])) {
-			$locale = $this->locale->text[$locale];
-		}
+		$locale = $this->locale->text[$locale];
 
 		// Check if request is not over an AJAX request
 		if ($this->viaAJAX !== true) {
@@ -183,13 +181,13 @@ class FormData
 		// Block user if they fill any trap fields
 		foreach ($this->trapFields as $name) {
 			if ($this->setup->getRequest ($name)) {
-				throw new \Exception ('You are blocked!');
+				throw new UserInputException('You are blocked!');
 			}
 		}
 
 		// Check user's IP address against local blocklist
 		if ($this->spamCheck->checkList () === true) {
-			throw new \Exception ('You are blocked!');
+			throw new UserInputException('You are blocked!');
 		}
 
 		// Whether to check for spam in current mode
@@ -198,7 +196,7 @@ class FormData
 		{
 			// Check user's IP address against local or remote database
 			if ($this->spamCheck->{$this->setup->spamDatabase}() === true) {
-				throw new \Exception ('You are blocked!');
+				throw new UserInputException('You are blocked!');
 			}
 
 			// Throw any error message as exception
