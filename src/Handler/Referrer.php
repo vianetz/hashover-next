@@ -43,13 +43,6 @@ final class Referrer implements MiddlewareInterface
             // Check if script was requested from an allowed domain
             if (preg_match($domain_regex, $domain)) {
                 $this->setup->setupRemoteAccess();
-
-                $referer = parse_url($serverParams['HTTP_REFERER']);
-                $refererDomain = $referer['scheme'] . '://' . $referer['host'] . (!empty($referer['port']) ? ':' . $referer['port'] : '');
-
-                header('Access-Control-Allow-Origin: ' . $refererDomain);
-                header('Access-Control-Allow-Credentials: true');
-
                 return $handler->handle($request);
             }
         }

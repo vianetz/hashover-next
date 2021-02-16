@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx-dev:7.4-alpine
+FROM webdevops/php-apache-dev:7.4-alpine
 
 # Install mhsendmail for Mailhog
 ENV GOPATH /tmp

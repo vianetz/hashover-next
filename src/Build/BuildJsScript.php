@@ -28,9 +28,14 @@ final class BuildJsScript
         self::generateAdminJs($setup, $container);
 
         $event->getIO()->write('Javascript build successfully saved to ' . self::OUTPUT_DIR);
+        $event->getIO()->write('');
         $event->getIO()->write('You can integrate comments now with');
         $sri = self::generateSri(file_get_contents(__DIR__ . '/../../public/static/dist/loader.js'));
         $event->getIO()->write('    <script type="text/javascript" src="/static/dist/loader.js" integrity="' . $sri .'" crossorigin="anonymous" async defer></script>');
+        $event->getIO()->write('');
+        $event->getIO()->write('or - if you want to load only a single file');
+        $sri = self::generateSri(file_get_contents(__DIR__ . '/../../public/static/dist/comments.js'));
+        $event->getIO()->write('    <script type="text/javascript" src="/static/dist/comments.js?cfg[language]=de_DE" integrity="' . $sri .'" crossorigin="anonymous" async defer></script>');
     }
 
     private static function generateAdminJs(Setup $setup, Container $container): void
