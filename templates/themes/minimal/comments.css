@@ -251,7 +251,7 @@
 
 .hashover.hashover-logged-out .hashover-inputs > *,
 .hashover .hashover-comment .hashover-inputs > * {
-  padding: 10px 3px 0 3px;
+  padding: 10px 3px 0 0;
 }
 
 .hashover .hashover-comment,
