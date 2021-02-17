@@ -1,3 +1,4 @@
+$imageBaseUrl: '/images';
 // Alternatives: Light green #E5FFF0 or Light red (pink-ish) #FFE5F0;*/
 $highlight-color: #e9edf0;
 $border-color: rgba(0, 0, 0, 0.125);
@@ -58,6 +59,10 @@ $border-color: rgba(0, 0, 0, 0.125);
         }
     }
 
+    .hashover-formatting {
+        background-position: 0px -447px;
+    }
+
     .hashover-fake-link {
         cursor: pointer;
     }
@@ -115,8 +120,7 @@ $border-color: rgba(0, 0, 0, 0.125);
 
 .hashover,
 .hashover-top-comments,
-.hashover-sort-section,
-.hashover .hashover-inputs {
+.hashover-sort-section {
     clear: both;
 }
 
@@ -147,10 +151,6 @@ $border-color: rgba(0, 0, 0, 0.125);
 .hashover .hashover-message {
     position: relative;
     z-index: 1;
-}
-
-.hashover .hashover-formatting {
-    background-position: 0px -454px;
 }
 
 .hashover .hashover-message,
@@ -249,8 +249,6 @@ $border-color: rgba(0, 0, 0, 0.125);
 }
 
 .hashover .hashover-inputs > * {
-    display: table-cell;
-    vertical-align: middle;
     line-height: 16px;
 }
 
@@ -270,7 +268,7 @@ $border-color: rgba(0, 0, 0, 0.125);
     width: 28px;
     height: 32px;
     margin-top: -16px;
-    background-image: url('../../images/inputs-and-buttons.png');
+    background-image: url($imageBaseUrl + '/inputs-and-buttons.png');
     background-repeat: no-repeat;
     background-attachment: scroll;
     border: 1px solid transparent;
@@ -684,7 +682,7 @@ $border-color: rgba(0, 0, 0, 0.125);
     vertical-align: top;
     min-height: 16px;
     padding-left: 30px;
-    background-image: url('../../images/inputs-and-buttons.png');
+    background-image: url($imageBaseUrl + '/inputs-and-buttons.png');
     background-repeat: no-repeat;
     background-attachment: scroll;
     opacity: 0.75;
@@ -776,7 +774,7 @@ $border-color: rgba(0, 0, 0, 0.125);
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: center center;
-    background-image: url('../../images/loading.gif');
+    background-image: url($imageBaseUrl + '/loading.gif');
 }
 
 .hashover .hashover-loading {
@@ -814,7 +812,7 @@ $border-color: rgba(0, 0, 0, 0.125);
 }
 
 .hashover .hashover-comment-edit.hashover-loading {
-    background-image: url('../../images/loading.gif') ! important;
+    background-image: url($imageBaseUrl + '/loading.gif') ! important;
     background-position: 6px center;
 }
 
@@ -847,7 +845,7 @@ $border-color: rgba(0, 0, 0, 0.125);
 .hashover.hashover-vector .hashover-input-cell > div:before,
 .hashover.hashover-vector .hashover-required-input > *:after,
 .hashover.hashover-vector .hashover-comment .hashover-buttons a {
-    background-image: url('../../images/inputs-and-buttons.svg');
+    background-image: url($imageBaseUrl + '/inputs-and-buttons.svg');
 }
 
 @media only screen and (max-width: 640px) {
