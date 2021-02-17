@@ -11,7 +11,7 @@ $definitions = [
         return $logger;
     },
     \HashOver\Build\JavaScriptBuild::class => static function (\Psr\Container\ContainerInterface $c) {
-        return new JavaScriptBuild($c->get(\HashOver\Build\Minifier::class), '../../frontend');
+        return new JavaScriptBuild($c->get(\HashOver\Build\Minifier::class), '../js');
     },
     \HashOver\Build\Minifier::class => \DI\autowire(\HashOver\Build\MullieMinifier::class),
     \HashOver\Build\CommentsJs::class => DI\decorate(static function ($previous, \Psr\Container\ContainerInterface $c) {
