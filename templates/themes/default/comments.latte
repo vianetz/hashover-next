@@ -3,7 +3,9 @@
 {block comments}
 <div id="{='comments-section'|hoPrefix:false}" class="hashover-comments-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
     <div id="{='count-wrapper'|hoPrefix:false}" n:class="hashover-count-sort, hashover-dashed-title" n:attr="style:  !$isPhpMode && $collapseLimit <= 0 ? 'display: none'">
-        <span id="{='count'|hoPrefix:false}" class="hashover-count">{$commentCounts[show-count]}</span>
+        <span id="{='count'|hoPrefix:false}" class="hashover-count">
+            {if $commentCounts[show-count] > 1}{$commentCounts[show-count]}{/if}
+        </span>
 
         <span n:if="!$isPhpMode && $commentCounts[total] > 2" id="{='sort'|hoPrefix:false}" class="hashover-select-wrapper hashover-sort-select">
             <select id="{='sort-select'|hoPrefix:false}" name="sort" size="1" title="{_'sort'}">
