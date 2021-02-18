@@ -20,6 +20,8 @@ declare(strict_types=1);
 namespace HashOver\Handler;
 
 use HashOver\Misc;
+use HashOver\Setup;
+use HashOver\Statistics;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -27,11 +29,15 @@ final class LoadComments extends Javascript
 {
     private \HashOver $hashover;
     private ResponseInterface $response;
+    private Setup $setup;
+    private Statistics $statistics;
 
-    public function __construct(ResponseInterface $response, \HashOver $hashover)
+    public function __construct(ResponseInterface $response, \HashOver $hashover, Setup $setup, Statistics $statistics)
     {
         $this->response = $response;
         $this->hashover = $hashover;
+        $this->setup = $setup;
+        $this->statistics = $statistics;
     }
     
     public function __invoke(ServerRequestInterface $request): ResponseInterface
@@ -41,21 +47,15 @@ final class LoadComments extends Javascript
 
         $this->hashover->setMode(\HashOver::HASHOVER_MODE_JSON);
 
-        $this->hashover->setup->setPageURL($request);
+        $this->setup->setPageURL($request);
+        $this->setup->setPageTitle('request');
+        $this->setup->setThreadName('request');
+        $this->setup->setWebsite('request');
 
-        // Set page title from POST/GET data
-        $this->hashover->setup->setPageTitle('request');
+        $this->setup->loadFrontendSettings($request);
 
-        // Set thread name from POST/GET data
-        $this->hashover->setup->setThreadName('request');
-
-        // Set website from POST/GET data
-        $this->hashover->setup->setWebsite('request');
-
-        // Initiate comment processing
         $this->hashover->initiate();
 
-        // Check for comments
         if ($this->hashover->thread->totalCount > 1) {
             // Parse primary comments
             $this->hashover->parsePrimary();
@@ -63,17 +63,17 @@ final class LoadComments extends Javascript
             // Display as JSON data
             $data = $this->hashover->comments;
 
-            if ($this->hashover->setup->enableStatistics) {
-                $this->hashover->statistics->executionEnd();
+            if ($this->setup->enableStatistics) {
+                $this->statistics->executionEnd();
 
                 $data['statistics'] = [
-                    'execution-time' => $this->hashover->statistics->executionTime,
-                    'script-memory' => $this->hashover->statistics->scriptMemory,
-                    'system-memory' => $this->hashover->statistics->systemMemory
+                    'execution-time' => $this->statistics->executionTime,
+                    'script-memory' => $this->statistics->scriptMemory,
+                    'system-memory' => $this->statistics->systemMemory
                 ];
             }
         } else {
-            $data = array('No comments.');
+            $data = ['No comments.'];
         }
 
         $response->getBody()->write(Misc::jsonData($data));
