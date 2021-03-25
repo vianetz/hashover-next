@@ -23,11 +23,11 @@ final class JavaScriptBuild
 {
     private string $directory;
     private array $files = [];
-    private Minifier $minifier;
+    private MullieMinifierFactory $minifierFactory;
 
-    public function __construct(Minifier $minifier, string $directory = '.')
+    public function __construct(MullieMinifierFactory $minifierFactory, string $directory = '.')
     {
-        $this->minifier = $minifier;
+        $this->minifierFactory = $minifierFactory;
         $this->directory = __DIR__ . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR;
     }
 
@@ -98,13 +98,14 @@ final class JavaScriptBuild
 
     public function build(): string
     {
+        $minifier = $this->minifierFactory->create();
         foreach ($this->files as $file) {
-            $this->minifier->add($file);
+            $minifier->add($file);
         }
 
         $this->files = [];
 
-        return $this->minifier->minify();
+        return $minifier->minify();
     }
 
     public function getJs(): string

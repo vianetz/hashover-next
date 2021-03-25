@@ -27,6 +27,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractHandler
 {
+    public const HTTP_STATUS_CODE_MOVED_TEMPORARILY = 302;
     protected \HashOver $hashover;
     protected DataFiles $dataFiles;
     protected ResponseInterface $response;
@@ -55,7 +56,7 @@ abstract class AbstractHandler
             $response = $this->response->withHeader('Location', '../moderation/');
         }
 
-        return $response;
+        return $response->withStatus(self::HTTP_STATUS_CODE_MOVED_TEMPORARILY);
     }
 
     protected function render(string $templateName, array $templateData = []): ResponseInterface

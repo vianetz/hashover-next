@@ -25,6 +25,6 @@ final class RedirectHandler
             $response = $this->response->withHeader('Location', '/admin/login/');
         }
 
-        return $response->withStatus(302);
+        return $response->withStatus(AbstractHandler::HTTP_STATUS_CODE_MOVED_TEMPORARILY);
     }
 }

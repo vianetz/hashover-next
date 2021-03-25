@@ -11,9 +11,8 @@ $definitions = [
         return $logger;
     },
     \HashOver\Build\JavaScriptBuild::class => static function (\Psr\Container\ContainerInterface $c) {
-        return new JavaScriptBuild($c->get(\HashOver\Build\Minifier::class), '../js');
+        return new JavaScriptBuild($c->get(\HashOver\Build\MullieMinifierFactory::class), '../js');
     },
-    \HashOver\Build\Minifier::class => \DI\autowire(\HashOver\Build\MullieMinifier::class),
     \HashOver\Build\CommentsJs::class => DI\decorate(static function ($previous, \Psr\Container\ContainerInterface $c) {
         return new \HashOver\Build\StatisticsDecorator($c->get(\HashOver\Statistics::class), $previous, $c->get(\HashOver\Setup::class));
     }),

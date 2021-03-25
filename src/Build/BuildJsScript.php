@@ -20,8 +20,8 @@ final class BuildJsScript
         /** @var Setup $setup */
         $setup = $container->get(Setup::class);
 
-        self::writeToFile('dist/comments.js', $container->get(CommentsJs::class)->generate($setup));
-        self::writeToFile('dist/loader.js', $container->get(LoaderJs::class)->generate($setup));
+        self::writeToFile('dist/comments.js', $container->make(CommentsJs::class)->generate($setup));
+        self::writeToFile('dist/loader.js', $container->make(LoaderJs::class)->generate($setup));
 
         self::linkThemeCss(__DIR__ . '/../../templates/themes');
 
@@ -49,8 +49,8 @@ final class BuildJsScript
         $setupClone->formPosition = 'bottom';
         $setupClone->passwordField = 'off';
 
-        self::writeToFile('admin/dist/comments.js', $container->get(CommentsJs::class)->generate($setupClone));
-        self::writeToFile('admin/dist/loader.js', str_replace("'/static/dist/comments.js'", "'/static/admin/dist/comments.js'", $container->get(LoaderJs::class)->generate($setupClone)));
+        self::writeToFile('admin/dist/comments.js', $container->make(CommentsJs::class)->generate($setupClone));
+        self::writeToFile('admin/dist/loader.js', str_replace("'/static/dist/comments.js'", "'/static/admin/dist/comments.js'", $container->make(LoaderJs::class)->generate($setupClone)));
     }
 
     private static function writeToFile(string $filename, string $contents): void
@@ -78,8 +78,6 @@ final class BuildJsScript
     private static function linkThemeCss(string $src): void
     {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($src));
-        $destination = [];
-        $origin = [];
         foreach ($iterator as $file) {
             /** @var \SplFileInfo $file */
             if ($file->isDir() || $file->getExtension() !== 'css') {
