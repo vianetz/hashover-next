@@ -11,13 +11,13 @@ only required information is the comment itself.
 ## Purpose of this fork
 This repository is a complete refactoring of the [great original hashover-next](https://github.com/jacobwb/hashover-next) with the following goals:
 - Improve application security
-- PHP 8 compatibility
-- Build static JavaScript files to allow using security hashes and better minification
 - Add application logging
 - Provide Docker container
 - Implement unit tests
 
 ### Main Differences to Original
+- PHP 8 compatibility
+- Build static JavaScript files to allow using security hashes and better minification
 - Dependency management and autoloading with composer
 - Uses a router
 - Added PSR-3 logger
@@ -66,6 +66,15 @@ composer hashover:build-js
 ```html
 <script src="/dist/comments.js" type="text/javascript" />
 ```
+
+## Development
+
+Docker containers can be run with
+```
+docker-compose up -d
+```
+
+Afterwards the admin interface is available on `http://localhost:8080/admin`.
 
 Information and Documentation
 ---

@@ -25,6 +25,6 @@ final class RedirectHandler
             $response = $this->response->withHeader('Location', '/admin/login/');
         }
 
-        return $response;
+        return $response->withStatus(302);
     }
 }
