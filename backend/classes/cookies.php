@@ -80,7 +80,7 @@ final class Cookies
 		// Use specific expiration date or configured date
 		$date = $date ?: $this->getCookieExpiration ();
 
-		if ($this->setup->setsCookies) {
+		if ($this->setup->setsCookies && $value !== null) {
 			setcookie ($name, $value, $date, '/', $this->domain, $this->secure, true);
 		}
 	}
