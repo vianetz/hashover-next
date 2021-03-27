@@ -6,8 +6,8 @@
 
     <style type="text/css">
         body {
-            padding: 0px;
-            margin: 0px;
+            padding: 0;
+            margin: 0;
         }
 
         #main, #main * {
@@ -19,7 +19,7 @@
         #main {
             max-width: 640px;
             padding: 32px 16px 32px 16px;
-            margin: 0px auto 0px auto;
+            margin: 0 auto 0 auto;
         }
 
         #header {
@@ -54,7 +54,7 @@
             /* Light red (pink-ish) */
             /*background-color: #FFE5F0;*/
 
-            padding: 0px;
+            padding: 0;
             overflow: hidden;
 
             -moz-border-radius: 6px 6px 6px 6px;
@@ -67,7 +67,7 @@
         }
 
         p {
-            margin: 16px 0px 16px 0px;
+            margin: 16px 0 16px 0;
         }
 
         #reply {
@@ -95,7 +95,7 @@
 
     <p id="in-reply-to">{$inReplyTo}</p>
 
-    <div id="reply" class="container" n:if="$htmlReply">
+    <div id="reply" class="container" n:ifset="$htmlReply">
         <p>{$htmlReply|breakLines}</p>
     </div>
 
