@@ -32,7 +32,7 @@
 
     <div id="{='end-links'|hoPrefix:false}" class="hashover-end-links"  n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
         {if $commentCounts[total] > 1 && $enableRssAppend}
-        <a href="{$rssUrl}" class="hashover-rss-link" rel="nofollow" target="_blank" title="{_'rss-feed'}">{_'rss-feed'}</a>
+        <a href="{$rssUrl}" class="hashover-rss-link" rel="nofollow noopener" target="_blank" title="{_'rss-feed'}">{_'rss-feed'}</a>
         {/if}
     </div>
 </div>
