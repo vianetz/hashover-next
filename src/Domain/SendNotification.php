@@ -1,12 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace HashOver\Backend;
+namespace HashOver\Domain;
 
 use HashOver\Avatars;
 use HashOver\Crypto;
-use HashOver\Domain\Config;
-use HashOver\Domain\Templater;
 use HashOver\Locale;
 use HashOver\Misc;
 use HashOver\Setup;

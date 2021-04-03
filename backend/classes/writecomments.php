@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-use HashOver\Backend\SendNotification;
 use HashOver\Domain\UserInputException;
+use HashOver\Domain\SendNotification;
 
 class WriteComments extends Secrets
 {

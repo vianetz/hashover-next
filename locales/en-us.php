@@ -238,5 +238,8 @@ $locale = array (
 	'setting-name-field'			=> 'User name field',
 	'setting-password-field'		=> 'User password field, for editing privileges',
 	'setting-email-field'			=> 'User notification e-mail field',
-	'setting-website-field'			=> 'User website URL field'
+	'setting-website-field'			=> 'User website URL field',
+    'privacy-notice' => 'Information on the processing of your data and objection options can be found in',
+    'privacy-notice-link-text' => 'our privacy statement',
+    'email-not-published-hint' => 'Your email address will not be published.'
 );

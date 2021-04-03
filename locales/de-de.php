@@ -242,5 +242,5 @@ $locale = array (
 	'setting-website-field'			=> 'URL-Feld der Benutzer-Website',
     'privacy-notice' => 'Hinweise zur Verarbeitung Ihrer Angaben und Widerspruchsmöglichkeiten finden sich in',
     'privacy-notice-link-text' => 'unserer Datenschutzerklärung',
-    'email-not-published-hint' => 'Your email address will not be published.'
+    'email-not-published-hint' => 'Die Email-Adresse wird nicht veröffentlicht.'
 );

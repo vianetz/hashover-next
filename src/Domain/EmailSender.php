@@ -17,7 +17,7 @@ declare(strict_types=1);
 // You should have received a copy of the GNU Affero General Public License
 // along with HashOver.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace HashOver\Backend;
+namespace HashOver\Domain;
 
 use Psr\Log\LoggerInterface;
 
