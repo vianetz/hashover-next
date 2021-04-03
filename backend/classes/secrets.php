@@ -29,6 +29,7 @@ class Secrets
 {
     protected string $notificationEmail = 'example@example.com';
     protected string $noreplyEmail = 'noreply@example.com';
+    protected string $noreplyFrom = 'noreply@example.com';
     protected string $encryptionKey = '8CharKey';
     protected string $adminName = 'admin';
     protected string  $adminPassword = 'passwd';
@@ -53,6 +54,7 @@ class Secrets
         $this->encryptionKey = $_ENV['ENCRYPTION_KEY'];
         $this->notificationEmail = $_ENV['NOTIFICATION_EMAIL'];
         $this->noreplyEmail = $_ENV['NOREPLY_EMAIL'];
+        $this->noreplyFrom = $_ENV['NOREPLY_FROM'];
         $this->smtpHost = $_ENV['SMTP_HOST'];
         $this->smtpPort = $_ENV['SMTP_PORT'];
         $this->smtpUser = $_ENV['SMTP_USER'];

@@ -1,5 +1,3 @@
-{default $isCommentFailed = false}
-
 {block editForm}
 <div class="hashover-title hashover-dashed-title">{_'edit-comment'}</div>
 {if $isUserAdmin}
@@ -39,7 +37,7 @@
 <input n:if="$setup->remoteAccess" type="hidden" name="remote-access" value="true" />
 <input n:if="$file" type="hidden" name="file" value="{$file}" />
 
-<div class="hashover-form-footer">
+<footer class="hashover-form-footer">
     <span class="hashover-form-links">
         <label n:if="$setup->emailField !== 'off'" for="{='edit-subscribe'|hoPrefix}-{$permalink}" class="hashover-edit-label" title="{_'subscribe-tip'}">
             <input id="{='edit-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" checked="{$setup->subscribesUser}" />
@@ -55,5 +53,5 @@
 
         <input id="{='edit-delete'|hoPrefix}-{$permalink}" class="hashover-submit hashover-edit-delete" type="submit" name="delete" {if $isUserAdmin}value="{_'permanently-delete'}" title="{_'permanently-delete'}" {else}value="{_'delete'}" title="{_'delete'}"{/if} />
     </span>
-</div>
+</footer>
 {/block}

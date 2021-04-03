@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 namespace HashOver\Backend;
 
-use HashOver\Avatars;
-use HashOver\Cookies;
-use HashOver\Domain\Templater;
-use HashOver\Login;
-use HashOver\Setup;
-
 final class CommentsHtml extends FormHtmlAbstract
 {
     public function render(array $commentCounts, ?string $comments, ?string $popularComments, bool $needsHashoverWrapper = true): string
@@ -26,11 +20,6 @@ final class CommentsHtml extends FormHtmlAbstract
             'formAction' => $this->setup->getBackendPath('form-actions'),
             'enableAvatars' => $this->setup->iconMode !== 'none',
             'enableLabels' => $this->setup->usesLabels,
-            'isCommentFailed' => $this->cookies->getValue('failed-on') === 'comment',
-            'isEmailFailed' => $this->cookies->getValue('failed-on') === 'email',
-            'isNameFailed' => $this->cookies->getValue('failed-on') === 'name',
-            'isWebsiteFailed' => $this->cookies->getValue('failed-on') === 'website',
-            'isPasswordFailed' => $this->cookies->getValue('failed-on') === 'password',
             'reply' => $this->cookies->getValue('replied'), // check if comment is a failed reply
             'url' => $this->setup->pageURL,
             'thread' => $this->setup->threadName,

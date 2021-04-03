@@ -17,6 +17,7 @@
         <div n:class="hashover-name-input, ($failedOnField === 'email') ? hashover-emphasized-input">
             <input type="email" id="{='main-email'|hoPrefix:false|hoSuffix:$permalink}" class="hashover-input-info" placeholder="{_'email'}" name="email" value="{$userEmail}" autocomplete="off" title="{_'email-tip'}" n:attr="required: ($setup->emailField === 'required')" />
         </div>
+        <small>{_'email-not-published-hint'}</small>
     </div>
     <div n:if="$setup->websiteField !== 'off'" n:class="hashover-input-cell, ($setup->websiteField === 'required') ? hashover-required-input">
         <label n:if="$setup->usesLabels" for="{='main-website'|hoPrefix:false|hoSuffix:$permalink}" class="hashover-website-label">{_'website'}</label>

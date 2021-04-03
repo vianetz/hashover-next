@@ -7,7 +7,10 @@ use HashOver\Build\JavaScriptBuild;
 $definitions = [
     Psr\Log\LoggerInterface::class => static function (\Psr\Container\ContainerInterface $c) {
         $logger = new \Monolog\Logger('hashover-logger');
-        $logger->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout', \Monolog\Logger::DEBUG));
+        $handler = new \Monolog\Handler\StreamHandler($_ENV['LOG_FILE'], $_ENV['LOG_LEVEL']);
+        $handler->setFormatter(new \Monolog\Formatter\LogstashFormatter('hashover-logger'));
+        $logger->pushHandler($handler);
+
         return $logger;
     },
     \HashOver\Build\JavaScriptBuild::class => static function (\Psr\Container\ContainerInterface $c) {

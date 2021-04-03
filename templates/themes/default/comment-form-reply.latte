@@ -27,20 +27,21 @@
     <input n:if="$setup->remoteAccess" type="hidden" name="remote-access" value="true" />
     <input n:if="$file" type="hidden" name="reply-to" value="{$file}" />
 
-    <div class="hashover-form-footer">
+    <footer class="hashover-form-footer">
         <span class="hashover-form-links">
+            <span n:if="!$isPhpMode" id="{='reply-formatting'|hoPrefix}-{$permalink}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
+
             <label n:if="$setup->emailField !== 'off'" for="{='reply-subscribe'|hoPrefix}-{$permalink}" class="hashover-reply-label" title="{_'subscribe-tip'}">
                 <input id="{='reply-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" checked="{$setup->subscribesUser}" />
                 {_'subscribe'}
             </label>
-
-            <span n:if="!$isPhpMode" id="{='reply-formatting'|hoPrefix}-{$permalink}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
         </span>
         <span class="hashover-form-buttons">
             <a n:if="$setup->usesCancelButtons" id="{='reply-cancel'|hoPrefix}-{$permalink}" class="hashover-submit hashover-reply-cancel" title="{_'cancel'}" rel="nofollow" href="{$setup->filePath|addQueryParams}#hashover-{$permalink}">{_'cancel'}</a>
 
             <input id="{='reply-post'|hoPrefix}-{$permalink}" class="hashover-submit hashover-reply-post" type="submit" name="post" value="{_'post-reply'}" title="{_'post-reply'}" />
         </span>
-    </div>
+        <div class="privacy-notice"><small>{_'privacy-notice'} <a href="/privacy" target="_blank">{_'privacy-notice-link-text'}</a>.</small></div>
+    </footer>
 </div>
 {/block}

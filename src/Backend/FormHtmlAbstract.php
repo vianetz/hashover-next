@@ -6,7 +6,6 @@ namespace HashOver\Backend;
 use HashOver\Avatars;
 use HashOver\Cookies;
 use HashOver\Domain\Templater;
-use HashOver\HTMLTag;
 use HashOver\Login;
 use HashOver\Setup;
 
@@ -53,6 +52,11 @@ abstract class FormHtmlAbstract
             'commentFormat' => $this->setup->usesMarkdown ? 'markdown' : 'html',
             'isPhpMode' => $this->mode === \HashOver::HASHOVER_MODE_PHP,
             'failedOnField' => $this->cookies->getValue('failed-on'),
+            'isCommentFailed' => $this->cookies->getValue('failed-on') === 'comment',
+            'isEmailFailed' => $this->cookies->getValue('failed-on') === 'email',
+            'isNameFailed' => $this->cookies->getValue('failed-on') === 'name',
+            'isWebsiteFailed' => $this->cookies->getValue('failed-on') === 'website',
+            'isPasswordFailed' => $this->cookies->getValue('failed-on') === 'password',
         ];
     }
 }

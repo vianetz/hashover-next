@@ -105,48 +105,6 @@ class FormUI
 		return $avatar;
 	}
 
-	// Creates "Notify me of replies" checkbox
-	protected function subscribeLabel ($permalink = '', $type = 'main', $checked = true)
-	{
-		// Reply/edit form indicator
-		$is_form = !empty ($permalink);
-
-		// The checkbox ID
-		$id = $this->prefix ($type . '-subscribe', $is_form);
-
-		// Append permalink to the ID if one was given
-		if ($is_form === true) {
-			$id .= '-' . $permalink;
-		}
-
-		// Create subscribe checkbox label element
-		$subscribe_label = new HTMLTag ('label', array (
-			'for' => $id,
-			'class' => 'hashover-' . $type . '-label',
-			'title' => $this->locale->text['subscribe-tip']
-		));
-
-		// Create subscribe element checkbox
-		$subscribe = new HTMLTag ('input', array (
-			'id' => $id,
-			'type' => 'checkbox',
-			'name' => 'subscribe'
-		), false, true);
-
-		// Tick the checkbox
-		if ($checked === true) {
-			$subscribe->createAttribute ('checked', 'true');
-		}
-
-		// Add subscribe checkbox element to subscribe checkbox label element
-		$subscribe_label->appendChild ($subscribe);
-
-		// Add text to subscribe checkbox label element
-		$subscribe_label->appendInnerHTML ($this->locale->text['subscribe']);
-
-		return $subscribe_label;
-	}
-
 	// Creates a table-like cell for the allowed HTML/markdown panel
 	protected function formatCell ($format, $locale_key)
 	{

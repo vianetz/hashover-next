@@ -64,7 +64,7 @@ composer hashover:build-js
 ```
 1. Integrate the JavaScript snippet into your website within the `<body>` HTML tag:
 ```html
-<script src="/dist/comments.js" type="text/javascript" />
+<script type="text/javascript" src="/static/dist/loader.js" async defer onload='new HashOver("hashover", {settings: {"language": "de_DE"}});'></script>
 ```
 
 ## Development

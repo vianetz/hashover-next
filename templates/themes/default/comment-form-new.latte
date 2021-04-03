@@ -4,7 +4,7 @@
 <div id="{='form-section'|hoPrefix:false}" class="hashover-form-section" n:attr="style: !$isPhpMode && $enableCollapseInterface ? 'display: none'">
     <span class="hashover-title hashover-main-title hashover-dashed-title">{_'post-a-comment'}{if $enableDisplayTitle} {_'on'} "{$pageTitle}"{/if}</span>
 
-    <div id="{='message-container'|hoPrefix:false}" n:class="hashover-title, hashover-message, ($cookie[message] && $isPhpMode) ? 'hashover-message-open hashover-php-message-open', $cookie[isError] ? hashover-message-error">
+    <div id="{='message-container'|hoPrefix:false}" n:class="hashover-message, ($cookie[message] && $isPhpMode) ? 'hashover-message-open hashover-php-message-open', $cookie[isError] ? hashover-message-error">
         <div id="{='message'|hoPrefix:false}" class="hashover-main-message">{$cookie[message]}</div>
     </div>
 
@@ -49,14 +49,14 @@
         <input n:if="$enableRemoteAccess" type="hidden" name="remote-access" value="true" />
         <input n:if="$reply" type="hidden" name="reply-to" value="{$reply}" />
 
-        <div class="hashover-form-footer">
+        <footer class="hashover-form-footer">
             <span class="hashover-form-links">
+                <span n:if="!$isPhpMode" id="{='main-formatting'|hoPrefix:false}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
+
                 <label n:if="$enableEmailField" for="{='main-subscribe'|hoPrefix:false}" class="hashover-main-label" title="{_'subscribe-tip'}">
                     <input id="{='main-subscribe'|hoPrefix:false}" type="checkbox" name="subscribe" checked="{$enableSubscribeByDefault}" />
                     {_'subscribe'}
                 </label>
-
-                <span n:if="!$isPhpMode" id="{='main-formatting'|hoPrefix:false}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
             </span>
             <span class="hashover-form-buttons">
                 {if $isLoggedIn}
@@ -67,7 +67,8 @@
 
                 <input id="{='post-button'|hoPrefix:false}" class="hashover-submit hashover-post-button" type="submit" name="post" value="{_'post-button'}" title="{_'post-button'}" />
             </span>
-        </div>
+            <div class="privacy-notice"><small>{_'privacy-notice'} <a href="/privacy" target="_blank">{_'privacy-notice-link-text'}</a>.</small></div>
+        </footer>
     </form>
 </div>
 {/block}

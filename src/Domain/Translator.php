@@ -18,7 +18,7 @@ final class Translator
 
     public function translate(?string $textIdentifier = null): string
     {
-        if (count($this->translations) === 0) {
+        if (\count($this->translations) === 0) {
             $this->includeLocaleFile($this->getLocaleFile());
         }
 
@@ -41,7 +41,7 @@ final class Translator
             $ctype = setlocale(LC_CTYPE, 0);
 
             // Split locale by encoding
-            $ctype_parts = explode('.', $ctype);
+            $ctype_parts = explode('.', $ctype, 2);
 
             // Get locale code (en_US, de_DE, etc.)
             $locale = $ctype_parts[0];

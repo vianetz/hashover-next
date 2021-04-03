@@ -590,7 +590,7 @@ class WriteComments extends Secrets
 			// If so, add it to latest comments metadata
 			$this->thread->data->addLatestComment ($comment_file);
 
-			$this->sendNotification->send($comment_file, $this->data, $this->email, $this->notificationEmail, $this->noreplyEmail, $this->formData->replyTo,  $this->name);
+			$this->sendNotification->send($comment_file, $this->data, $this->email, $this->formData->replyTo, $this->name);
 
 			// Set/update user login cookie
 			if ($this->setup->usesAutoLogin !== false) {
