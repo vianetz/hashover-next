@@ -53,8 +53,8 @@
             <span class="hashover-form-links">
                 <span n:if="!$isPhpMode" id="{='main-formatting'|hoPrefix:false}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
 
-                <label n:if="$enableEmailField" for="{='main-subscribe'|hoPrefix:false}" class="hashover-main-label" title="{_'subscribe-tip'}">
-                    <input id="{='main-subscribe'|hoPrefix:false}" type="checkbox" name="subscribe" checked="{$enableSubscribeByDefault}" />
+                <label n:if="$enableSubscribe" for="{='main-subscribe'|hoPrefix:false}" class="hashover-main-label" title="{_'subscribe-tip'}">
+                    <input id="{='main-subscribe'|hoPrefix:false}" type="checkbox" name="subscribe" />
                     {_'subscribe'}
                 </label>
             </span>

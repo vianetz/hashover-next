@@ -31,8 +31,8 @@
         <span class="hashover-form-links">
             <span n:if="!$isPhpMode" id="{='reply-formatting'|hoPrefix}-{$permalink}" class="hashover-fake-link hashover-formatting" title="{_'comment-formatting'}">{_'comment-formatting'}</span>
 
-            <label n:if="$setup->emailField !== 'off'" for="{='reply-subscribe'|hoPrefix}-{$permalink}" class="hashover-reply-label" title="{_'subscribe-tip'}">
-                <input id="{='reply-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" checked="{$setup->subscribesUser}" />
+            <label n:if="$enableSubscribe" for="{='reply-subscribe'|hoPrefix}-{$permalink}" class="hashover-reply-label" title="{_'subscribe-tip'}">
+                <input id="{='reply-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" />
                 {_'subscribe'}
             </label>
         </span>

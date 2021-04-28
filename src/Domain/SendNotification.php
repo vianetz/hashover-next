@@ -41,6 +41,10 @@ final class SendNotification
     }
 
     /**
+     * Send notification email to
+     * 1. Admin
+     * 2. In case of an reply to the email address that was replied to (in case that it has subscribed to updates)
+     *
      * @param array<mixed> $data
      */
     public function send(string $file, array $data, string $email, ?string $replyTo = null, ?string $name = null): void
@@ -95,25 +99,15 @@ final class SendNotification
             $this->emailSender->html($htmlBody);
         }
 
-        // Only send notification if it's not admin posting
+        // Only send internal notification if it's not admin posting
         if ($email !== $this->config->get('notificationEmail')) {
             $this->emailSender->to($this->config->get('notificationEmail'));
             $this->emailSender->from($this->config->get('noreplyEmail'), $this->config->get('noreplyFrom'));
             $this->emailSender->send();
         }
 
-        // Do nothing else if reply comment failed to read
-        if ($reply === false) {
-            return;
-        }
-
-        // Do nothing else if reply comment lacks e-mail and decrypt info
-        if (empty($reply['email']) || empty($reply['encryption'])) {
-            return;
-        }
-
-        // Do nothing else if reply comment poster disabled notifications
-        if (Misc::getArrayItem($reply, 'notifications') === 'no') {
+        if ($reply === false || empty($reply['email']) || empty($reply['encryption'])
+            || Misc::getArrayItem($reply, 'notifications') === 'no') {
             return;
         }
 
@@ -121,21 +115,13 @@ final class SendNotification
         $replyEmail = $this->crypto->decrypt($reply['email'], $reply['encryption']);
 
         // Check if reply e-mail is different than login's and admin's
-        if ($replyEmail !== $email && $replyEmail !== $this->config->get('notificationEmail')) {
-            // If so, set message to be sent to reply comment e-mail
-            $this->emailSender->to($replyEmail);
-
-            // Check if users are allowed to reply by email
-            if ($this->setup->allowsUserReplies) {
-                // If so, set e-mail as coming from posting user
-                $this->emailSender->from($email, $name);
-            } else {
-                // If not, set e-mail as coming from noreply e-mail
-                $this->emailSender->from($this->config->get('noreplyEmail'), $this->config->get('noreplyFrom'));
-            }
-
-            $this->emailSender->send();
+        if ($replyEmail === $email || $replyEmail === $this->config->get('notificationEmail')) {
+            return;
         }
+
+        $this->emailSender->to($replyEmail);
+        $this->emailSender->from($this->config->get('noreplyEmail'), $this->config->get('noreplyFrom'));
+        $this->emailSender->send();
     }
 
     /**

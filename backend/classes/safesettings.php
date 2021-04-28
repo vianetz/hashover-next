@@ -71,7 +71,7 @@ class SafeSettings
 	public $appendsRss		= true;				// Whether a comment RSS feed link is displayed
 
 	// Technical settings
-	public $subscribesUser		= true;				// Whether to subscribe the user to e-mail notifications by default
+	public $subscribesUser		= false;				// Whether to allow to subscribe the user to e-mail notifications
 	public $allowsUserReplies	= false;			// Whether given e-mails are sent as reply-to address to users
 	public $gravatarDefault		= 'custom';			// Gravatar theme to use ('custom', 'identicon', 'monsterid', 'wavatar', or 'retro')
 	public $gravatarForce		= false;			// Whether to force the themed Gravatar images instead of an avatar image

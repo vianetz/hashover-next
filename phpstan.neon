@@ -4,5 +4,5 @@ parameters:
         - phpstan-bootstrap.php
     paths:
         - %currentWorkingDirectory%/backend
-        - %currentWorkingDirectory%/frontend
+        - %currentWorkingDirectory%/templates
         - %currentWorkingDirectory%/src

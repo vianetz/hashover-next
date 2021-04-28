@@ -33,7 +33,7 @@ final class CommentsHtml extends FormHtmlAbstract
             'enableWebsiteRequired' => $this->setup->websiteField === 'required',
             'enableNameRequired' => $this->setup->nameField === 'required',
             'enablePasswordRequired' => $this->setup->passwordField === 'required',
-            'enableSubscribeByDefault' => $this->setup->subscribesUser,
+            'enableSubscribe' => $this->setup->subscribesUser,
             'enableLogin' => $this->setup->allowsLogin,
             'commentCounts' => $commentCounts,
             'collapseLimit' => $this->setup->collapseLimit,

@@ -45,15 +45,19 @@ abstract class AbstractHandler
         $this->checkAllowed();
     }
 
-    protected function redirect(ServerRequestInterface $request, string $url = ''): ResponseInterface
+    protected function redirect(ServerRequestInterface $request = null, string $url = ''): ResponseInterface
     {
-        $queryParams = $request->getQueryParams();
         if (! empty($url)) {
             $response = $this->response->withHeader('Location', $url);
-        } elseif (! empty($queryParams['redirect'])) {
-            $response = $this->response->withHeader('Location', $queryParams['redirect']);
-        } else {
-            $response = $this->response->withHeader('Location', '../moderation/');
+        } elseif ($request !== null) {
+            $queryParams = $request->getQueryParams();
+            if (! empty($url)) {
+                $response = $this->response->withHeader('Location', $url);
+            } elseif (! empty($queryParams['redirect'])) {
+                $response = $this->response->withHeader('Location', $queryParams['redirect']);
+            } else {
+                $response = $this->response->withHeader('Location', '../moderation/');
+            }
         }
 
         return $response->withStatus(self::HTTP_STATUS_CODE_MOVED_TEMPORARILY);
@@ -104,7 +108,7 @@ abstract class AbstractHandler
         $uri_parts = explode('?', $uri);
 
         if (basename($uri_parts[0]) !== 'login') {
-            $this->redirect('../login/?redirect=' . urlencode($uri));
+            $this->redirect(null, '../login/?redirect=' . urlencode($uri));
         }
     }
 }

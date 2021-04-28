@@ -21,6 +21,7 @@ class Thread
 {
 	protected $setup;
 
+	/** @var \HashOver\Database */
 	public $data;
 	public $commentList = array ();
 	public $threadCount = array ();

@@ -36,6 +36,7 @@ final class HashOver
 	public \HashOver\Setup $setup;
 	public $login;
 	public $cookies;
+	/** @var \HashOver\Thread */
 	public $thread;
 	public $templater;
 	public $locale;

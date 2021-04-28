@@ -80,6 +80,10 @@
 .hashover .privacy-notice {
   padding-top: 10px;
 }
+.hashover .privacy-notice small {
+  display: inline-block;
+  padding: 10px;
+}
 
 .hashover > div {
   display: block;
@@ -129,7 +133,7 @@
 .hashover .hashover-formatting-message > * {
   display: block;
   width: 100%;
-  max-height: 0px;
+  max-height: 0;
 }
 
 .hashover .hashover-message > *,

@@ -39,8 +39,8 @@
 
 <footer class="hashover-form-footer">
     <span class="hashover-form-links">
-        <label n:if="$setup->emailField !== 'off'" for="{='edit-subscribe'|hoPrefix}-{$permalink}" class="hashover-edit-label" title="{_'subscribe-tip'}">
-            <input id="{='edit-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" checked="{$setup->subscribesUser}" />
+        <label n:if="$enableSubscribe" for="{='edit-subscribe'|hoPrefix}-{$permalink}" class="hashover-edit-label" title="{_'subscribe-tip'}">
+            <input id="{='edit-subscribe'|hoPrefix}-{$permalink}" type="checkbox" name="subscribe" />
             {_'subscribe'}
         </label>
 
