@@ -41,7 +41,7 @@ class FormUI
 
 	private TemplateHelper $templateHelper;
 
-	public function __construct ($mode = 'javascript', Setup $setup, Locale $locale, Login $login, Cookies $cookies, Avatars $avatars)
+	public function __construct(Setup $setup, Locale $locale, Login $login, Cookies $cookies, Avatars $avatars, $mode = \HashOver::HASHOVER_MODE_JAVASCRIPT)
 	{
 	    $this->templateHelper = new TemplateHelper($setup, $mode);
 
