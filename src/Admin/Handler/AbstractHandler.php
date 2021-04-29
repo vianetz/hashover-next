@@ -41,8 +41,6 @@ abstract class AbstractHandler
         $this->dataFiles = $dataFiles;
         $this->response = $response;
         $this->latte = $latte;
-
-        $this->checkAllowed();
     }
 
     protected function redirect(ServerRequestInterface $request = null, string $url = ''): ResponseInterface
@@ -51,9 +49,7 @@ abstract class AbstractHandler
             $response = $this->response->withHeader('Location', $url);
         } elseif ($request !== null) {
             $queryParams = $request->getQueryParams();
-            if (! empty($url)) {
-                $response = $this->response->withHeader('Location', $url);
-            } elseif (! empty($queryParams['redirect'])) {
+            if (! empty($queryParams['redirect'])) {
                 $response = $this->response->withHeader('Location', $queryParams['redirect']);
             } else {
                 $response = $this->response->withHeader('Location', '../moderation/');
@@ -96,19 +92,5 @@ abstract class AbstractHandler
         }
 
         return $data;
-    }
-
-    protected function checkAllowed(): void
-    {
-        if ($this->hashover->login->userIsAdmin) {
-            return;
-        }
-
-        $uri = $_SERVER['REQUEST_URI'];
-        $uri_parts = explode('?', $uri);
-
-        if (basename($uri_parts[0]) !== 'login') {
-            $this->redirect(null, '../login/?redirect=' . urlencode($uri));
-        }
     }
 }

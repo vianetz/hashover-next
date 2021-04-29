@@ -27,6 +27,10 @@ final class BlocklistHandler extends AbstractHandler
 {
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
+        if (! $this->hashover->login->userIsAdmin) {
+            return $this->redirect($request, '/admin');
+        }
+
         $blocklist = [];
 
         $blocklist_file = $this->hashover->setup->getAbsolutePath('config/blocklist.json');

@@ -27,6 +27,10 @@ final class UrlQueriesHandler extends AbstractHandler
 {
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
+        if (! $this->hashover->login->userIsAdmin) {
+            return $this->redirect($request, '/admin');
+        }
+
         $ignoredQueries = [];
         $parsedBody = $request->getParsedBody();
 

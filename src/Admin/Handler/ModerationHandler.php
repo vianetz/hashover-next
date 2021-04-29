@@ -38,6 +38,10 @@ final class ModerationHandler extends AbstractHandler
 
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
+        if (! $this->hashover->login->userIsAdmin) {
+            return $this->redirect($request, '/admin');
+        }
+
         $currentWebsite = $this->hashover->setup->website;
         $website = $this->requestHelper->getPostOrGet($request, 'website') ?? $currentWebsite;
 

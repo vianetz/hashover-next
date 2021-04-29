@@ -20,11 +20,16 @@ declare(strict_types=1);
 namespace HashOver\Admin\Handler;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateHandler extends AbstractHandler
 {
-    public function __invoke(): ResponseInterface
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
+        if (! $this->hashover->login->userIsAdmin) {
+            return $this->redirect($request, '/admin');
+        }
+
         return $this->render('updates.html');
     }
 }

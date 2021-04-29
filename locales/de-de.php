@@ -13,7 +13,7 @@
 $locale = array (
 	'comment-form'		=> 'Kommentar hier eingeben...',
 	'reply-form'		=> 'Antwort hier eingeben...',
-	'comment-formatting'	=> 'Formatierung',
+	'comment-formatting'	=> 'Wie formattiere ich?',
 	'allowed-html'		=> 'Zulässiges HTML',
 	'allowed-markdown'	=> 'Markdown Format',
 	'html-format'		=> '&lt;b&gt;, &lt;strong&gt;, &lt;u&gt;, &lt;i&gt;, &lt;em&gt;, &lt;s&gt;, &lt;big&gt;, &lt;small&gt;, &lt;sup&gt;, &lt;sub&gt;, &lt;pre&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;blockquote&gt;, &lt;code&gt; maskieren HTML, URLs werden automatisch zu Links umgewandelt und mit [img]Bild-URL[/img] werden externe Bilder angezeigt.',
@@ -240,7 +240,7 @@ $locale = array (
 	'setting-password-field'		=> 'Benutzerkennwortfeld zum Bearbeiten von Berechtigungen',
 	'setting-email-field'			=> 'E-Mail-Feld für Benutzerbenachrichtigung',
 	'setting-website-field'			=> 'URL-Feld der Benutzer-Website',
-    'privacy-notice' => 'Hinweise zur Verarbeitung Ihrer Angaben und Widerspruchsmöglichkeiten finden sich in <a href="/privacy" target="_blank">unserer Datenschutzerklärung</a>',
+    'privacy-notice' => 'Hinweise zur Verarbeitung Ihrer Angaben und Widerspruchsmöglichkeiten finden sich in <a href="/privacy" target="_blank">unserer Datenschutzerklärung</a>.',
     'email-not-published-hint' => 'Die Email-Adresse ist optional und wird nicht veröffentlicht.',
     'rss-notice' => 'Antworten können über den <a href="%s" target="_blank">RSS-Feed</a> abonniert werden.'
 );

@@ -13,7 +13,7 @@
 $locale = array (
 	'comment-form'		=> 'Type comment here...',
 	'reply-form'		=> 'Type reply here...',
-	'comment-formatting'	=> 'Formatting',
+	'comment-formatting'	=> 'How to format?',
 	'allowed-html'		=> 'Allowed HTML',
 	'allowed-markdown'	=> 'Markdown Format',
 	'html-format'		=> '&lt;b&gt;, &lt;strong&gt;, &lt;u&gt;, &lt;i&gt;, &lt;em&gt;, &lt;s&gt;, &lt;big&gt;, &lt;small&gt;, &lt;sup&gt;, &lt;sub&gt;, &lt;pre&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;blockquote&gt;, &lt;code&gt; escapes HTML, URLs automagically become links, and [img]URL here[/img] will display an external image.',
@@ -239,7 +239,7 @@ $locale = array (
 	'setting-password-field'		=> 'User password field, for editing privileges',
 	'setting-email-field'			=> 'User notification e-mail field',
 	'setting-website-field'			=> 'User website URL field',
-    'privacy-notice' => 'Information on the processing of your data and objection options can be found in <a href="/privacy" target="_blank">our privacy statement</a>',
+    'privacy-notice' => 'Information on the processing of your data and objection options can be found in <a href="/privacy" target="_blank">our privacy statement</a>.',
     'email-not-published-hint' => 'Your email address will not be published.',
-    'rss-notice' => 'Antworten können über den <a href="%s" target="_blank">RSS-Feed</a> abonniert werden.'
+    'rss-notice' => 'Replies can be subscribed via the <a href="%s" target="_blank">RSS feed</a>.'
 );
