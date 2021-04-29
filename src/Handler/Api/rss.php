@@ -24,7 +24,7 @@ header ('Content-Type: application/xml; charset=utf-8');
 chdir (realpath ('../'));
 
 // Do some standard HashOver setup work
-require ('backend/nocache-headers.php');
+require('backend/nocache-headers.php');
 require __DIR__ . '/../src/autoload.php';
 
 // Setup class autoloader
