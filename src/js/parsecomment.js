@@ -200,6 +200,10 @@ HashOverConstructor.prototype.parseComment = function (comment, parent, collapse
 			);
 		}
 
+		if (comment['isMod']) {
+			classes += ' hashover-is-mod';
+		}
+
 		// Check if the logged in user owns the comment
 		if (comment['user-owned'] !== undefined) {
 			// If so, append class to indicate comment is from logged in user

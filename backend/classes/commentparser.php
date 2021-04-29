@@ -305,6 +305,8 @@ class CommentParser
 		// Add comment body to output
 		$output['body'] = $comment['body'];
 
+		$output['isMod'] = $this->login->isAdmin($comment['login_id']);
+
 		// And return parsed comment data
 		return $output;
 	}

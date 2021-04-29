@@ -1,11 +1,10 @@
-.hashover .hashover-inputs label,
-.hashover .hashover-comment-label {
-  padding: 5px;
+.hashover .hashover-submit {
+  margin: 0 10px;
 }
 .hashover .hashover-form-footer {
-  padding: 12px;
-  margin-top: 10px;
+  padding: 12px 12px 0 12px;
   overflow: hidden;
+  margin-top: 6px;
   background-color: #e9edf0;
 }
 .hashover .hashover-reply .hashover-header {
@@ -15,9 +14,11 @@
   position: relative;
   width: 99%;
   padding: 12px;
+  vertical-align: top;
   resize: vertical;
   border: 2px solid rgba(0, 0, 0, 0.125);
   display: block;
+  margin: auto;
   box-sizing: border-box;
 }
 .hashover .hashover-footer {
@@ -38,8 +39,7 @@
   font-weight: bold;
 }
 .hashover .hashover-formatting {
-  background-position: 0px -453px;
-  padding-bottom: 10px;
+  background-position: 0px -447px;
 }
 .hashover .hashover-fake-link {
   cursor: pointer;
@@ -50,7 +50,7 @@
 }
 .hashover .hashover-comment:not(.hashover-first) > .hashover-header {
   font-size: smaller;
-  padding: 5px 12px;
+  padding: 0 12px;
 }
 .hashover .hashover-header .hashover-thread-link {
   text-decoration: none;
@@ -60,7 +60,6 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   box-sizing: border-box;
   width: 100%;
-  padding: 5px 0;
 }
 .hashover .hashover-inputs input {
   width: 98%;
@@ -68,21 +67,17 @@
   border: 2px solid #dfdfdf;
   box-sizing: border-box;
 }
-.hashover .hashover-inputs small {
-  display: block;
-  padding: 5px 5px 0;
-}
-.hashover .hashover-title {
-  font-size: larger;
-  padding-bottom: 10px;
-  width: 100%;
-}
-.hashover .privacy-notice {
-  padding-top: 10px;
-}
 .hashover .privacy-notice small {
   display: inline-block;
   padding: 10px;
+}
+.hashover .hashover-is-mod .hashover-comment-name:after {
+  content: "MOD";
+  margin-left: 5px;
+  background-color: rgba(0, 0, 0, 0.125);
+  padding: 2px 5px;
+  font-weight: bold;
+  font-size: smaller;
 }
 
 .hashover > div {
@@ -122,7 +117,19 @@
   display: inline-block;
 }
 
-.hashover .hashover .hashover-message {
+.hashover .hashover-main-title {
+  font-size: larger;
+}
+
+.hashover .hashover-dashed-title {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  vertical-align: top;
+}
+
+.hashover .hashover-message {
   position: relative;
   z-index: 1;
 }
@@ -144,6 +151,7 @@
 .hashover .hashover-message > * {
   padding: 0 12px;
   margin-bottom: 12px;
+  border: 1px solid #AAAAAA;
 }
 
 .hashover .hashover-message > *,
@@ -221,10 +229,6 @@
   display: block;
 }
 
-.hashover .hashover-inputs > * {
-  line-height: 16px;
-}
-
 .hashover .hashover-name-input,
 .hashover .hashover-password-input,
 .hashover .hashover-email-input,
@@ -246,6 +250,11 @@
   background-attachment: scroll;
   border: 1px solid transparent;
   pointer-events: none;
+}
+
+.hashover.hashover-logged-out .hashover-inputs > *,
+.hashover .hashover-comment .hashover-inputs > * {
+  padding: 10px 3px 0 3px;
 }
 
 .hashover .hashover-comment,
@@ -325,27 +334,32 @@
 .hashover form label {
   cursor: pointer;
   font-weight: bold;
-  display: block;
 }
 
 .hashover .hashover-comment-label {
   display: block;
   width: 100%;
-  margin-bottom: -1px;
+  padding-left: 5px;
 }
 
 .hashover .hashover-form-links {
   display: inline-block;
   vertical-align: middle;
+  margin-bottom: 12px;
 }
 
 .hashover .hashover-form-links > * {
   display: inline-block;
+  margin-top: 7px;
   margin-right: 6px;
 }
 
 .hashover .hashover-form-links > *:last-child {
   margin-right: 0;
+}
+
+.hashover .hashover-form-buttons {
+  margin-bottom: 12px;
 }
 
 .hashover .hashover-edit-form,
@@ -809,10 +823,6 @@
   }
   .hashover .hashover-formatting-table p {
     margin-bottom: 12px;
-  }
-  .hashover .hashover-form-buttons {
-    width: 100%;
-    float: none;
   }
 }
 

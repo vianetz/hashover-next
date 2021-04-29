@@ -217,18 +217,19 @@ class Login extends Secrets
 		$this->loginMethod->setLogin ();
 	}
 
-	// Weak verification of an admin login
-	public function isAdmin ()
-	{
-		// Create login hash
-		$hash = hash ('ripemd160', $this->adminName . $this->adminPassword);
+    /**
+     * Weak verification of an admin login
+     */
+    public function isAdmin(string $loginHash = null): bool
+    {
+        if (empty($loginHash)) {
+            $loginHash = $this->loginHash;
+        }
 
-		// Check if the hashes match
-		$match = ($this->loginHash === $hash);
+        $hash = hash('ripemd160', $this->adminName . $this->adminPassword);
 
-		// And return match
-		return $match;
-	}
+        return $loginHash === $hash;
+    }
 
 	// Logs user in as admin
 	public function adminLogin ()
