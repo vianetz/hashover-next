@@ -16,13 +16,23 @@ final class Translator
         $this->setup = $setup;
     }
 
-    public function translate(?string $textIdentifier = null): string
+    /**
+     * @param mixed ...$args
+     * @throws \Exception
+     */
+    public function translate(?string $textIdentifier = null, ...$args): string
     {
         if (\count($this->translations) === 0) {
             $this->includeLocaleFile($this->getLocaleFile());
         }
 
-        return $this->translations[$textIdentifier] ?? '';
+        if (empty($this->translations[$textIdentifier])) {
+            return '';
+        }
+
+        $translatedString = @sprintf($this->translations[$textIdentifier], ...$args);
+
+        return $translatedString !== '' && $translatedString !== false ? $translatedString : $this->translations[$textIdentifier];
     }
 
     /**

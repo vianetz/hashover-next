@@ -41,7 +41,12 @@
 
             <input id="{='reply-post'|hoPrefix}-{$permalink}" class="hashover-submit hashover-reply-post" type="submit" name="post" value="{_'post-reply'}" title="{_'post-reply'}" />
         </span>
-        <div class="privacy-notice"><small>{_'privacy-notice'} <a href="/privacy" target="_blank">{_'privacy-notice-link-text'}</a>.</small></div>
+        <div class="privacy-notice">
+                <small>
+                    {_'privacy-notice'} <a href="/privacy" target="_blank">{_'privacy-notice-link-text'}</a>.<br />
+                    <span n:if="$enableRssAppend">{='rss-notice'|translate:$rssUrl|noescape}</span>
+                </small>
+            </div>
     </footer>
 </div>
 {/block}

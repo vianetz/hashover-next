@@ -240,7 +240,7 @@ $locale = array (
 	'setting-password-field'		=> 'Benutzerkennwortfeld zum Bearbeiten von Berechtigungen',
 	'setting-email-field'			=> 'E-Mail-Feld für Benutzerbenachrichtigung',
 	'setting-website-field'			=> 'URL-Feld der Benutzer-Website',
-    'privacy-notice' => 'Hinweise zur Verarbeitung Ihrer Angaben und Widerspruchsmöglichkeiten finden sich in',
-    'privacy-notice-link-text' => 'unserer Datenschutzerklärung',
-    'email-not-published-hint' => 'Die Email-Adresse ist optional und wird nicht veröffentlicht.'
+    'privacy-notice' => 'Hinweise zur Verarbeitung Ihrer Angaben und Widerspruchsmöglichkeiten finden sich in <a href="/privacy" target="_blank">unserer Datenschutzerklärung</a>',
+    'email-not-published-hint' => 'Die Email-Adresse ist optional und wird nicht veröffentlicht.',
+    'rss-notice' => 'Antworten können über den <a href="%s" target="_blank">RSS-Feed</a> abonniert werden.'
 );

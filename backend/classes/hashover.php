@@ -21,6 +21,7 @@ final class HashOver
     public const HASHOVER_MODE_JSON = 'json';
     public const HASHOVER_MODE_JAVASCRIPT = 'javascript';
     public const HASHOVER_MODE_PHP = 'php';
+    public const HASHOVER_MODE_RSS = 'rss';
 
 	protected string $mode;
 	protected $sortComments;
@@ -60,7 +61,7 @@ final class HashOver
         \HashOver\PHPMode $phpMode,
         string $mode = self::HASHOVER_MODE_PHP
     ) {
-        // Store output mode (javascript or php)
+        // Store output mode
         $this->mode = $mode;
 
         $this->statistics = $statistics;

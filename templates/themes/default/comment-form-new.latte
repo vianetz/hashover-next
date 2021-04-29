@@ -67,7 +67,12 @@
 
                 <input id="{='post-button'|hoPrefix:false}" class="hashover-submit hashover-post-button" type="submit" name="post" value="{_'post-button'}" title="{_'post-button'}" />
             </span>
-            <div class="privacy-notice"><small>{_'privacy-notice'} <a href="/privacy" target="_blank">{_'privacy-notice-link-text'}</a>.</small></div>
+            <div class="privacy-notice">
+                <small>
+                    {_'privacy-notice'|noescape}<br />
+                    <span n:if="$enableRssAppend">{='rss-notice'|translate:$rssUrl|noescape}</span>
+                </small>
+            </div>
         </footer>
     </form>
 </div>

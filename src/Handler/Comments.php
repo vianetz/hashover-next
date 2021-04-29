@@ -145,7 +145,7 @@ final class Comments extends Javascript
                 'stream-mode' => ($this->setup->replyMode === 'stream'),
                 'stream-depth' => $this->setup->streamDepth,
                 'theme-css' => $this->setup->getThemePath('comments.css', true),
-                'rss-api' => $this->setup->getHttpPath('api/rss.php'),
+                'rss-api' => $this->setup->getHttpPath('api/rss'),
                 'image-format' => $this->setup->imageFormat,
                 'device-type' => $this->setup->isMobile ? 'mobile' : 'desktop',
                 'collapses-interface' => $this->setup->collapsesInterface,

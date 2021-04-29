@@ -41,7 +41,7 @@ final class CommentsHtml extends FormHtmlAbstract
             'comments' => $comments,
             'popularComments' => $popularComments,
             'enableRssAppend' => $this->setup->appendsRss,
-            'rssUrl' => $this->setup->getHttpPath('api/rss.php') . '?url=' . $this->setup->pageURL,
+            'rssUrl' => $this->setup->getHttpPath('api/rss') . '?url=' . $this->setup->pageURL,
             'enableDisplayTitle' => $this->setup->displaysTitle && ! empty($this->setup->pageTitle),
         ]);
 

@@ -29,6 +29,7 @@ use HashOver\Admin\Handler\RedirectHandler;
 use HashOver\Admin\Handler\ThreadsHandler;
 use HashOver\Admin\Handler\UpdateHandler;
 use HashOver\Admin\Handler\UrlQueriesHandler;
+use HashOver\Handler\Api\Rss;
 use HashOver\Handler\CommentInfo;
 use HashOver\Handler\Comments;
 use HashOver\Handler\FormActions;
@@ -59,6 +60,9 @@ $dispatcher = \FastRoute\simpleDispatcher(static function (\FastRoute\RouteColle
         $r->addRoute(['GET', 'POST'], '/form-actions', FormActions::class);
         $r->addRoute(['GET', 'POST'], '/load-comments', LoadComments::class);
         $r->addRoute(['GET', 'POST'], '/comment-info', CommentInfo::class);
+    });
+    $r->addGroup('/api', static function (RouteCollector $r): void {
+        $r->addRoute(['GET'], '/rss', Rss::class);
     });
 });
 
